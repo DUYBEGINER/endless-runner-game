@@ -3,7 +3,7 @@ from pygame import *
 
 ####### ĐỊNH NGHĨA CÁC BIẾN ########
 # Kích thước cửa sổ game
-WINDOW_WIDTH = 840
+WINDOW_WIDTH = 850git rm --cached -r .idea
 WINDOW_HEIGHT = 850
 
 # Thiết lập màn hình game
