@@ -4,7 +4,7 @@ from pygame import *
 ####### ĐỊNH NGHĨA CÁC BIẾN ########
 # Kích thước cửa sổ game
 WINDOW_WIDTH = 850
-WINDOW_HEIGHT = 850
+WINDOW_HEIGHT = 100
 
 # Thiết lập màn hình game
 SCREEN = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))     # Thiết lập bề mặt màn hình chính
@@ -38,7 +38,7 @@ BLOCK_SIZE = 40         # Kích thước khối block
 
 
 
-########## VÒNG LẶP GAME ##########
+########## VÒNG LẶP GAME ### #######
 pygame.init()
 while True:
     for event in pygame.event.get():
