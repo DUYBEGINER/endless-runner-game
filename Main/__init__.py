@@ -11,7 +11,7 @@ SCREEN = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))     # Thiết l�
 pygame.display.set_caption('Name_of_game')                          # Thiết lập tên cửa sổ game
 
 # Thiết lập icon game
-Game_icon = pygame.image.load('icon_game.jpg')
+Game_icon = pygame.image.load('../Asset/icon_game.jpg')
 pygame.display.set_icon(Game_icon)
 
 # Thiết lập FPS
