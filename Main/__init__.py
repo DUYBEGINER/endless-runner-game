@@ -3,8 +3,8 @@ from pygame import *
 
 ####### ĐỊNH NGHĨA CÁC BIẾN ########
 # Kích thước cửa sổ game
-WINDOW_WIDTH = 850
-WINDOW_HEIGHT = 850
+WINDOW_WIDTH = 320
+WINDOW_HEIGHT = 500
 
 # Thiết lập màn hình game
 SCREEN = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))     # Thiết lập bề mặt màn hình chính
@@ -19,8 +19,6 @@ FPS = 120
 FPS_Clock = pygame.time.Clock()
 
 
-
-
 # Màu sắc
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -32,7 +30,7 @@ BLUE = (0, 0, 255)
 
 # Kích thước các đối tượng trong game
 GROUND_HEIGHT = 50      # Chiều dày mặt đất
-BLOCK_SIZE = 40         # Kích thước khối block
+BLOCK_SIZE = 80         # Kích thước khối block
 
 # Thêm các file ảnh vào đối tượng
 
