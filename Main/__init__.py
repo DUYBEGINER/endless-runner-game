@@ -8,9 +8,7 @@ from Players import Player
 SCREEN = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))     # Thiết lập bề mặt màn hình chính
 pygame.display.set_caption('Name_of_game')                          # Thiết lập tên cửa sổ game
 
-# Thiết lập đường dẫn
-current_dir_tmp = os.path.dirname(os.path.abspath(__file__)) #  Đường dẫn tới ../main
-current_dir = os.path.dirname(current_dir_tmp) # Đường dẫn tới ../Game_project
+
 
 # Thiết lập icon game
 Game_icon = pygame.image.load(os.path.join(current_dir, 'Asset/icon_game/icon_game.jpg'))

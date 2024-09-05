@@ -21,9 +21,9 @@ class Player(pygame.sprite.Sprite):
             # Reset list temp
             Temp_list = []
             #Đếm xem có bao nhiêu file ảnh trong folder dùng làm animation
-            num_of_frames = len(os.listdir(f'Asset/character/{animation}'))
+            num_of_frames = len(os.listdir(os.path.join(current_dir,f'Asset/character/{animation}')))
             for i in range(num_of_frames):
-                img = pygame.image.load(f'Asset/character/{animation}/{i}.png')
+                img = pygame.image.load(os.path.join(current_dir,f'Asset/character/{animation}/{i}.png'))
                 img = pygame.transform.scale(img, (int((img.get_width() * scale)), (img.get_height() * scale)))
                 Temp_list.append(img)
             self.Animation_list.append(Temp_list)

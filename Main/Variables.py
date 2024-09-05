@@ -1,4 +1,9 @@
+import os
+
 ####### ĐỊNH NGHĨA CÁC BIẾN ########
+# Thiết lập đường dẫn
+current_dir_tmp = os.path.dirname(os.path.abspath(__file__)) #  Đường dẫn tới ../main
+current_dir = os.path.dirname(current_dir_tmp) # Đường dẫn tới ../Game_project
 # Kích thước cửa sổ game
 WINDOW_WIDTH = 320
 WINDOW_HEIGHT = 500
