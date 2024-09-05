@@ -8,8 +8,6 @@ from Players import Player
 SCREEN = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))     # Thiết lập bề mặt màn hình chính
 pygame.display.set_caption('Name_of_game')                          # Thiết lập tên cửa sổ game
 
-
-
 # Thiết lập icon game
 Game_icon = pygame.image.load(os.path.join(current_dir, 'Asset/icon_game/icon_game.jpg'))
 pygame.display.set_icon(Game_icon)
@@ -25,8 +23,8 @@ BACKGROUND_IMG1 = pygame.transform.scale(BACKGROUND_IMG1, (WINDOW_WIDTH*1.25, WI
 BACKGROUND_IMG2 = pygame.image.load(os.path.join(current_dir, 'Asset/Map/background1.png'))
 BACKGROUND_IMG2 = pygame.transform.scale(BACKGROUND_IMG2, (WINDOW_WIDTH*1.25, WINDOW_HEIGHT*1.25))
 #Ground
-GROUND_IMG = pygame.image.load(os.path.join(current_dir, 'Asset/Map/Ground.png'))
-GROUND_IMG = pygame.transform.scale(GROUND_IMG, (WINDOW_WIDTH, GROUND_HEIGHT))
+GROUND_IMG = pygame.image.load(os.path.join(current_dir, 'Asset/Map/ground_new.png'))
+# GROUND_IMG = pygame.transform.scale(GROUND_IMG, (WINDOW_WIDTH, GROUND_HEIGHT))
 
 
 # Create Player
