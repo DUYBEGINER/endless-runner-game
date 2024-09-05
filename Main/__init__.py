@@ -2,6 +2,10 @@ import pygame, sys
 from pygame import *
 import os
 
+current_dir_tmp = os.path.dirname(os.path.abspath(__file__)) # đường dẫn tới ../Main
+current_dir = os.path.dirname(os.path.abspath(current_dir_tmp)) # đường dẫn tới ../GAME_PROJECT
+
+
 ####### ĐỊNH NGHĨA CÁC BIẾN ########
 # Kích thước cửa sổ game
 WINDOW_WIDTH = 320
@@ -12,7 +16,7 @@ SCREEN = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))     # Thiết l�
 pygame.display.set_caption('Name_of_game')                          # Thiết lập tên cửa sổ game
 
 # Thiết lập icon game
-Game_icon = pygame.image.load('Asset/icon_game/icon_game.jpg')
+Game_icon = pygame.image.load(os.path.join(current_dir, 'Asset/icon_game/icon_game.jpg'))
 pygame.display.set_icon(Game_icon)
 
 # Thiết lập FPS
@@ -28,12 +32,12 @@ GRAVITY = 0.25
 
 #### Load ảnh ####
 #Background
-BACKGROUND_IMG1 = pygame.image.load('Asset/Map/background3.png')
+BACKGROUND_IMG1 = pygame.image.load(os.path.join(current_dir, 'Asset/Map/background3.png'))
 BACKGROUND_IMG1 = pygame.transform.scale(BACKGROUND_IMG1, (WINDOW_WIDTH*1.25, WINDOW_HEIGHT*1.25))
-BACKGROUND_IMG2 = pygame.image.load('Asset/Map/background1.png')
+BACKGROUND_IMG2 = pygame.image.load(os.path.join(current_dir, 'Asset/Map/background1.png'))
 BACKGROUND_IMG2 = pygame.transform.scale(BACKGROUND_IMG2, (WINDOW_WIDTH*1.25, WINDOW_HEIGHT*1.25))
 #Ground
-GROUND_IMG = pygame.image.load('Asset/Map/Ground.png')
+GROUND_IMG = pygame.image.load(os.path.join(current_dir, 'Asset/Map/Ground.png'))
 GROUND_IMG = pygame.transform.scale(GROUND_IMG, (WINDOW_WIDTH, GROUND_HEIGHT))
 
 
@@ -70,9 +74,9 @@ class Player(pygame.sprite.Sprite):
             # Reset list temp
             Temp_list = []
             #Đếm xem có bao nhiêu file ảnh trong folder dùng làm animation
-            num_of_frames = len(os.listdir(f'Asset/character/{animation}'))
+            num_of_frames = len(os.listdir(os.path.join(current_dir, f'Asset/character/{animation}')))
             for i in range(num_of_frames):
-                img = pygame.image.load(f'Asset/character/{animation}/{i}.png')
+                img = pygame.image.load(os.path.join(current_dir, f'Asset/character/{animation}/{i}.png'))
                 img = pygame.transform.scale(img, (int((img.get_width() * scale)), (img.get_height() * scale)))
                 Temp_list.append(img)
             self.Animation_list.append(Temp_list)
