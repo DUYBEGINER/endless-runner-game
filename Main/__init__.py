@@ -59,7 +59,7 @@ class Player(pygame.sprite.Sprite):
         for i in range(7):
             img = pygame.image.load(f'Asset/character/run/run{i}.png')
             Temp_list.append(img)                   # Thêm từng frame Run vào Temp_list để add vào Animation_list sau
-        self.Animation_list.append(Temp_list)       # Thêm list animation Run vào phần từ đầu của Animation_list
+        self.Animation_list.append(Temp_list)       # Thêm list animation Run vào phần từ thứ 2 của Animation_list
 
 
         self.image = self.Animation_list[self.action][self.index]
