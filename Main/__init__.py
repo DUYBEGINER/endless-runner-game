@@ -12,9 +12,14 @@ SCREEN = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))     # Thiết l�
 pygame.display.set_caption('Name_of_game')                          # Thiết lập tên cửa sổ game
 
 # Thiết lập icon game
-Game_icon = pygame.image.load('Asset/icon_game.jpg')
+Game_icon = pygame.image.load('Asset/icon_game/icon_game.jpg')
 pygame.display.set_icon(Game_icon)
 
+#Load ảnh background
+BACKGROUND_IMG1 = pygame.image.load('Asset/Map/background3.png')
+BACKGROUND_IMG1 = pygame.transform.scale(BACKGROUND_IMG1, (WINDOW_WIDTH*1.25, WINDOW_HEIGHT*1.25))
+BACKGROUND_IMG2 = pygame.image.load('Asset/Map/background1.png')
+BACKGROUND_IMG2 = pygame.transform.scale(BACKGROUND_IMG2, (WINDOW_WIDTH*1.25, WINDOW_HEIGHT*1.25))
 # Thiết lập FPS
 FPS = 120
 FPS_Clock = pygame.time.Clock()
@@ -111,7 +116,7 @@ class Player(pygame.sprite.Sprite):
 
 
 # Create Player
-Player1 = Player(100,100,1,5)
+Player1 = Player(150,400,1,1)
 
 
 ########## VÒNG LẶP GAME ### #######
@@ -119,6 +124,8 @@ pygame.init()
 Running = True
 while Running:
     SCREEN.fill(BLACK)
+    SCREEN.blit(BACKGROUND_IMG2, (0, 0))
+    SCREEN.blit(BACKGROUND_IMG1, (0, 0))
 
     Player1.update_animation()
     Player1.draw()
