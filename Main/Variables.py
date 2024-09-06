@@ -15,7 +15,19 @@ GROUND_HEIGHT = 64      # Chiều dày mặt đất
 BLOCK_SIZE = 32         # Kích thước khối block
 # Trọng lực
 GRAVITY = 0.3
+#Wall
+WALL_IMG1 = pygame.image.load(os.path.join(current_dir, 'Asset/Map/wall.png'))
+WALL_IMG1 = pygame.transform.scale(WALL_IMG1, (32, WINDOW_HEIGHT-GROUND_HEIGHT))
+WALL_RECT1 = WALL_IMG1.get_rect()
 
+WALL_IMG2 = pygame.image.load(os.path.join(current_dir, 'Asset/Map/wall.png'))
+WALL_IMG2 = pygame.transform.scale(WALL_IMG2, (32, WINDOW_HEIGHT-GROUND_HEIGHT))
+WALL_RECT2 = WALL_IMG2.get_rect()
+# Update the wall rect positions
+WALL_RECT1.topleft = (0, 0)
+WALL_RECT2.topleft = (288, 0)
+
+# WALL_RECT.center = (0, 0)
 # Màu sắc
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)

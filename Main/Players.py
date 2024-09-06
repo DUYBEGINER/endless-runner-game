@@ -37,10 +37,10 @@ class Player(pygame.sprite.Sprite):
         self.speed = speed
         self.flip = False       #Kiểm tra lật qua lại
 
+
     # Xử lí di chuyển nhân vật
     def Moving(self,SCREEN,moving_left,moving_right):
         dx = 0
-
         # Tăng giảm tọa độ x dựa theo moving-left hoặc moving-right
         if moving_left:
             dx -= self.speed
@@ -50,7 +50,18 @@ class Player(pygame.sprite.Sprite):
             dx += self.speed
             self.flip = False
             # self.direction = 1
+            # Kiểm tra va chạm với tường
+        if self.rect.colliderect(WALL_RECT1):
+            if moving_left:
+                # Prevent movement to the left by placing the player just to the right of the wall
+                if self.rect.left + dx < WALL_RECT1.right:
+                    dx = WALL_RECT1.right - self.rect.left
 
+        if self.rect.colliderect(WALL_RECT2):
+            if moving_right:
+                # Prevent movement to the right by placing the player just to the left of the wall
+                if self.rect.right + dx > WALL_RECT2.left:
+                    dx = WALL_RECT2.left - self.rect.right
         #Update position
         self.rect.x += dx
 

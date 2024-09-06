@@ -28,7 +28,6 @@ BACKGROUND_IMG2 = pygame.transform.scale(BACKGROUND_IMG2, (WINDOW_WIDTH*1.25, WI
 GROUND_IMG = pygame.image.load(os.path.join(current_dir, 'Asset/Map/ground_new.png'))
 # GROUND_IMG = pygame.transform.scale(GROUND_IMG, (WINDOW_WIDTH, GROUND_HEIGHT))
 
-
 # Create Player
 Player1 = Player(150,400,1,2)
 
@@ -42,6 +41,8 @@ while Running:
     SCREEN.blit(BACKGROUND_IMG2, (0, 0))
     SCREEN.blit(BACKGROUND_IMG1, (0, 0))
     SCREEN.blit(GROUND_IMG, (0, WINDOW_HEIGHT-GROUND_HEIGHT))
+    SCREEN.blit(WALL_IMG1, (0, 0))
+    SCREEN.blit(WALL_IMG2, (288, 0))
     Player1.update_animation()
     Player1.draw(SCREEN)
     Player1.Moving(SCREEN,moving_left,moving_right)
