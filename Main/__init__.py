@@ -1,11 +1,13 @@
 import pygame, sys
 from pygame import *
+from pygame import mixer
 import os
+
 from Variables import *
 from Players import Player
 
 # Thiết lập màn hình game
-SCREEN = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))     # Thiết lập bề mặt màn hình chính
+     # Thiết lập bề mặt màn hình chính
 pygame.display.set_caption('Name_of_game')                          # Thiết lập tên cửa sổ game
 
 # Thiết lập icon game
@@ -30,8 +32,10 @@ GROUND_IMG = pygame.image.load(os.path.join(current_dir, 'Asset/Map/ground_new.p
 # Create Player
 Player1 = Player(150,400,1,2)
 
+
 ########## VÒNG LẶP GAME ### #######
 pygame.init()
+
 Running = True
 while Running:
     SCREEN.fill(BLACK)
@@ -39,8 +43,9 @@ while Running:
     SCREEN.blit(BACKGROUND_IMG1, (0, 0))
     SCREEN.blit(GROUND_IMG, (0, WINDOW_HEIGHT-GROUND_HEIGHT))
     Player1.update_animation()
-    Player1.draw(SCREEN,moving_left, moving_right)
-
+    Player1.draw(SCREEN)
+    Player1.Moving(SCREEN,moving_left,moving_right)
+    Player1.Jump()
     #Update player action
     if Player1.in_air:
         Player1.update_action(2)
@@ -56,15 +61,20 @@ while Running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_a:
                 moving_left = True
+                walking_sfx.play()
             if event.key == pygame.K_d:
                 moving_right = True
-            if event.key == pygame.K_SPACE:
+                walking_sfx.play()
+            if event.key == pygame.K_SPACE  and not Player1.in_air:
                 Player1.jump = True
+                jump_sfx.play()
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_a:
                 moving_left = False
+                walking_sfx.stop()
             if event.key == pygame.K_d:
                 moving_right = False
+                walking_sfx.stop()
 
 
     pygame.display.update()

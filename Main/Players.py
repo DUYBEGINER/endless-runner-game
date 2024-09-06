@@ -3,6 +3,7 @@ from pygame import *
 import os
 from Variables import *
 
+
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y,scale,speed):
         super().__init__()
@@ -37,9 +38,9 @@ class Player(pygame.sprite.Sprite):
         self.flip = False       #Kiểm tra lật qua lại
 
     # Xử lí di chuyển nhân vật
-    def moving(self,moving_left,moving_right):
+    def Moving(self,SCREEN,moving_left,moving_right):
         dx = 0
-        dy = 0
+
         # Tăng giảm tọa độ x dựa theo moving-left hoặc moving-right
         if moving_left:
             dx -= self.speed
@@ -50,27 +51,29 @@ class Player(pygame.sprite.Sprite):
             self.flip = False
             # self.direction = 1
 
-        #Jump
-        if self.jump == True and self.in_air==False:
+        #Update position
+        self.rect.x += dx
+
+    def Jump(self):
+        dx = 0
+        dy = 0
+        # Jump
+        if self.jump == True and self.in_air == False:
             self.vel_y = -10
             self.jump = False
             self.in_air = True
-
-        #Thêm trọng lực
+        # Thêm trọng lực
         self.vel_y += GRAVITY
-
         dy += self.vel_y
-
-        #Kiểm tra player có chạm đất chưa
-        if self.rect.bottom + dy > WINDOW_HEIGHT-GROUND_HEIGHT:
+        # Kiểm tra player có chạm đất chưa
+        if self.rect.bottom + dy > WINDOW_HEIGHT - GROUND_HEIGHT:
             dy = WINDOW_HEIGHT - GROUND_HEIGHT - self.rect.bottom
             self.in_air = False
-
-        #Update position
         self.rect.x += dx
         self.rect.y += dy
-    def draw(self,SCREEN,moving_left,moving_right):
-        self.moving(moving_left, moving_right)
+
+    def draw(self,SCREEN):
+
         SCREEN.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)
 
     def update_animation(self):
