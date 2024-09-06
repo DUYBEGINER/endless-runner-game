@@ -45,3 +45,7 @@ pygame.init()
 #Jump
 jump_sfx = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/jump.mp3'))
 walking_sfx = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/walking.mp3'))
+
+# Các biến liên quan đến thời gian spawn các chướng ngại vật đá
+update_time = pygame.time.get_ticks()
+COOLDOWN_SPAWN = 500

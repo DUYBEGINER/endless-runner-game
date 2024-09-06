@@ -1,7 +1,6 @@
-import pygame, sys
+import pygame, sys, os
 from pygame import *
-import os
-from Variables import *
+import Variables
 
 
 class Player(pygame.sprite.Sprite):
@@ -22,9 +21,9 @@ class Player(pygame.sprite.Sprite):
             # Reset list temp
             Temp_list = []
             #Đếm xem có bao nhiêu file ảnh trong folder dùng làm animation
-            num_of_frames = len(os.listdir(os.path.join(current_dir,f'Asset/character/{animation}')))
+            num_of_frames = len(os.listdir(os.path.join(Variables.current_dir,f'Asset/character/{animation}')))
             for i in range(num_of_frames):
-                img = pygame.image.load(os.path.join(current_dir,f'Asset/character/{animation}/{i}.png'))
+                img = pygame.image.load(os.path.join(Variables.current_dir,f'Asset/character/{animation}/{i}.png'))
                 img = pygame.transform.scale(img, (int((img.get_width() * scale)), (img.get_height() * scale)))
                 Temp_list.append(img)
             self.Animation_list.append(Temp_list)
@@ -51,17 +50,17 @@ class Player(pygame.sprite.Sprite):
             self.flip = False
             # self.direction = 1
             # Kiểm tra va chạm với tường
-        if self.rect.colliderect(WALL_RECT1):
+        if self.rect.colliderect(Variables.WALL_RECT1):
             if moving_left:
                 # Prevent movement to the left by placing the player just to the right of the wall
-                if self.rect.left + dx < WALL_RECT1.right:
-                    dx = WALL_RECT1.right - self.rect.left
+                if self.rect.left + dx < Variables.WALL_RECT1.right:
+                    dx = Variables.WALL_RECT1.right - self.rect.left
 
-        if self.rect.colliderect(WALL_RECT2):
+        if self.rect.colliderect(Variables.WALL_RECT2):
             if moving_right:
                 # Prevent movement to the right by placing the player just to the left of the wall
-                if self.rect.right + dx > WALL_RECT2.left:
-                    dx = WALL_RECT2.left - self.rect.right
+                if self.rect.right + dx > Variables.WALL_RECT2.left:
+                    dx = Variables.WALL_RECT2.left - self.rect.right
         #Update position
         self.rect.x += dx
 
@@ -74,11 +73,11 @@ class Player(pygame.sprite.Sprite):
             self.jump = False
             self.in_air = True
         # Thêm trọng lực
-        self.vel_y += GRAVITY
+        self.vel_y += Variables.GRAVITY
         dy += self.vel_y
         # Kiểm tra player có chạm đất chưa
-        if self.rect.bottom + dy > WINDOW_HEIGHT - GROUND_HEIGHT:
-            dy = WINDOW_HEIGHT - GROUND_HEIGHT - self.rect.bottom
+        if self.rect.bottom + dy > Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT:
+            dy = Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT - self.rect.bottom
             self.in_air = False
         self.rect.x += dx
         self.rect.y += dy
