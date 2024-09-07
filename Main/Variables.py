@@ -1,6 +1,7 @@
 import os
 import pygame
-
+from pygame.sprite import Sprite
+from pygame.sprite import Group
 ####### ĐỊNH NGHĨA CÁC BIẾN ########
 # Thiết lập đường dẫn
 current_dir_tmp = os.path.dirname(os.path.abspath(__file__)) #  Đường dẫn tới ../main
@@ -49,3 +50,5 @@ walking_sfx = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/walking.m
 # Các biến liên quan đến thời gian spawn các chướng ngại vật đá
 update_time = pygame.time.get_ticks()
 COOLDOWN_SPAWN = 500
+
+Stones_list = []

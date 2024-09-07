@@ -2,6 +2,7 @@ import pygame, sys, os, random
 from pygame import *
 from pygame import mixer
 import Variables
+from Main.Variables import Stones_list
 from Players import Player
 import Stone_fall
 
@@ -28,7 +29,7 @@ GROUND_IMG = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Map/gr
 # GROUND_IMG = pygame.transform.scale(GROUND_IMG, (WINDOW_WIDTH, GROUND_HEIGHT))
 
 # Create Player
-Player1 = Player(150,400,1,2)
+Player1 = Player(150,150,1,3)
 
 # Tư động sinh các đối tượng đá
 def re_spawn_stone():
@@ -38,6 +39,7 @@ def re_spawn_stone():
     else:
         stone = Stone_fall.Stone(2,'stone_fall2')
     Stone_fall.stones.add(stone)
+    Stones_list.append(stone)
 
 ########## VÒNG LẶP GAME ### #######
 pygame.init()
@@ -52,7 +54,7 @@ while Running:
     Variables.SCREEN.blit(Variables.WALL_IMG2, (288, 0))
     Player1.update_animation()
     Player1.draw(Variables.SCREEN)
-    Player1.Moving(Variables.SCREEN,Variables.moving_left,Variables.moving_right)
+    Player1.Moving(Variables.moving_left, Variables.moving_right)
     Player1.Jump()
 
 
@@ -94,6 +96,9 @@ while Running:
     Stone_fall.stones.update()
     Stone_fall.stones.draw(Variables.SCREEN)
 
+    #vẽ hình vuông bao quanh để kiểm tra va chạm
+    # for stone in Stone_fall.stones:
+    #     pygame.draw.rect(Variables.SCREEN, (255, 0, 0), stone.rect, 2)
 
 
     pygame.display.update()
