@@ -5,6 +5,7 @@ import Variables
 from Main.Variables import Stones_list
 from Players import Player
 import Stone_fall
+import Setting
 
 # Thiết lập màn hình game
      # Thiết lập bề mặt màn hình chính

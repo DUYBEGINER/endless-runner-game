@@ -104,8 +104,8 @@ class Player(pygame.sprite.Sprite):
         # if self.vel_y > 10:
         #     self.vel_y = 1
         dy += self.vel_y
-
-        # kiểm tra va chạm với stone
+        #test
+        # kiểm tra va chạm với stone 
         for tile in stones:
             if tile.rect.colliderect(self.rect.x + dx, self.rect.y, self.width, self.height):
                 dx = 0
