@@ -1,47 +1,68 @@
 import pygame
-import pygame_menu
 import sys
 
 # Khởi tạo Pygame
 pygame.init()
 
-# Thiết lập kích thước cửa sổ
-width, height = 280,400
-screen = pygame.display.set_mode((width, height))
+# Thiết lập kích thước màn hình và các màu sắc
+screen_width, screen_height = 320,500
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("Menu")
 
-# Đặt tiêu đề cho cửa sổ
-pygame.display.set_caption("Game Menu")
+#màu
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+BLUE = (0, 0, 255)
+RED = (255, 0, 0)
 
-# Tạo một hàm để bắt đầu trò chơi
-def start_the_game():
-    print("Bắt đầu trò chơi!")
-    # Tại đây, bạn có thể bắt đầu vòng lặp trò chơi hoặc chuyển cảnh
+# Thiết lập font chữ
+font = pygame.font.SysFont(None, 35)
 
-# Tạo một hàm để thoát trò chơi
-def exit_game():
-    pygame.quit()
-    sys.exit()
+# Hàm vẽ văn bản
+def draw_text(text, font, color, surface, x, y):
+    textobj = font.render(text, True, color)
+    textrect = textobj.get_rect()
+    textrect.center = (x, y)
+    surface.blit(textobj, textrect)
 
-# Tạo một menu
-menu = pygame_menu.Menu('Chào mừng đến với Game!', width, height,
-                       theme=pygame_menu.themes.THEME_DARK)
+# Hàm hiển thị menu
+def show_menu():
+    while True:
+        screen.fill(WHITE)
+        draw_text('Main Menu', font, BLACK, screen, screen_width // 2, screen_height // 4)
+        draw_text('Start Game', font, BLUE, screen, screen_width // 2, screen_height // 2 - 30)
+        draw_text('Quit', font, RED, screen, screen_width // 2, screen_height // 2 + 30)
+        
+        pygame.display.update()
 
-# Thêm các tùy chọn vào menu
-menu.add_button('Bắt đầu trò chơi', start_the_game)
-menu.add_button('Thoát', exit_game)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                if screen_width // 2 - 100 < mouse_pos[0] < screen_width // 2 + 100 and screen_height // 2 - 60 < mouse_pos[1] < screen_height // 2 - 10:
+                    return  # Quay lại màn hình chính (hoặc bắt đầu trò chơi)
+                elif screen_width // 2 - 100 < mouse_pos[0] < screen_width // 2 + 100 and screen_height // 2 + 10 < mouse_pos[1] < screen_height // 2 + 60:
+                    pygame.quit()
+                    sys.exit()
 
-# Vòng lặp chính của game
-while True:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
+# Hàm main
+def main_game():
+    while True:
+        screen.fill(WHITE)
+        draw_text('Game Screen', font, BLACK, screen, screen_width // 2, screen_height // 2)
+        pygame.display.update()
 
-    # Làm mới màn hình
-    screen.fill((0, 0, 0))
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
 
-    # Hiển thị menu
-    menu.mainloop(screen)
+        # Thêm logic trò chơi ở đây
 
-    # Cập nhật màn hình
-    pygame.display.flip()
+# Chạy chương trình
+show_menu()
+main_game()
+
