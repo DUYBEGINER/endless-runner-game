@@ -2,10 +2,14 @@ import pygame, random, os
 from pygame.sprite import Sprite
 from pygame.sprite import Group
 import Variables
-# Định nghĩa một số biêns liên quan 
-GRAVITY_STONE = 0.025
-MAX_HIGH = 4 # Định nghĩa độ cao cột đá có thể có
+from Main import Stones_list
 
+# Định nghĩa một số biêns liên quan
+GRAVITY_STONE = 0.025
+MAX_HIGH = 4  # Định nghĩa độ cao cột đá có thể có
+
+# Định nghĩa nhóm các viên đá
+stones = Group()
 # Define Class Stone_fall
 class Stone(Sprite):
     def __init__(self, scale, stone_type):
@@ -15,13 +19,14 @@ class Stone(Sprite):
         img_stone_fall = pygame.image.load(os.path.join(Variables.current_dir, f'Asset/Map/{stone_type}.png'))
         # Create Rect of stone_fall
         self.scale = scale
-        self.image = pygame.transform.scale(img_stone_fall, (img_stone_fall.get_width() * scale, img_stone_fall.get_height() * scale))
+        self.image = pygame.transform.scale(img_stone_fall,
+                                            (img_stone_fall.get_width() * scale, img_stone_fall.get_height() * scale))
         self.rect = self.image.get_rect()
-        tmp = random.randint(1,8) # Lấy một số ngẫu nhiên từ 1 đến 8 để làm giá trị x ban đầu cho stone
-        # Kiểm tra để lấy vị trí spawn để không gây trường hợp xấu 
+        tmp = random.randint(1, 8)  # Lấy một số ngẫu nhiên từ 1 đến 8 để làm giá trị x ban đầu cho stone
+        # Kiểm tra để lấy vị trí spawn để không gây trường hợp xấu
         while (not self.check_high(tmp)):
             tmp = self.check_min_high()
-        self.rect.center = (tmp*self.image.get_width() + self.image.get_width()/2, -10)
+        self.rect.center = (tmp * self.image.get_width() + self.image.get_width() / 2, -10)
         # Định nghĩa các biến liên quan đến rơi
         self.in_air = True
         self.vel_y = 0
@@ -29,7 +34,7 @@ class Stone(Sprite):
         # Định nghĩa các biến liên quan đến xóa các đối tượng
         self.list_to_delete = []
         self.list_to_check_high = []
-    
+
     # Định nghĩa các phương thức của class
     def update(self):
         dy = 0
@@ -38,7 +43,8 @@ class Stone(Sprite):
             self.in_air = False
             self.vel_y = 0
             self.rect.bottom = Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT + 1
-        else: self.in_air = True
+        else:
+            self.in_air = True
         # Tính toán tốc độ rơi của đá
         self.check_collision_otherStone()
         if (self.in_air):
@@ -50,15 +56,14 @@ class Stone(Sprite):
         # Kiểm tra và xóa các đối tượng chạm mặt đâts nếu đủ điều kiện
         self.check_to_delete_fall2()
         self.check_to_delete()
-        
 
     def check_collision_otherStone(self):
         for i in stones:
             if self != i:
                 if (self.rect.centerx < i.rect.right and
-                    self.rect.centerx > i.rect.left and
-                    self.rect.bottom <= i.rect.top + 5 and
-                    self.rect.bottom >= i.rect.top):
+                        self.rect.centerx > i.rect.left and
+                        self.rect.bottom <= i.rect.top + 5 and
+                        self.rect.bottom >= i.rect.top):
                     self.in_air = False
                     self.vel_y = 0
                     self.rect.bottom = i.rect.top + 1
@@ -75,6 +80,7 @@ class Stone(Sprite):
         if len(self.list_to_delete) == 8:
             for i in self.list_to_delete:
                 i.kill()
+                Stones_list.remove(i)
 
     def check_to_delete_fall2(self):
         # Kiểm tra đối tượng là đá rơi dạng 2 và in_air là False
@@ -82,24 +88,23 @@ class Stone(Sprite):
             for i in stones:
                 if self != i:  # Đảm bảo không so sánh với chính nó
                     # Kiểm tra va chạm giữa self và i
-                    #if self.rect.colliderect(i.rect):
+                    # if self.rect.colliderect(i.rect):
                     # Kiểm tra nếu i (đối tượng khác) đang rơi vào self
-                    if (self.rect.centerx <  i.rect.right and
-                        self.rect.centerx > i.rect.left and
-                        self.rect.top < i.rect.bottom +1 ):
+                    if (self.rect.centerx < i.rect.right and
+                            self.rect.centerx > i.rect.left and
+                            self.rect.top < i.rect.bottom + 1):
                         self.kill()
                         break
-
 
     def check_high(self, x):
         # reset list_to_check_high
         self.list_to_check_high = []
-        pos_x = x * self.rect.width + self.rect.width/2
+        pos_x = x * self.rect.width + self.rect.width / 2
         for i in stones:
             if abs(i.rect.centerx - pos_x) < self.rect.width:
                 self.list_to_check_high.append(i)
         return (len(self.list_to_check_high) < MAX_HIGH)
-    
+
     def check_min_high(self):
         # Khởi tạo các biến liên quan
         min_col = -1
@@ -108,7 +113,7 @@ class Stone(Sprite):
         self.list_to_check_high = []
         # Kiểm tra từng cột từ 1 đến 8
         for col in range(1, 9):
-            pos_x = col * self.rect.width + self.rect.width/2
+            pos_x = col * self.rect.width + self.rect.width / 2
             self.list_to_check_high = []
 
             # Kiểm tra từng viên đá trong danh sách `stones`
@@ -122,11 +127,8 @@ class Stone(Sprite):
                 tmp_min = len(self.list_to_check_high)
                 min_col = col
         return min_col
-    
 
-# Định nghĩa nhóm các viên đá
-stones = Group()
-    
 
-        
+
+
 
