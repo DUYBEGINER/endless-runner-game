@@ -119,8 +119,8 @@ while Running:
     Stone_fall.stones.draw(Variables.SCREEN)
 
     # vẽ hình vuông bao quanh để kiểm tra va chạm
-    for stone in Stone_fall.stones:
-        pygame.draw.rect(Variables.SCREEN, (255, 0, 0), stone.rect, 2)
+    # for stone in Stone_fall.stones:
+    #     pygame.draw.rect(Variables.SCREEN, (255, 0, 0), stone.rect, 2)
 
 
     pygame.display.update()

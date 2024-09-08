@@ -55,8 +55,7 @@ class Player(pygame.sprite.Sprite):
             self.flip = True
         if moving_right:
             dx += self.speed
-            self.flip = False
-
+            self.flip = False\
         # Sử dụng hàm kiểm tra va chạm
         dx, dy = self.check_collision(dx, dy)
         self.rect.x += dx
@@ -95,9 +94,12 @@ class Player(pygame.sprite.Sprite):
         if self.rect.colliderect(Variables.WALL_RECT1) and dx < 0:
             if self.rect.left + dx < Variables.WALL_RECT1.right:
                 dx = Variables.WALL_RECT1.right - self.rect.left
+                dx = 0
         if self.rect.colliderect(Variables.WALL_RECT2) and dx > 0:
             if self.rect.right + dx > Variables.WALL_RECT2.left:
                 dx = Variables.WALL_RECT2.left - self.rect.right
+                if abs(dx) < 1:
+                    dx = 0
 
         # Kiểm tra va chạm với stone
         for tile in stones:
@@ -116,10 +118,14 @@ class Player(pygame.sprite.Sprite):
         if self.rect.bottom + dy > Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT:
             dy = Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT - self.rect.bottom
             self.in_air = False
+
+        # Giảm hiệu ứng giật
         if abs(dy) < 1:
             dy = 0
 
         return dx, dy
+
+    #Cập nhật animation
     def update_animation(self):
         # Tốc độ nhanh chậm của animation
         ANIMATION_COOLDOWN = 80
