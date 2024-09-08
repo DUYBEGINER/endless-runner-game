@@ -79,8 +79,8 @@ class Player(pygame.sprite.Sprite):
             if tile.rect.colliderect(self.rect.x, self.rect.y + dy, self.width, self.height):
                 self.in_air = False
                 if self.vel_y < 0:
-                    self.vel_y = 0
-                    dy = tile.rect.bottom - self.rect.top
+                    self.vel_y = tile.vel_y
+                    dy = self.vel_y
                 elif self.vel_y >= 0:
                     self.vel_y = 0
                     dy = tile.rect.top - self.rect.bottom
@@ -112,9 +112,8 @@ class Player(pygame.sprite.Sprite):
             if tile.rect.colliderect(self.rect.x, self.rect.y + dy, self.width, self.height):
                 self.in_air = False
                 if self.vel_y < 0:
-                    self.vel_y = 0
-                    self.rect.y = tile.rect.bottom
-                    dy = 0
+                    self.vel_y = tile.vel_y
+                    dy = self.vel_y
                 elif self.vel_y >= 0:
                     self.vel_y = 0
                     dy = tile.rect.top - self.rect.bottom

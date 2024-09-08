@@ -1,5 +1,4 @@
 import pygame, os, random
-import sys
 from pygame import *
 import Variables
 from Main.Variables import Stones_list
@@ -20,7 +19,7 @@ FPS_Clock = pygame.time.Clock()
 
 #### Load ảnh ####
 #Background
-BACKGROUND_IMG1 = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Map/aa3dcivmogib1.jpg'))
+BACKGROUND_IMG1 = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Map/background2.png'))
 BACKGROUND_IMG1 = pygame.transform.scale(BACKGROUND_IMG1, (Variables.WINDOW_WIDTH*1.25, Variables.WINDOW_HEIGHT*1.25))
 BACKGROUND_IMG2 = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Map/background1.png'))
 BACKGROUND_IMG2 = pygame.transform.scale(BACKGROUND_IMG2, (Variables.WINDOW_WIDTH*1.25, Variables.WINDOW_HEIGHT*1.25))
@@ -40,7 +39,6 @@ def re_spawn_stone():
         stone = Stone_fall.Stone(2,'stone_fall2')
     Stone_fall.stones.add(stone)
     Stones_list.append(stone)
-
 
 ########## VÒNG LẶP GAME ### #######
 pygame.init()
