@@ -19,6 +19,7 @@ FPS = 120
 FPS_Clock = pygame.time.Clock()
 
 #### Load ảnh ####
+###
 #Background
 BACKGROUND_IMG1 = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Map/background3.png'))
 BACKGROUND_IMG1 = pygame.transform.scale(BACKGROUND_IMG1, (Variables.WINDOW_WIDTH*1.25, Variables.WINDOW_HEIGHT*1.25))
@@ -95,7 +96,7 @@ while Running:
                 Variables.moving_right = False
                 Variables.walking_sfx.stop()
 
-
+    #Thêm hiệu ứng nhảy
     if just_jump == False:
         temp_posx= Player1.rect.x
         temp_posy = Player1.rect.y
