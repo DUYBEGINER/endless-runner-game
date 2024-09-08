@@ -1,11 +1,10 @@
-import pygame, sys, os, random
+import pygame, os, random
+import sys
 from pygame import *
-from pygame import mixer
 import Variables
 from Main.Variables import Stones_list
 from Players import Player
 import Stone_fall
-import Setting
 
 # Thiết lập màn hình game
      # Thiết lập bề mặt màn hình chính
@@ -41,6 +40,7 @@ def re_spawn_stone():
         stone = Stone_fall.Stone(2,'stone_fall2')
     Stone_fall.stones.add(stone)
     Stones_list.append(stone)
+
 
 ########## VÒNG LẶP GAME ### #######
 pygame.init()
