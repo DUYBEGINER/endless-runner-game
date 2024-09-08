@@ -14,8 +14,8 @@ class Player(pygame.sprite.Sprite):
         self.jump = False
         self.in_air = True
         self.vel_y = 0  # Vận tốc
-
         self.update_time = pygame.time.get_ticks()
+
         #Load all animation
         Animation_type = ['Idle','Run','Jump2']
         for animation in Animation_type:
@@ -46,47 +46,19 @@ class Player(pygame.sprite.Sprite):
 
 
     # Xử lí di chuyển nhân vật
-    def Moving(self,moving_left,moving_right):
+    def Moving(self, moving_left, moving_right):
         dx = 0
         dy = 0
         # Tăng giảm tọa độ x dựa theo moving-left hoặc moving-right
         if moving_left:
             dx -= self.speed
             self.flip = True
-            # self.direction = -1
         if moving_right:
             dx += self.speed
             self.flip = False
-            # self.direction = 1
 
-
-        # Kiểm tra va chạm với tường
-        #Va chạm tường trái
-        if self.rect.colliderect(Variables.WALL_RECT1):
-            if moving_left:
-                # Prevent movement to the left by placing the player just to the right of the wall
-                if self.rect.left + dx < Variables.WALL_RECT1.right:
-                    dx = Variables.WALL_RECT1.right - self.rect.left
-        #Va chạm tường phải
-        if self.rect.colliderect(Variables.WALL_RECT2):
-            if moving_right:
-                # Prevent movement to the right by placing the player just to the left of the wall
-                if self.rect.right + dx > Variables.WALL_RECT2.left:
-                    dx = Variables.WALL_RECT2.left - self.rect.right
-
-        #kiểm tra va chạm với stone
-        for tile in stones:
-            if tile.rect.colliderect(self.rect.x+dx, self.rect.y, self.width, self.height):
-                dx = 0
-            if tile.rect.colliderect(self.rect.x, self.rect.y + dy, self.width, self.height):
-                self.in_air = False
-                if self.vel_y < 0:
-                    self.vel_y = tile.vel_y
-                    dy = self.vel_y
-                elif self.vel_y >= 0:
-                    self.vel_y = 0
-                    dy = tile.rect.top - self.rect.bottom
-
+        # Sử dụng hàm kiểm tra va chạm
+        dx, dy = self.check_collision(dx, dy)
         self.rect.x += dx
         self.rect.y += dy
 
@@ -102,12 +74,32 @@ class Player(pygame.sprite.Sprite):
             self.in_air = True
         # Thêm trọng lực
         self.vel_y += Variables.GRAVITY
-
-        # if self.vel_y > 10:
-        #     self.vel_y = 1
         dy += self.vel_y
-        #test
-        # kiểm tra va chạm với stone 
+        # Sử dụng hàm kiểm tra va chạm
+        dx, dy = self.check_collision(dx, dy)
+        self.rect.x += dx
+        self.rect.y += dy
+
+
+    def draw(self,SCREEN):
+        #Xuất hình ảnh, chỉnh sửa diện tích hiển thị
+        SCREEN.blit(pygame.transform.flip(self.image, self.flip, False), self.rect, (6,0,self.width+5,self.height))
+        pygame.draw.rect(SCREEN, (255, 0, 0), self.rect, 2)
+
+
+    def check_collision(self, dx, dy):
+        """
+        Kiểm tra va chạm với các đối tượng tường, đá
+        """
+        # Kiểm tra va chạm với tường
+        if self.rect.colliderect(Variables.WALL_RECT1) and dx < 0:
+            if self.rect.left + dx < Variables.WALL_RECT1.right:
+                dx = Variables.WALL_RECT1.right - self.rect.left
+        if self.rect.colliderect(Variables.WALL_RECT2) and dx > 0:
+            if self.rect.right + dx > Variables.WALL_RECT2.left:
+                dx = Variables.WALL_RECT2.left - self.rect.right
+
+        # Kiểm tra va chạm với stone
         for tile in stones:
             if tile.rect.colliderect(self.rect.x + dx, self.rect.y, self.width, self.height):
                 dx = 0
@@ -120,19 +112,14 @@ class Player(pygame.sprite.Sprite):
                     self.vel_y = 0
                     dy = tile.rect.top - self.rect.bottom
 
-        # Kiểm tra player có chạm đất chưa
+        # Kiểm tra va chạm với đất
         if self.rect.bottom + dy > Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT:
             dy = Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT - self.rect.bottom
             self.in_air = False
+        if abs(dy) < 1:
+            dy = 0
 
-        self.rect.x += dx
-        self.rect.y += dy
-
-    def draw(self,SCREEN):
-        #Xuất hình ảnh, chỉnh sửa diện tích hiển thị
-        SCREEN.blit(pygame.transform.flip(self.image, self.flip, False), self.rect, (6,0,self.width+5,self.height))
-
-        #pygame.draw.rect(SCREEN, (255, 0, 0), self.rect, 2)
+        return dx, dy
     def update_animation(self):
         # Tốc độ nhanh chậm của animation
         ANIMATION_COOLDOWN = 80

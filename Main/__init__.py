@@ -30,7 +30,7 @@ GROUND_IMG = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Map/gr
 # GROUND_IMG = pygame.transform.scale(GROUND_IMG, (WINDOW_WIDTH, GROUND_HEIGHT))
 
 # Create Player
-Player1 = Player(150,150,1,2)
+Player1 = Player(150,150,1,3)
 
 
 
@@ -118,11 +118,10 @@ while Running:
     Stone_fall.stones.update()
     Stone_fall.stones.draw(Variables.SCREEN)
 
-    #vẽ hình vuông bao quanh để kiểm tra va chạm
-    # for stone in Stone_fall.stones:
-    #     pygame.draw.rect(Variables.SCREEN, (255, 0, 0), stone.rect, 2)
+    # vẽ hình vuông bao quanh để kiểm tra va chạm
+    for stone in Stone_fall.stones:
+        pygame.draw.rect(Variables.SCREEN, (255, 0, 0), stone.rect, 2)
 
-    ##tets
 
     pygame.display.update()
     FPS_Clock.tick(FPS)
