@@ -91,14 +91,14 @@ class Player(pygame.sprite.Sprite):
         """
         Kiểm tra va chạm với các đối tượng tường, đá
         """
-        # Kiểm tra va chạm với tường
-        if self.rect.colliderect(Variables.WALL_RECT1) and dx < 0:
-            if self.rect.left + dx < Variables.WALL_RECT1.right:
-                dx = Variables.WALL_RECT1.right - self.rect.left
-        if self.rect.colliderect(Variables.WALL_RECT2) and dx > 0:
-            if self.rect.right + dx > Variables.WALL_RECT2.left:
-                dx = Variables.WALL_RECT2.left - self.rect.right
-
+        # Kiem tra va cham tuong
+        if Variables.WALL_RECT1.colliderect(self.rect.left + dx, self.rect.top, self.rect.width, self.rect.height):
+            self.rect.left = Variables.WALL_RECT1.right
+            dx = 0
+        if Variables.WALL_RECT2.colliderect(self.rect.left + dx, self.rect.top, self.rect.width, self.rect.height):
+            self.rect.right = Variables.WALL_RECT2.left
+            dx = 0
+            
         # Kiểm tra va chạm với stone
         for tile in stones:
             if tile.rect.colliderect(self.rect.x + dx, self.rect.y, self.width, self.height):

@@ -1,7 +1,7 @@
 import pygame, os, random
 from pygame import *
 import Variables
-from Main.Variables import effect_list
+from Variables import effect_list
 
 from Players import Player
 import Stone_fall
