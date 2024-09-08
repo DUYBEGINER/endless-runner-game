@@ -41,14 +41,22 @@ BLUE = (0, 0, 255)
 moving_left = False
 moving_right = False
 
+#Biến chạy hiệu ứng animation jump
+effect_jump_index = 0
+effect_list = []
+
 pygame.init()
 #SFX
 #Jump
 jump_sfx = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/jump.mp3'))
 walking_sfx = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/walking.mp3'))
+sound_background = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/sound_game.mp3'))
+
 
 # Các biến liên quan đến thời gian spawn các chướng ngại vật đá
 update_time = pygame.time.get_ticks()
 COOLDOWN_SPAWN = 500
-
-Stones_list = []
+for i in range(7):
+    img = pygame.image.load(os.path.join(current_dir, f'Asset/character/distribute/{i}.png'))
+    # img = pygame.transform.scale(img, (int((img.get_width() * scale)), (img.get_height() * scale)))
+    effect_list.append(img)

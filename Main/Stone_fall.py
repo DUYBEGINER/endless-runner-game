@@ -2,7 +2,7 @@ import pygame, random, os
 from pygame.sprite import Sprite
 from pygame.sprite import Group
 import Variables
-from Main import Stones_list
+
 
 # Định nghĩa một số biêns liên quan
 GRAVITY_STONE = 0.025
@@ -19,8 +19,7 @@ class Stone(Sprite):
         img_stone_fall = pygame.image.load(os.path.join(Variables.current_dir, f'Asset/Map/{stone_type}.png'))
         # Create Rect of stone_fall
         self.scale = scale
-        self.image = pygame.transform.scale(img_stone_fall,
-                                            (img_stone_fall.get_width() * scale, img_stone_fall.get_height() * scale))
+        self.image = pygame.transform.scale(img_stone_fall,(img_stone_fall.get_width() * scale, img_stone_fall.get_height() * scale))
         self.rect = self.image.get_rect()
         tmp = random.randint(1, 8)  # Lấy một số ngẫu nhiên từ 1 đến 8 để làm giá trị x ban đầu cho stone
         # Kiểm tra để lấy vị trí spawn để không gây trường hợp xấu
@@ -80,7 +79,7 @@ class Stone(Sprite):
         if len(self.list_to_delete) == 8:
             for i in self.list_to_delete:
                 i.kill()
-                Stones_list.remove(i)
+
 
     def check_to_delete_fall2(self):
         # Kiểm tra đối tượng là đá rơi dạng 2 và in_air là False

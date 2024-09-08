@@ -17,7 +17,7 @@ class Player(pygame.sprite.Sprite):
 
         self.update_time = pygame.time.get_ticks()
         #Load all animation
-        Animation_type = ['Idle','Run','Jump']
+        Animation_type = ['Idle','Run','Jump2']
         for animation in Animation_type:
             # Reset list temp
             Temp_list = []
@@ -25,7 +25,7 @@ class Player(pygame.sprite.Sprite):
             num_of_frames = len(os.listdir(os.path.join(Variables.current_dir,f'Asset/character/{animation}')))
             for i in range(num_of_frames):
                 img = pygame.image.load(os.path.join(Variables.current_dir,f'Asset/character/{animation}/{i}.png'))
-                img = pygame.transform.scale(img, (int((img.get_width() * scale * 0.7)), (img.get_height() * scale)))
+                img = pygame.transform.scale(img, (int((img.get_width() * scale)), (img.get_height() * scale)))
                 Temp_list.append(img)
             self.Animation_list.append(Temp_list)
 
@@ -34,9 +34,11 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
 
+        #Giảm kích thước rect bao quang player để xử lí va chạm chính xác hơn
+        self.rect.width = int(self.rect.width * 0.6)
         #thêm thuộc tính width và height để sử dụng kiểm tra va chạm
-        self.width = self.image.get_width()
-        self.height = self.image.get_height()
+        self.width = self.rect.width
+        self.height = self.rect.height
 
         #Các biến dùng để di chuyển, biến đổi
         self.speed = speed
@@ -117,6 +119,7 @@ class Player(pygame.sprite.Sprite):
                 elif self.vel_y >= 0:
                     self.vel_y = 0
                     dy = tile.rect.top - self.rect.bottom
+
         # Kiểm tra player có chạm đất chưa
         if self.rect.bottom + dy > Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT:
             dy = Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT - self.rect.bottom
@@ -126,8 +129,10 @@ class Player(pygame.sprite.Sprite):
         self.rect.y += dy
 
     def draw(self,SCREEN):
-        SCREEN.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)
-        # pygame.draw.rect(SCREEN, (255, 0, 0), self.rect, 2)
+        #Xuất hình ảnh, chỉnh sửa diện tích hiển thị
+        SCREEN.blit(pygame.transform.flip(self.image, self.flip, False), self.rect, (6,0,self.width+5,self.height))
+
+        #pygame.draw.rect(SCREEN, (255, 0, 0), self.rect, 2)
     def update_animation(self):
         # Tốc độ nhanh chậm của animation
         ANIMATION_COOLDOWN = 80
