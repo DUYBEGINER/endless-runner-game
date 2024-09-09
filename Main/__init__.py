@@ -50,8 +50,8 @@ just_jump = False
 ########## VÒNG LẶP GAME ### #######
 pygame.init()
 # Variables.sound_background.play(loops=-1)
-Running = True
-while Running:
+
+while Variables.RUNNING:
 
     Variables.SCREEN.fill(Variables.BLACK)
     Variables.SCREEN.blit(BACKGROUND_IMG2, (0, 0))
@@ -61,21 +61,21 @@ while Running:
     Variables.SCREEN.blit(Variables.WALL_IMG2, (288, 0))
     Player1.update_animation()
     Player1.draw(Variables.SCREEN)
-    Player1.Moving(Variables.moving_left, Variables.moving_right)
-    Player1.Jump()
+    Player1.move_and_jump(Variables.moving_left, Variables.moving_right)
+
 
 
     # Update player action
     if Player1.in_air:
         Player1.update_action(2)
     elif Variables.moving_left or Variables.moving_right:
-        Player1.update_action(1)  # Run
+        Player1.update_action(1)  # Runa
     else:
-        Player1.update_action(0)  # Idle
+        Player1.update_action(0)  # Idlea
 
     for event in pygame.event.get():
         if event.type == QUIT:
-            Running = False
+            Variables.RUNNING = False
         # Xử lí di chuyển nhân vật khi ấn nút
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_a:

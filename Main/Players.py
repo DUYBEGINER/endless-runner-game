@@ -46,10 +46,10 @@ class Player(pygame.sprite.Sprite):
         self.flip = False  # Kiểm tra lật qua lại
 
     # Xử lí di chuyển nhân vật
-    def Moving(self, moving_left, moving_right):
+    def move_and_jump(self, moving_left, moving_right):
         dx = 0
         dy = 0
-        # Tăng giảm tọa độ x dựa theo moving-left hoặc moving-right
+        # Movement logic
         if moving_left:
             dx -= self.speed
             self.flip = True
@@ -57,25 +57,20 @@ class Player(pygame.sprite.Sprite):
             dx += self.speed
             self.flip = False
 
-        # Sử dụng hàm kiểm tra va chạm
-        dx, dy = self.check_collision(dx, dy)
-        self.rect.x += dx
-        self.rect.y += dy
-
-    #### JUMP  #####
-    def Jump(self):
-        dx = 0
-        dy = 0
-        # Jump
-        if self.jump == True and self.in_air == False:
+        # Jumping logic
+        if self.jump and not self.in_air:
             self.vel_y = -10
             self.jump = False
             self.in_air = True
-        # Thêm trọng lực
+
+        # Gravity
         self.vel_y += Variables.GRAVITY
         dy += self.vel_y
-        # Sử dụng hàm kiểm tra va chạm
+
+        # Collision checking
         dx, dy = self.check_collision(dx, dy)
+
+        # Update player position
         self.rect.x += dx
         self.rect.y += dy
 
@@ -101,29 +96,34 @@ class Player(pygame.sprite.Sprite):
             if tile.rect.colliderect(self.rect.x + dx, self.rect.y, self.width, self.height):
                 dx = 0
             if tile.rect.colliderect(self.rect.x, self.rect.y + dy, self.width, self.height):
-                    if self.vel_y < 0:
-                        self.vel_y = tile.vel_y
-                        dy = self.vel_y
-                    elif self.vel_y >= 0:
-                        self.vel_y = 0
-                        dy = tile.rect.top - self.rect.bottom
+                self.in_air = True
+                if self.vel_y < 0:
+                    self.vel_y = tile.vel_y
+                    dy = self.vel_y
+
+                elif self.vel_y >= 0:
+                    self.vel_y = 0
+                    dy = tile.rect.top - self.rect.bottom
+        falling_stones = [stone for stone in stones if stone.rect.bottom > self.rect.top]
 
         for tile in stones:
             if tile.rect.colliderect(self.rect.left, self.rect.bottom, self.width, 1):
                 self.in_air = False
 
-        falling_stones = [stone for stone in stones if stone.rect.bottom > self.rect.top]
+        #Kiểm tra va chạm với đá rơi
+
         for stone in falling_stones:
-            if self.rect.colliderect(stone.rect) and not self.in_air:
+            if self.rect.colliderect(stone.rect.left, stone.rect.bottom, stone.rect.width, 1) and not self.in_air:
                 Variables.RUNNING = False
+                print("over")
 
         # Kiểm tra va chạm với đất
         if self.rect.bottom + dy > Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT:
             dy = Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT - self.rect.bottom
             self.in_air = False
 
-        if abs(dy) < 1:
-            dy = 0
+        # if abs(dy) < 1:
+        #     dy = 0
         return dx, dy
 
     def update_animation(self):
