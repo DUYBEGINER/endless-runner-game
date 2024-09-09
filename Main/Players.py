@@ -49,6 +49,7 @@ class Player(pygame.sprite.Sprite):
     def move_and_jump(self, moving_left, moving_right):
         dx = 0
         dy = 0
+        self.on_ground = False
         # Movement logic
         if moving_left:
             dx -= self.speed
@@ -62,11 +63,22 @@ class Player(pygame.sprite.Sprite):
             self.vel_y = -10
             self.jump = False
             self.in_air = True
+
         # Gravity
         self.vel_y += Variables.GRAVITY
         dy += self.vel_y
+
         # Collision checking
         dx, dy = self.check_collision(dx, dy)
+
+        # Kiểm tra va chạm với đất
+        if self.rect.bottom + dy > Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT:
+            dy = Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT - self.rect.bottom
+            self.in_air = False
+
+        #Kiểm tra bién in_air
+        print('in_air: ', self.in_air)
+
         # Update player position
         self.rect.x += dx
         self.rect.y += dy
@@ -80,7 +92,8 @@ class Player(pygame.sprite.Sprite):
         """
         Kiểm tra va chạm với các đối tượng tường, đá
         """
-        # Kiem tra va cham tuong
+
+        on_ground = False        # Kiem tra va cham tuong
         if Variables.WALL_RECT1.colliderect(self.rect.left + dx, self.rect.top, self.rect.width, self.rect.height):
             self.rect.left = Variables.WALL_RECT1.right
             dx = 0
@@ -102,23 +115,26 @@ class Player(pygame.sprite.Sprite):
                     self.vel_y = 0
                     dy = tile.rect.top - self.rect.bottom
 
-        falling_stones = [stone for stone in stones if stone.rect.bottom > self.rect.top]
+        #Kiểm tra có đứng trên đá không
         for tile in stones:
             if tile.rect.colliderect(self.rect.left, self.rect.bottom, self.width, 1):
                 self.in_air = False
+                self.on_ground = True
+
+        falling_stones = [stone for stone in stones if stone.rect.bottom > self.rect.top]
         #Kiểm tra va chạm với đá rơi
         for stone in falling_stones:
             if self.rect.colliderect(stone.rect.left, stone.rect.bottom, stone.rect.width, 1) and not self.in_air:
                 Variables.RUNNING = False
                 print("over")
 
-        # Kiểm tra va chạm với đất
-        if self.rect.bottom + dy > Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT:
-            dy = Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT - self.rect.bottom
-            self.in_air = False
+        if not self.on_ground:
+            self.in_air = True
 
+        #Giảm giật
         if abs(dy) < 1:
             dy = 0
+
         return dx, dy
 
     def update_animation(self):

@@ -63,8 +63,6 @@ while Variables.RUNNING:
     Player1.draw(Variables.SCREEN)
     Player1.move_and_jump(Variables.moving_left, Variables.moving_right)
 
-
-
     # Update player action
     if Player1.in_air:
         Player1.update_action(2)
