@@ -9,7 +9,7 @@ current_dir = os.path.dirname(current_dir_tmp) # Đường dẫn tới ../Game_p
 # Kích thước cửa sổ game
 WINDOW_WIDTH = 320
 WINDOW_HEIGHT = 500
-
+RUNNING = True
 SCREEN = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 # Kích thước các đối tượng trong game
 GROUND_HEIGHT = 64      # Chiều dày mặt đất
@@ -40,6 +40,7 @@ BLUE = (0, 0, 255)
 #Các biến hành động nhân vật
 moving_left = False
 moving_right = False
+moving_jump = False
 
 #Biến chạy hiệu ứng animation jump
 effect_jump_index = 0
