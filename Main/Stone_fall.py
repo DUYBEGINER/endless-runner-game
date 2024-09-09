@@ -46,6 +46,7 @@ class Stone(Sprite):
             self.in_air = True
         # Tính toán tốc độ rơi của đá
         self.check_collision_otherStone()
+        # Áp dụng 
         if (self.in_air):
             self.vel_y += GRAVITY_STONE
             if self.vel_y > self.MAX_VEL:
@@ -74,7 +75,7 @@ class Stone(Sprite):
         # reset list_to_delete
         self.list_to_delete = []
         for i in stones:
-            if (i.rect.bottom >= Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT - 2):
+            if (i.rect.bottom >= Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT - 2 and i.type != 'boom'):
                 self.list_to_delete.append(i)
         if len(self.list_to_delete) == 8:
             for i in self.list_to_delete:

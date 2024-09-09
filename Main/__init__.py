@@ -4,7 +4,7 @@ import Variables
 from Variables import effect_list
 
 from Players import Player
-import Stone_fall
+import Stone_fall, Boom
 
 # Thiết lập màn hình game
 # Thiết lập bề mặt màn hình chính
@@ -13,7 +13,7 @@ pygame.display.set_caption('Name_of_game')  # Thiết lập tên cửa sổ game
 # Thiết lập icon game
 Game_icon = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/icon_game/icon_game.jpg'))
 pygame.display.set_icon(Game_icon)
-  
+       
 # Thiết lập FPS
 FPS = 120
 FPS_Clock = pygame.time.Clock()
@@ -36,11 +36,13 @@ Player1 = Player(150, 150, 1, 3)
 
 # Tư động sinh các đối tượng đá
 def re_spawn_stone():
-    tmp = random.randint(1, 10)  # Chọn một số ngẫu nhiên từ 1 đến 10
-    if tmp <= 6:
+    tmp = random.randint(1, 100)  # Chọn một số ngẫu nhiên từ 1 đến 10
+    if tmp <= 65:
         stone = Stone_fall.Stone(2, 'stone_fall1')
-    else:
+    elif tmp <= 94:
         stone = Stone_fall.Stone(2, 'stone_fall2')
+    else:
+        stone = Boom.boom(2)
     Stone_fall.stones.add(stone)
 
 
