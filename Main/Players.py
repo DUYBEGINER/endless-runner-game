@@ -62,14 +62,11 @@ class Player(pygame.sprite.Sprite):
             self.vel_y = -10
             self.jump = False
             self.in_air = True
-
         # Gravity
         self.vel_y += Variables.GRAVITY
         dy += self.vel_y
-
         # Collision checking
         dx, dy = self.check_collision(dx, dy)
-
         # Update player position
         self.rect.x += dx
         self.rect.y += dy
@@ -104,14 +101,12 @@ class Player(pygame.sprite.Sprite):
                 elif self.vel_y >= 0:
                     self.vel_y = 0
                     dy = tile.rect.top - self.rect.bottom
-        falling_stones = [stone for stone in stones if stone.rect.bottom > self.rect.top]
 
+        falling_stones = [stone for stone in stones if stone.rect.bottom > self.rect.top]
         for tile in stones:
             if tile.rect.colliderect(self.rect.left, self.rect.bottom, self.width, 1):
                 self.in_air = False
-
         #Kiểm tra va chạm với đá rơi
-
         for stone in falling_stones:
             if self.rect.colliderect(stone.rect.left, stone.rect.bottom, stone.rect.width, 1) and not self.in_air:
                 Variables.RUNNING = False
@@ -122,8 +117,8 @@ class Player(pygame.sprite.Sprite):
             dy = Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT - self.rect.bottom
             self.in_air = False
 
-        # if abs(dy) < 1:
-        #     dy = 0
+        if abs(dy) < 1:
+            dy = 0
         return dx, dy
 
     def update_animation(self):
