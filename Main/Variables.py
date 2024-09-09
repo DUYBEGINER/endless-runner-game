@@ -15,7 +15,7 @@ SCREEN = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 GROUND_HEIGHT = 64      # Chiều dày mặt đất
 BLOCK_SIZE = 32         # Kích thước khối block
 # Trọng lực
-GRAVITY = 0.5
+GRAVITY = 0.35
 #Wall
 WALL_IMG1 = pygame.image.load(os.path.join(current_dir, 'Asset/Map/wall.png'))
 WALL_IMG1 = pygame.transform.scale(WALL_IMG1, (32, WINDOW_HEIGHT-GROUND_HEIGHT))
@@ -40,7 +40,7 @@ BLUE = (0, 0, 255)
 #Các biến hành động nhân vật
 moving_left = False
 moving_right = False
-
+RUNNING = True
 #Biến chạy hiệu ứng animation jump
 effect_jump_index = 0
 effect_list = []
