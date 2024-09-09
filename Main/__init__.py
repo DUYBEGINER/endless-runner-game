@@ -61,7 +61,7 @@ while Variables.RUNNING:
     Variables.SCREEN.blit(GROUND_IMG, (0, Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT))
     Variables.SCREEN.blit(Variables.WALL_IMG1, (0, 0))
     Variables.SCREEN.blit(Variables.WALL_IMG2, (288, 0))
-    Player1.update_animation()
+    #Player1.update_animation()
     Player1.draw(Variables.SCREEN)
     Player1.move_and_jump(Variables.moving_left, Variables.moving_right)
 

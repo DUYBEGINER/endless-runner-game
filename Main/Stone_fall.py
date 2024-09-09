@@ -75,7 +75,7 @@ class Stone(Sprite):
         # reset list_to_delete
         self.list_to_delete = []
         for i in stones:
-            if (i.rect.bottom >= Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT - 2 and i.type != 'boom'):
+            if (i.rect.bottom >= Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT - 2):
                 self.list_to_delete.append(i)
         if len(self.list_to_delete) == 8:
             for i in self.list_to_delete:
