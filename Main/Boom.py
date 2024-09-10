@@ -1,0 +1,99 @@
+import pygame, os,  random
+from Stone_fall import stones
+
+import Variables
+import Stone_fall
+GRAVITY_BOOM = 0.025
+# Cài đặt thời gian chờ
+ANIMATION_COOLDOWN = 360
+class boom(pygame.sprite.Sprite):
+    def __init__(self, scale):
+        pygame.sprite.Sprite.__init__(self)
+        self.scale = scale
+        self.animation_list = []
+        self.type = 'boom'
+        self.index = 0
+        self.update_time = pygame.time.get_ticks()
+        self.active = False
+        # Load image 
+        for i in range(1, 9): 
+            img = pygame.image.load(os.path.join(Variables.current_dir, f'Asset/Boom/{i}.png'))
+            img = pygame.transform.scale(img, (img.get_width() * self.scale, img.get_height() * self.scale))
+            self.animation_list.append(img)
+        self.image = self.animation_list[self.index]
+        self.rect = self.image.get_rect()
+        # Tạo vị trí ban đầu
+        tmp = random.randint(1, 8)
+        self.rect.center = (tmp * self.image.get_width() + self.image.get_width() / 2, -30)
+        # Taọ các biến liên quan đến rơi
+        self.in_air = True
+        self.vel_y = 0
+        self.MAX_VEL = 4
+    def update(self):
+        dy = 0
+        # Kiểm tra đá có chạm mặt đất hay chưa
+        if self.rect.bottom + dy > Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT:
+            self.in_air = False
+            self.active =True
+            self.vel_y = 0
+            self.rect.bottom = Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT + 1
+        else:
+            self.in_air = True
+        # Kiểm tra va chạm với stones
+        self.check_collision_stones()
+        self.update_animation()
+        # Áp dụng Gravity
+        if self.in_air:
+            self.vel_y += GRAVITY_BOOM
+            if self.vel_y > self.MAX_VEL:
+                self.vel_y = self.MAX_VEL
+        dy = self.vel_y
+        self.rect.centery += dy
+        # self.check_to_delete()
+
+    def check_collision_stones(self):
+        for i in stones:
+            if self != i:
+                if (self.rect.centerx < i.rect.right and
+                        self.rect.centerx > i.rect.left and
+                        self.rect.bottom <= i.rect.top + 5 and
+                        self.rect.bottom >= i.rect.top):
+                    self.in_air = False
+                    self.active = True
+                    self.vel_y = 0
+                    self.rect.bottom = i.rect.top + 1
+                    break
+                else:
+                    self.in_air = True
+    def update_animation(self):
+            if self.active:
+                # Cập nhật frame ảnh hiện tại
+                self.image = self.animation_list[self.index]
+                # 
+                if pygame.time.get_ticks() - self.update_time > ANIMATION_COOLDOWN:
+                    self.update_time = pygame.time.get_ticks()
+                    self.index += 1
+                if self.index >= len(self.animation_list) :
+                    self.booom()
+    def booom(self):
+        list_tmp = []
+        for stone in stones:
+            if self != stone:
+                if stone.rect.colliderect(self.rect.left - self.rect.width, self.rect.top - self.rect.height, self.rect.width * 3, self.rect.height *3):
+                    list_tmp.append(stone)
+        for i in list_tmp:
+            i.kill()
+        tmp_img = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Boom/stone_effect.png'))
+        Variables.SCREEN.blit(tmp_img, self.rect)
+        self.kill()
+
+        
+    def check_to_delete(self):
+        # reset list_to_delete
+        self.list_to_delete = []
+        for i in stones:
+            if (i.rect.bottom >= Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT - 2):
+                self.list_to_delete.append(i)
+        if len(self.list_to_delete) == 8:
+            for i in self.list_to_delete:
+                i.kill()

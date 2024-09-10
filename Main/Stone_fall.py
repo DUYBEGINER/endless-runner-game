@@ -46,6 +46,7 @@ class Stone(Sprite):
             self.in_air = True
         # Tính toán tốc độ rơi của đá
         self.check_collision_otherStone()
+        # Áp dụng 
         if (self.in_air):
             self.vel_y += GRAVITY_STONE
             if self.vel_y > self.MAX_VEL:

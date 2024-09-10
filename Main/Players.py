@@ -60,7 +60,7 @@ class Player(pygame.sprite.Sprite):
 
         # Jumping logic
         if self.jump and not self.in_air:
-            self.vel_y = -7
+            self.vel_y = -10
             self.jump = False
             self.in_air = True
 
@@ -86,12 +86,13 @@ class Player(pygame.sprite.Sprite):
     def draw(self, SCREEN):
         # Xuất hình ảnh, chỉnh sửa diện tích hiển thị
         SCREEN.blit(pygame.transform.flip(self.image, self.flip, False), self.rect, (6, 0, self.width + 5, self.height))
-        # pygame.draw.rect(SCREEN, (255, 0, 0), self.rect, 2)
+        pygame.draw.rect(SCREEN, (255, 0, 0), self.rect, 2)
 
     def check_collision(self, dx, dy):
         """
         Kiểm tra va chạm với các đối tượng tường, đá
         """
+
         on_ground = False        # Kiem tra va cham tuong
         if Variables.WALL_RECT1.colliderect(self.rect.left + dx, self.rect.top, self.rect.width, self.rect.height):
             self.rect.left = Variables.WALL_RECT1.right
