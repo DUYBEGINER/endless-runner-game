@@ -117,6 +117,9 @@ while Variables.RUNNING:
     Stone_fall.stones.update()
     Stone_fall.stones.draw(Variables.SCREEN)
 
+    Boom.booms_effect.update()
+    Boom.booms_effect.draw(Variables.SCREEN)
+
     # vẽ hình vuông bao quanh để kiểm tra va chạm
     for stone in Stone_fall.stones:
         pygame.draw.rect(Variables.SCREEN, (255, 0, 0), stone.rect, 2)

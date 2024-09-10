@@ -3,6 +3,7 @@ from pygame import *
 import Variables
 import Stone_fall
 from Stone_fall import stones
+from Boom import booms_effect
 
 
 class Player(pygame.sprite.Sprite):
@@ -123,11 +124,15 @@ class Player(pygame.sprite.Sprite):
                 self.on_ground = True
 
         falling_stones = [stone for stone in stones if stone.rect.bottom > self.rect.top]
-        #Kiểm tra va chạm với đá rơi
+        #Kiểm tra điều kiện dừng
         for stone in falling_stones:
             if self.rect.colliderect(stone.rect.left, stone.rect.bottom, stone.rect.width, 1) and not self.in_air:
                 Variables.RUNNING = False
-                print("over")
+                print("over!")
+        for tile in booms_effect:
+            if self.rect.colliderect(tile.rect.left, tile.rect.top, tile.rect.width, tile.rect.height):
+                Variables.RUNNING = False
+                print("over!")
 
         if not self.on_ground:
             self.in_air = True

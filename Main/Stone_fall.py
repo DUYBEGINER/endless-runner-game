@@ -95,7 +95,6 @@ class Stone(Sprite):
                             self.rect.top < i.rect.bottom + 1):
                         self.kill()
                         break
-
     def check_high(self, x):
         # reset list_to_check_high
         self.list_to_check_high = []
