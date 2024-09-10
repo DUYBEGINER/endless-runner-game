@@ -1,5 +1,6 @@
 import pygame
-import sys
+import sys, os
+import Variables
 
 pygame.init()
 
@@ -17,7 +18,7 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Menu")
 
 # tải ảnh nền và thay đổi kích thước cho phù hợp
-bg = pygame.image.load("../Asset/Setting/bg.jpg")
+bg = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Setting/bg.jpg'))
 bg = pygame.transform.scale(bg, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
 # tạo font chữ
