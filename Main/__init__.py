@@ -31,18 +31,18 @@ GROUND_IMG = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Map/gr
 
 # Create Player
 Player1 = Player(150, 150, 1, 3)
-
+update_time_score = pygame.time.get_ticks()
 
 # Tư động sinh các đối tượng đá
 def re_spawn_stone():
     tmp = random.randint(1, 100)  # Chọn một số ngẫu nhiên từ 1 đến 10
-    if tmp <= 50:
+    if tmp <= 40:
         stone = Stone_fall.Stone(2, 'stone_fall1')
         Stone_fall.stones.add(stone)
-    elif tmp <= 60:
+    elif tmp <= 50:
         stone = Stone_fall.Stone(2, 'stone_fall2')
         Stone_fall.stones.add(stone)
-    elif tmp <= 80:
+    elif tmp <= 70:
         stone = Boom.boom(2)
         Stone_fall.stones.add(stone)
     else:
@@ -53,20 +53,29 @@ def re_spawn_stone():
 
 # Kiểm tra player có vừa mới nhảy không, nếu có thì thêm hiệu ứng
 just_jump = False
-
+sound_playing = False
+update_time_broken = pygame.time.get_ticks()
 ########## VÒNG LẶP GAME ### #######
 pygame.init()
 # Variables.sound_background.play(loops=-1)
 
 while Variables.RUNNING:
 
+    if pygame.time.get_ticks() - update_time_score > 200:
+        Variables.score +=1
+        update_time_score = pygame.time.get_ticks()
     Variables.SCREEN.fill(Variables.BLACK)
     Variables.SCREEN.blit(BACKGROUND_IMG2, (0, 0))
     Variables.SCREEN.blit(BACKGROUND_IMG1, (0, 0))
     Variables.SCREEN.blit(GROUND_IMG, (0, Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT))
     Variables.SCREEN.blit(Variables.WALL_IMG1, (0, 0))
     Variables.SCREEN.blit(Variables.WALL_IMG2, (288, 0))
+
+    # Hiển thị shield
     Variables.SCREEN.blit(Variables.SHIELD_IMG, (30, 0))
+    Variables.draw_num_shield(Variables.quantity_shield,Variables.text_font, Variables.WHITE  , 60, 5)
+    Variables.draw_text(Variables.score, Variables.text_font, Variables.WHITE, 40, 50)
+
 
     Player1.update_animation()
     Player1.draw(Variables.SCREEN)
@@ -83,25 +92,43 @@ while Variables.RUNNING:
     for event in pygame.event.get():
         if event.type == QUIT:
             Variables.RUNNING = False
-        # Xử lí di chuyển nhân vật khi ấn nút
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_a:
                 Variables.moving_left = True
-                Variables.walking_sfx.play()
+                if not sound_playing and not Player1.in_air:
+                    Variables.channel_walk.play(Variables.walking_sfx, loops=-1)
+                    sound_playing = True
             if event.key == pygame.K_d:
                 Variables.moving_right = True
-                Variables.walking_sfx.play()
+                if not sound_playing and not Player1.in_air:
+                    Variables.channel_walk.play(Variables.walking_sfx, loops=-1)
+                    sound_playing = True
             if event.key == pygame.K_SPACE and not Player1.in_air:
                 Player1.jump = True
-                Variables.jump_sfx.play()
+                Variables.channel_jump.play(Variables.jump_sfx)
                 just_jump = True
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_a:
                 Variables.moving_left = False
-                Variables.walking_sfx.stop()
+                if not Variables.moving_right and not Player1.in_air:
+                    Variables.channel_walk.stop()
+                    sound_playing = False
             if event.key == pygame.K_d:
                 Variables.moving_right = False
-                Variables.walking_sfx.stop()
+                if not Variables.moving_left and not Player1.in_air:
+                    Variables.channel_walk.stop()
+                    sound_playing = False
+
+    # Cập nhật trạng thái âm thanh dựa trên các phím đang được nhấn và trạng thái bay
+    keys = pygame.key.get_pressed()
+    if (keys[pygame.K_a] or keys[pygame.K_d]) and not Player1.in_air:
+        if not sound_playing:
+            Variables.channel_walk.play(Variables.walking_sfx, loops=-1)
+            sound_playing = True
+    elif not keys[pygame.K_a] and not keys[pygame.K_d] or Player1.in_air:
+        if sound_playing:
+            Variables.channel_walk.stop()
+            sound_playing = False
 
     # Thêm hiệu ứng nhảy
     if just_jump == False:
@@ -114,6 +141,20 @@ while Variables.RUNNING:
             Variables.effect_jump_index = 0
             just_jump = False
 
+
+    if Player1.just_broken == False:
+        temp2_posx = Player1.rect.left
+        temp2_posy = Player1.rect.top
+    if Player1.just_broken == True :
+        Variables.SCREEN.blit(Variables.stone_broken_animation[Variables.stone_broken_index], (Player1.player_broke_stone_x, Player1.player_broke_stone_y))
+        Variables.stone_broken_index += 1
+        if Variables.stone_broken_index >= len(Variables.stone_broken_animation):
+            Variables.stone_broken_index = 0
+            Player1.just_broken = False
+
+
+
+
     # Update class Stone
     if pygame.time.get_ticks() - Variables.update_time > Variables.COOLDOWN_SPAWN:
         Variables.update_time = pygame.time.get_ticks()
@@ -123,6 +164,8 @@ while Variables.RUNNING:
 
     Stone_fall.stones.update()
     Stone_fall.stones.draw(Variables.SCREEN)
+
+
 
     Boom.booms_effect.update()
     Boom.booms_effect.draw(Variables.SCREEN)
@@ -137,10 +180,10 @@ while Variables.RUNNING:
 
 
     # vẽ hình vuông bao quanh để kiểm tra va chạm
-    for stone in Stone_fall.stones:
-        pygame.draw.rect(Variables.SCREEN, (255, 0, 0), stone.rect, 2)
+    # for stone in Stone_fall.stones:
+    #     pygame.draw.rect(Variables.SCREEN, (255, 0, 0), stone.rect, 2)
 
-    print(Variables.quantity_shield)
+
     pygame.display.update()
     FPS_Clock.tick(FPS)
 pygame.quit()

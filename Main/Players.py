@@ -4,7 +4,9 @@ import Variables
 import Stone_fall
 from Stone_fall import stones
 from Boom import booms_effect
-
+# from pygame.sprite import Group
+#
+# Stone_broken = Group()
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y, scale, speed):
@@ -17,7 +19,9 @@ class Player(pygame.sprite.Sprite):
         self.in_air = True
         self.vel_y = 0  # Vận tốc
         self.update_time = pygame.time.get_ticks()
-
+        self.just_broken = False
+        self.player_broke_stone_x = 0
+        self.player_broke_stone_y = 0
         # Load all animation
         Animation_type = ['Idle', 'Run', 'Jump2']
         for animation in Animation_type:
@@ -88,7 +92,7 @@ class Player(pygame.sprite.Sprite):
         self.update_animation()
         # Xuất hình ảnh, chỉnh sửa diện tích hiển thị
         SCREEN.blit(pygame.transform.flip(self.image, self.flip, False), self.rect, (6, 0, self.width + 5, self.height))
-        pygame.draw.rect(SCREEN, (255, 0, 0), self.rect, 2)
+        # pygame.draw.rect(SCREEN, (255, 0, 0), self.rect, 2)
 
 
     def check_collision(self, dx, dy):
@@ -132,6 +136,9 @@ class Player(pygame.sprite.Sprite):
                 else:
                     stone.kill()
                     Variables.quantity_shield -= 1
+                    self.just_broken = True
+                    self.player_broke_stone_x = stone.rect.left
+                    self.player_broke_stone_y = stone.rect.top
                     dy = 0
                     break
 
@@ -144,11 +151,9 @@ class Player(pygame.sprite.Sprite):
                     Variables.quantity_shield -= 1
         if not self.on_ground:
             self.in_air = True
-
         #Giảm giật
         if abs(dy) < 1:
             dy = 0
-
         return dx, dy
 
     def update_animation(self):
@@ -169,3 +174,9 @@ class Player(pygame.sprite.Sprite):
             self.action = new_action
             self.update_time = pygame.time.get_ticks()
             self.index = 0
+
+    # def animation_broken(self,x,y):
+        # ANIMATION_COOLDOWN = 20
+        # if pygame.time.get_ticks() - self.update_time > ANIMATION_COOLDOWN:
+        #     self.update_time = pygame.time.get_ticks()
+        #     self.index += 1

@@ -15,9 +15,11 @@ class shield(pygame.sprite.Sprite):
         self.animation_list = []
         self.index = 0
         self.in_air =  True
-        self.update_time = pygame.time.get_ticks()
         self.vel_y = 0
 
+        self.TIME_EXIST = 5000
+        self.update_time = pygame.time.get_ticks()
+        self.update_time_exist = pygame.time.get_ticks()
 
         for i in range(8):
             img = pygame.image.load(os.path.join(Variables.current_dir, f'Asset/Item/Shield/{i}.png'))
@@ -42,7 +44,9 @@ class shield(pygame.sprite.Sprite):
         if self.in_air:
             self.vel_y += GRAVITY_SHIELD
             dy += self.vel_y
-
+        if pygame.time.get_ticks() - self.update_time_exist> self.TIME_EXIST:
+            self.kill()
+            self.update_time_exist = pygame.time.get_ticks()
         dy = self.check_collision_stone(dy)
         self.update_animation()
 
@@ -77,3 +81,4 @@ class shield(pygame.sprite.Sprite):
         if self.rect.colliderect(player):
             Variables.quantity_shield += 1
             self.kill()
+            Variables.channel_collect.play(Variables.collect_shield_sfx)
