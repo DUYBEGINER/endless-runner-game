@@ -17,7 +17,7 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Menu")
 
 # tải ảnh nền và thay đổi kích thước cho phù hợp
-bg = pygame.image.load("Asset/Setting/bg.jpg")
+bg = pygame.image.load("../Asset/Setting/bg.jpg")
 bg = pygame.transform.scale(bg, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
 # tạo font chữ
@@ -64,6 +64,7 @@ def menu():
                 # kiểm tra xem chuột có click vào button nào không và thực hiện hành động tương ứng
                 if start_button_rect.collidepoint(mouse_x, mouse_y):
                     print("Start Game clicked!")
+                    break
                     # thực hiện start game
                 elif settings_button_rect.collidepoint(mouse_x, mouse_y):
                     print("Settings clicked!")

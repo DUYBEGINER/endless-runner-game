@@ -13,7 +13,7 @@ pygame.display.set_caption('Name_of_game')  # Thiết lập tên cửa sổ game
 # Thiết lập icon game
 Game_icon = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/icon_game/icon_game.jpg'))
 pygame.display.set_icon(Game_icon)
-       
+
 # Thiết lập FPS
 FPS = 120
 FPS_Clock = pygame.time.Clock()
@@ -25,7 +25,8 @@ BACKGROUND_IMG1 = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/M
 BACKGROUND_IMG1 = pygame.transform.scale(BACKGROUND_IMG1,
                                          (Variables.WINDOW_WIDTH * 1.25, Variables.WINDOW_HEIGHT * 1.25))
 BACKGROUND_IMG2 = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Map/background1.png'))
-BACKGROUND_IMG2 = pygame.transform.scale(BACKGROUND_IMG2,(Variables.WINDOW_WIDTH * 1.25, Variables.WINDOW_HEIGHT * 1.25))
+BACKGROUND_IMG2 = pygame.transform.scale(BACKGROUND_IMG2,
+                                         (Variables.WINDOW_WIDTH * 1.25, Variables.WINDOW_HEIGHT * 1.25))
 # Ground
 GROUND_IMG = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Map/ground_new.png'))
 # GROUND_IMG = pygame.transform.scale(GROUND_IMG, (WINDOW_WIDTH, GROUND_HEIGHT))
@@ -61,7 +62,7 @@ while Variables.RUNNING:
     Variables.SCREEN.blit(GROUND_IMG, (0, Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT))
     Variables.SCREEN.blit(Variables.WALL_IMG1, (0, 0))
     Variables.SCREEN.blit(Variables.WALL_IMG2, (288, 0))
-    #Player1.update_animation()
+    # Player1.update_animation()
     Player1.draw(Variables.SCREEN)
     Player1.move_and_jump(Variables.moving_left, Variables.moving_right)
 
