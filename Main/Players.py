@@ -94,7 +94,6 @@ class Player(pygame.sprite.Sprite):
         """
         Kiểm tra va chạm với các đối tượng tường, đá
         """
-
         on_ground = False        # Kiem tra va cham tuong
         if Variables.WALL_RECT1.colliderect(self.rect.left + dx, self.rect.top, self.rect.width, self.rect.height):
             self.rect.left = Variables.WALL_RECT1.right
@@ -112,7 +111,6 @@ class Player(pygame.sprite.Sprite):
                 if self.vel_y < 0:
                     self.vel_y = tile.vel_y
                     dy = self.vel_y
-
                 elif self.vel_y >= 0:
                     self.vel_y = 0
                     dy = tile.rect.top - self.rect.bottom
@@ -126,13 +124,18 @@ class Player(pygame.sprite.Sprite):
         falling_stones = [stone for stone in stones if stone.rect.bottom > self.rect.top]
         #Kiểm tra điều kiện dừng
         for stone in falling_stones:
-            if self.rect.colliderect(stone.rect.left, stone.rect.bottom, stone.rect.width, 1) and not self.in_air:
+            if self.rect.colliderect(stone.rect.left, stone.rect.bottom, stone.rect.width, 1) and not self.in_air and Variables.quantity_shield == 0:
                 Variables.RUNNING = False
                 print("over!")
-        for tile in booms_effect:
-            if self.rect.colliderect(tile.rect.left, tile.rect.top, tile.rect.width, tile.rect.height):
-                Variables.RUNNING = False
-                print("over!")
+            elif self.rect.colliderect(stone.rect.left, stone.rect.bottom, stone.rect.width, 1) and not self.in_air and Variables.quantity_shield != 0:
+                stone.kill()
+                Variables.quantity_shield -= 1
+                break
+
+        # for tile in booms_effect:
+        #     if self.rect.colliderect(tile.rect.left, tile.rect.top, tile.rect.width, tile.rect.height):
+        #         Variables.RUNNING = False
+        #         print("over!")
 
         if not self.on_ground:
             self.in_air = True

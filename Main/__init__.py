@@ -1,6 +1,7 @@
 import pygame, os, random
 from pygame import *
 import Variables
+import Shield
 from Variables import effect_list
 
 from Players import Player
@@ -26,24 +27,31 @@ BACKGROUND_IMG1 = pygame.transform.scale(BACKGROUND_IMG1,
                                          (Variables.WINDOW_WIDTH * 1.25, Variables.WINDOW_HEIGHT * 1.25))
 BACKGROUND_IMG2 = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Map/background1.png'))
 BACKGROUND_IMG2 = pygame.transform.scale(BACKGROUND_IMG2,(Variables.WINDOW_WIDTH * 1.25, Variables.WINDOW_HEIGHT * 1.25))
-# Ground
+# Groundư
 GROUND_IMG = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Map/ground_new.png'))
 # GROUND_IMG = pygame.transform.scale(GROUND_IMG, (WINDOW_WIDTH, GROUND_HEIGHT))
 
-# Create Player
+# Create Playera
 Player1 = Player(150, 150, 1, 3)
 
 
 # Tư động sinh các đối tượng đá
 def re_spawn_stone():
     tmp = random.randint(1, 100)  # Chọn một số ngẫu nhiên từ 1 đến 10
-    if tmp <= 65:
+    if tmp <= 30:
         stone = Stone_fall.Stone(2, 'stone_fall1')
-    elif tmp <= 94:
+        Stone_fall.stones.add(stone)
+    elif tmp <= 80:
         stone = Stone_fall.Stone(2, 'stone_fall2')
+        Stone_fall.stones.add(stone)
+    # elif tmp <= 60:
+    #     stone = Boom.boom(2)
+    #     Stone_fall.stones.add(stone)a
     else:
-        stone = Boom.boom(2)
-    Stone_fall.stones.add(stone)
+        shield = Shield.shield(1)
+        Shield.Shield_Group.add(shield)
+
+
 
 
 # Kiểm tra player có vừa mới nhảy không, nếu có thì thêm hiệu ứng
@@ -117,13 +125,21 @@ while Variables.RUNNING:
     Stone_fall.stones.update()
     Stone_fall.stones.draw(Variables.SCREEN)
 
-    Boom.booms_effect.update()
-    Boom.booms_effect.draw(Variables.SCREEN)
+    # Boom.booms_effect.update()
+    # Boom.booms_effect.draw(Variables.SCREEN)
+
+
+    Shield.Shield_Group.update()
+    Shield.Shield_Group.draw(Variables.SCREEN)
+
+    for shield in Shield.Shield_Group:
+        shield.check_collision_player(Player1)
+
 
     # vẽ hình vuông bao quanh để kiểm tra va chạm
     for stone in Stone_fall.stones:
         pygame.draw.rect(Variables.SCREEN, (255, 0, 0), stone.rect, 2)
-
+    print(Variables.quantity_shield)
     pygame.display.update()
     FPS_Clock.tick(FPS)
 pygame.quit()

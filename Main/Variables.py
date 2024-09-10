@@ -41,7 +41,7 @@ BLUE = (0, 0, 255)
 moving_left = False
 moving_right = False
 moving_jump = False
-
+quantity_shield = 0
 #Biến chạy hiệu ứng animation jump
 effect_jump_index = 0
 effect_list = []
