@@ -1,9 +1,13 @@
 import pygame, os,  random
+
+from pygame.sprite import Group
 from Stone_fall import stones
 
 import Variables
 import Stone_fall
 GRAVITY_BOOM = 0.025
+
+booms_effect = Group()
 # Cài đặt thời gian chờ
 ANIMATION_COOLDOWN = 360
 class boom(pygame.sprite.Sprite):
@@ -83,8 +87,8 @@ class boom(pygame.sprite.Sprite):
                     list_tmp.append(stone)
         for i in list_tmp:
             i.kill()
-        tmp_img = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Boom/stone_effect.png'))
-        Variables.SCREEN.blit(tmp_img, self.rect)
+        boom_effect = Boom_effect(self.rect.centerx, self.rect.centery)
+        booms_effect.add(boom_effect)
         self.kill()
 
         
@@ -97,3 +101,29 @@ class boom(pygame.sprite.Sprite):
         if len(self.list_to_delete) == 8:
             for i in self.list_to_delete:
                 i.kill()
+
+class Boom_effect(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.animation_list = []
+        self.index = 0
+        self.x =x
+        self.y = y
+        self.update_time = pygame.time.get_ticks()
+        # Load animation
+        for i in range(1,6):
+            tmp_img = pygame.image.load(os.path.join(Variables.current_dir, f'Asset/Boom/Boom_effect/{i}.png'))
+            self.animation_list.append(tmp_img)
+        self.rect = self.animation_list[self.index].get_rect()
+        self.rect.center = (self.x, self.y)
+
+    def update(self):
+        ANIMATION_COOLDOWN_effect = 20
+        # Cập nhật frame ảnh hiện tại
+        self.image = self.animation_list[self.index]
+        # 
+        if pygame.time.get_ticks() - self.update_time > ANIMATION_COOLDOWN_effect:
+            self.update_time = pygame.time.get_ticks()
+            self.index += 1
+        if self.index >= len(self.animation_list) :
+            self.kill()
