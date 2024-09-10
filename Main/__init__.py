@@ -2,7 +2,7 @@ import pygame, os, random
 from pygame import *
 import Variables
 from Variables import effect_list
-import Setting
+
 from Players import Player
 import Stone_fall, Boom
 
@@ -13,7 +13,7 @@ pygame.display.set_caption('Name_of_game')  # Thiết lập tên cửa sổ game
 # Thiết lập icon game
 Game_icon = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/icon_game/icon_game.jpg'))
 pygame.display.set_icon(Game_icon)
-       
+
 # Thiết lập FPS
 FPS = 120
 FPS_Clock = pygame.time.Clock()
@@ -25,12 +25,13 @@ BACKGROUND_IMG1 = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/M
 BACKGROUND_IMG1 = pygame.transform.scale(BACKGROUND_IMG1,
                                          (Variables.WINDOW_WIDTH * 1.25, Variables.WINDOW_HEIGHT * 1.25))
 BACKGROUND_IMG2 = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Map/background1.png'))
-BACKGROUND_IMG2 = pygame.transform.scale(BACKGROUND_IMG2,(Variables.WINDOW_WIDTH * 1.25, Variables.WINDOW_HEIGHT * 1.25))
+BACKGROUND_IMG2 = pygame.transform.scale(BACKGROUND_IMG2,
+                                         (Variables.WINDOW_WIDTH * 1.25, Variables.WINDOW_HEIGHT * 1.25))
 # Ground
 GROUND_IMG = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Map/ground_new.png'))
 # GROUND_IMG = pygame.transform.scale(GROUND_IMG, (WINDOW_WIDTH, GROUND_HEIGHT))
 
-# Create Playerd
+# Create Player
 Player1 = Player(150, 150, 1, 3)
 
 
@@ -61,17 +62,17 @@ while Variables.RUNNING:
     Variables.SCREEN.blit(GROUND_IMG, (0, Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT))
     Variables.SCREEN.blit(Variables.WALL_IMG1, (0, 0))
     Variables.SCREEN.blit(Variables.WALL_IMG2, (288, 0))
-    #Player1.update_animation()
+    # Player1.update_animation()
     Player1.draw(Variables.SCREEN)
     Player1.move_and_jump(Variables.moving_left, Variables.moving_right)
 
     # Update player action
     if Player1.in_air:
-        Player1.update_action(2)   #Jump
+        Player1.update_action(2)
     elif Variables.moving_left or Variables.moving_right:
-        Player1.update_action(1)  # Run
+        Player1.update_action(1)  # Runa
     else:
-        Player1.update_action(0)  # Idle
+        Player1.update_action(0)  # Idlea
 
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -121,8 +122,8 @@ while Variables.RUNNING:
     Boom.booms_effect.draw(Variables.SCREEN)
 
     # vẽ hình vuông bao quanh để kiểm tra va chạm
-    # for stone in Stone_fall.stones:
-    #     pygame.draw.rect(Variables.SCREEN, (255, 0, 0), stone.rect, 2)
+    for stone in Stone_fall.stones:
+        pygame.draw.rect(Variables.SCREEN, (255, 0, 0), stone.rect, 2)
 
     pygame.display.update()
     FPS_Clock.tick(FPS)
