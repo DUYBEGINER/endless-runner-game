@@ -1,10 +1,12 @@
 import pygame, os, random
 from pygame import *
 import Variables
+from Main.Players import Stone_broken
 from Variables import effect_list
 import Shield
 from Players import Player
 import Stone_fall, Boom
+import Players
 
 # Thiết lập màn hình game
 # Thiết lập bề mặt màn hình chính
@@ -142,19 +144,6 @@ while Variables.RUNNING:
             just_jump = False
 
 
-    if Player1.just_broken == False:
-        temp2_posx = Player1.rect.left
-        temp2_posy = Player1.rect.top
-    if Player1.just_broken == True :
-        Variables.SCREEN.blit(Variables.stone_broken_animation[Variables.stone_broken_index], (Player1.player_broke_stone_x, Player1.player_broke_stone_y))
-        Variables.stone_broken_index += 1
-        if Variables.stone_broken_index >= len(Variables.stone_broken_animation):
-            Variables.stone_broken_index = 0
-            Player1.just_broken = False
-
-
-
-
     # Update class Stone
     if pygame.time.get_ticks() - Variables.update_time > Variables.COOLDOWN_SPAWN:
         Variables.update_time = pygame.time.get_ticks()
@@ -174,15 +163,17 @@ while Variables.RUNNING:
     Shield.Shield_Group.update()
     Shield.Shield_Group.draw(Variables.SCREEN)
 
+    #Chạy animation stone broken
+    Players.Stone_broken.update()
+    Players.Stone_broken.draw(Variables.SCREEN)
+
+
     for shield in Shield.Shield_Group:
         shield.check_collision_player(Player1)
-
-
 
     # vẽ hình vuông bao quanh để kiểm tra va chạm
     # for stone in Stone_fall.stones:
     #     pygame.draw.rect(Variables.SCREEN, (255, 0, 0), stone.rect, 2)
-
 
     pygame.display.update()
     FPS_Clock.tick(FPS)

@@ -4,11 +4,13 @@ import Variables
 import Stone_fall
 from Stone_fall import stones
 from Boom import booms_effect
-# from pygame.sprite import Group
-#
-# Stone_broken = Group()
+from pygame.sprite import Group
+
+Stone_broken = Group()
 
 class Player(pygame.sprite.Sprite):
+
+
     def __init__(self, x, y, scale, speed):
         super().__init__()
         # Biến
@@ -19,9 +21,6 @@ class Player(pygame.sprite.Sprite):
         self.in_air = True
         self.vel_y = 0  # Vận tốc
         self.update_time = pygame.time.get_ticks()
-        self.just_broken = False
-        self.player_broke_stone_x = 0
-        self.player_broke_stone_y = 0
         # Load all animation
         Animation_type = ['Idle', 'Run', 'Jump2']
         for animation in Animation_type:
@@ -134,13 +133,13 @@ class Player(pygame.sprite.Sprite):
                     Variables.RUNNING = False
                     print("over!")
                 else:
-                    stone.kill()
                     Variables.quantity_shield -= 1
-                    self.just_broken = True
-                    self.player_broke_stone_x = stone.rect.left
-                    self.player_broke_stone_y = stone.rect.top
+                    stone_broken= Broken_effect(stone.rect.centerx, self.rect.centery-32)
+                    Stone_broken.add(stone_broken)
+                    stone.kill()
                     dy = 0
                     break
+
 
         for tile in booms_effect:
             if self.rect.colliderect(tile.rect.left, tile.rect.top, tile.rect.width, tile.rect.height):
@@ -149,8 +148,12 @@ class Player(pygame.sprite.Sprite):
                     print("over!")
                 else:
                     Variables.quantity_shield -= 1
+                    # stone_broken_effect = Broken_effect(tile.rect.left, tile.rect.top)
+                    # Stone_broken.add(stone_broken_effect)
+
         if not self.on_ground:
             self.in_air = True
+
         #Giảm giật
         if abs(dy) < 1:
             dy = 0
@@ -180,3 +183,29 @@ class Player(pygame.sprite.Sprite):
         # if pygame.time.get_ticks() - self.update_time > ANIMATION_COOLDOWN:
         #     self.update_time = pygame.time.get_ticks()
         #     self.index += 1
+
+class Broken_effect(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.animation_list = []
+        self.index = 0
+        self.x = x
+        self.y = y
+        self.update_time = pygame.time.get_ticks()
+        # Load animation
+        for i in range(20):
+            img = pygame.image.load(os.path.join(Variables.current_dir, f'Asset/Map/animation_broken/{i}.png'))
+            img = pygame.transform.scale(img, (32, 32))
+            self.animation_list.append(img)
+        self.rect = self.animation_list[self.index].get_rect()
+        self.rect.center = (self.x, self.y)
+
+    def update(self):
+        ANIMATION_COOLDOWN_effect = 10
+        # Cập nhật frame ảnh hiện tại
+        self.image = self.animation_list[self.index]
+        if pygame.time.get_ticks() - self.update_time > ANIMATION_COOLDOWN_effect:
+            self.update_time = pygame.time.get_ticks()
+            self.index += 1
+        if self.index >= len(self.animation_list):
+            self.kill()

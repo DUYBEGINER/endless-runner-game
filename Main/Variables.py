@@ -68,8 +68,8 @@ effect_list = []
 effect_jump_index = 0
 
 #Biến chạy hiệu ứng animation broken
-stone_broken_animation = []
-stone_broken_index = 0
+# stone_broken_animation = []
+# stone_broken_index = 0
 pygame.init()
 
 
@@ -102,9 +102,3 @@ for i in range(7):
     img = pygame.image.load(os.path.join(current_dir, f'Asset/character/distribute/{i}.png'))
     # img = pygame.transform.scale(img, (int((img.get_width() * scale)), (img.get_height() * scale)))
     effect_list.append(img)
-
-for i in range(20):
-    img = pygame.image.load(os.path.join(current_dir, f'Asset/map/animation_broken/{i}.png'))
-
-    img = pygame.transform.scale(img, (int((img.get_width() * 2)), (img.get_height() * 2)))
-    stone_broken_animation.append(img)
