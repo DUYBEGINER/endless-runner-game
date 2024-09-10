@@ -118,7 +118,7 @@ class Boom_effect(pygame.sprite.Sprite):
         self.rect.center = (self.x, self.y)
 
     def update(self):
-        ANIMATION_COOLDOWN_effect = 20
+        ANIMATION_COOLDOWN_effect = 10
         # Cập nhật frame ảnh hiện tại
         self.image = self.animation_list[self.index]
         # 
