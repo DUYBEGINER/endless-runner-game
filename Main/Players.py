@@ -129,11 +129,11 @@ class Player(pygame.sprite.Sprite):
         #Kiểm tra điều kiện dừng
         for stone in falling_stones:
             if self.rect.colliderect(stone.rect.left, stone.rect.bottom, stone.rect.width, 1) and not self.in_air:
-                if Variables.quantity_shield == 0:
+                if Variables.quantity_shield <= 4:
                     Variables.RUNNING = False
                     print("over!")
                 else:
-                    Variables.quantity_shield -= 1
+                    Variables.quantity_shield -= 5
                     stone_broken= Broken_effect(stone.rect.centerx, self.rect.centery-32)
                     Stone_broken.add(stone_broken)
                     stone.kill()

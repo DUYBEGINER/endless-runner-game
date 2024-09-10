@@ -1,7 +1,7 @@
 import pygame, os,  random
 from pygame.sprite import Group
 from pygame.sprite import Sprite
-import Stone_fall
+from Boom import booms_effect
 from Stone_fall import stones
 import Variables
 
@@ -56,13 +56,17 @@ class shield(pygame.sprite.Sprite):
 
     def check_collision_stone(self,dy):
         for stone in stones:
-            if stone.rect.colliderect(self.rect.x, self.rect.y + dy, self.rect.width, self.rect.height):
+            if stone.rect.colliderect(self.rect.x, self.rect.y + dy, self.rect.width, self.rect.height) and self.rect.bottom >= self.rect.top:
                 self.in_air = False
                 self.vel_y = 0
                 dy = stone.rect.top - self.rect.bottom
-
         return dy
 
+    def check_collision_boom_effect(self):
+        for tile in booms_effect:
+            if self.rect.colliderect(tile.rect.left, tile.rect.top, tile.rect.width, tile.rect.height):
+                self.kill()
+                break
 
     def update_animation(self):
         # Tốc độ nhanh chậm của animation
