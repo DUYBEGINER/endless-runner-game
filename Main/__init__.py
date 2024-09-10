@@ -1,7 +1,7 @@
 import pygame, os, random
 from pygame import *
 import Variables
-from Main.Players import Stone_broken
+from Players import Stone_broken
 from Variables import effect_list
 import Shield
 from Players import Player
@@ -38,16 +38,17 @@ update_time_score = pygame.time.get_ticks()
 # Tư động sinh các đối tượng đá
 def re_spawn_stone():
     tmp = random.randint(1, 100)  # Chọn một số ngẫu nhiên từ 1 đến 10
-    if tmp <= 40:
+    if tmp <= 60:
         stone = Stone_fall.Stone(2, 'stone_fall1')
         Stone_fall.stones.add(stone)
-    elif tmp <= 50:
+    elif tmp <= 70:
         stone = Stone_fall.Stone(2, 'stone_fall2')
         Stone_fall.stones.add(stone)
-    elif tmp <= 70:
+    else:
         stone = Boom.boom(2)
         Stone_fall.stones.add(stone)
-    else:
+    tmp = random.randint(1, 100)
+    if tmp > 70:
         shield = Shield.shield(1)
         Shield.Shield_Group.add(shield)
 

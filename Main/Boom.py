@@ -4,7 +4,7 @@ from pygame.sprite import Group
 from Stone_fall import stones
 
 import Variables
-import Stone_fall
+
 
 GRAVITY_BOOM = 0.025
 
@@ -108,6 +108,7 @@ class boom(pygame.sprite.Sprite):
                     list_tmp.append(stone)
         for i in list_tmp:
             i.kill()
+        list_tmp = []
         boom_effect = Boom_effect(self.rect.centerx, self.rect.centery)
         booms_effect.add(boom_effect)
         self.kill()
