@@ -2,7 +2,7 @@ import pygame, os, random
 from pygame import *
 import Variables
 from Variables import effect_list
-
+import Setting
 from Players import Player
 import Stone_fall
 
@@ -65,11 +65,11 @@ while Variables.RUNNING:
 
     # Update player action
     if Player1.in_air:
-        Player1.update_action(2)
+        Player1.update_action(2)   #Jump
     elif Variables.moving_left or Variables.moving_right:
-        Player1.update_action(1)  # Runa
+        Player1.update_action(1)  # Run
     else:
-        Player1.update_action(0)  # Idlea
+        Player1.update_action(0)  # Idle
 
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -116,8 +116,8 @@ while Variables.RUNNING:
     Stone_fall.stones.draw(Variables.SCREEN)
 
     # vẽ hình vuông bao quanh để kiểm tra va chạm
-    for stone in Stone_fall.stones:
-        pygame.draw.rect(Variables.SCREEN, (255, 0, 0), stone.rect, 2)
+    # for stone in Stone_fall.stones:
+    #     pygame.draw.rect(Variables.SCREEN, (255, 0, 0), stone.rect, 2)
 
     pygame.display.update()
     FPS_Clock.tick(FPS)
