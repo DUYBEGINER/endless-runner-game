@@ -78,7 +78,7 @@ class Player(pygame.sprite.Sprite):
             self.in_air = False
 
         #Kiểm tra bién in_air
-        print('in_air: ', self.in_air)
+        # print('in_air: ', self.in_air)
 
         # Update player position
         self.rect.x += dx
@@ -89,6 +89,7 @@ class Player(pygame.sprite.Sprite):
         # Xuất hình ảnh, chỉnh sửa diện tích hiển thị
         SCREEN.blit(pygame.transform.flip(self.image, self.flip, False), self.rect, (6, 0, self.width + 5, self.height))
         pygame.draw.rect(SCREEN, (255, 0, 0), self.rect, 2)
+
 
     def check_collision(self, dx, dy):
         """
@@ -124,19 +125,23 @@ class Player(pygame.sprite.Sprite):
         falling_stones = [stone for stone in stones if stone.rect.bottom > self.rect.top]
         #Kiểm tra điều kiện dừng
         for stone in falling_stones:
-            if self.rect.colliderect(stone.rect.left, stone.rect.bottom, stone.rect.width, 1) and not self.in_air and Variables.quantity_shield == 0:
-                Variables.RUNNING = False
-                print("over!")
-            elif self.rect.colliderect(stone.rect.left, stone.rect.bottom, stone.rect.width, 1) and not self.in_air and Variables.quantity_shield != 0:
-                stone.kill()
-                Variables.quantity_shield -= 1
-                break
+            if self.rect.colliderect(stone.rect.left, stone.rect.bottom, stone.rect.width, 1) and not self.in_air:
+                if Variables.quantity_shield == 0:
+                    Variables.RUNNING = False
+                    print("over!")
+                else:
+                    stone.kill()
+                    Variables.quantity_shield -= 1
+                    dy = 0
+                    break
 
-        # for tile in booms_effect:
-        #     if self.rect.colliderect(tile.rect.left, tile.rect.top, tile.rect.width, tile.rect.height):
-        #         Variables.RUNNING = False
-        #         print("over!")
-
+        for tile in booms_effect:
+            if self.rect.colliderect(tile.rect.left, tile.rect.top, tile.rect.width, tile.rect.height):
+                if Variables.quantity_shield == 0:
+                    Variables.RUNNING = False
+                    print("over!")
+                else:
+                    Variables.quantity_shield -= 1
         if not self.on_ground:
             self.in_air = True
 

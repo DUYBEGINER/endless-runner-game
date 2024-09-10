@@ -44,7 +44,8 @@ class shield(pygame.sprite.Sprite):
             dy += self.vel_y
 
         dy = self.check_collision_stone(dy)
-        # self.check_collision_player(Player)
+        self.update_animation()
+
         self.rect.y += dy
 
 
@@ -61,7 +62,7 @@ class shield(pygame.sprite.Sprite):
 
     def update_animation(self):
         # Tốc độ nhanh chậm của animation
-        ANIMATION_COOLDOWN = 20
+        ANIMATION_COOLDOWN = 100
         # Cập nhật hình ảnh dựa trên frame hiện tại
         self.image = self.animation_list[self.index]
         # Kiểm tra xem đủ thời gian để chuyển qua frame tiếp theo chưa
@@ -69,7 +70,7 @@ class shield(pygame.sprite.Sprite):
             self.update_time = pygame.time.get_ticks()
             self.index += 1
         # Nếu index vượt qua số lượng animation hiện tại thì reset trở về 0
-        if self.index >= len(self.animation_list[self.index]) - 1:
+        if self.index >= len(self.animation_list) - 1:
             self.index = 0
 
     def check_collision_player(self, player):

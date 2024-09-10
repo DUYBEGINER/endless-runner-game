@@ -126,8 +126,3 @@ class Stone(Sprite):
                 tmp_min = len(self.list_to_check_high)
                 min_col = col
         return min_col
-
-
-
-
-

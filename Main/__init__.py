@@ -1,9 +1,8 @@
 import pygame, os, random
 from pygame import *
 import Variables
-import Shield
 from Variables import effect_list
-
+import Shield
 from Players import Player
 import Stone_fall, Boom
 
@@ -14,7 +13,7 @@ pygame.display.set_caption('Name_of_game')  # Thiết lập tên cửa sổ game
 # Thiết lập icon game
 Game_icon = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/icon_game/icon_game.jpg'))
 pygame.display.set_icon(Game_icon)
-       
+
 # Thiết lập FPS
 FPS = 120
 FPS_Clock = pygame.time.Clock()
@@ -23,34 +22,32 @@ FPS_Clock = pygame.time.Clock()
 
 # Background
 BACKGROUND_IMG1 = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Map/background3.png'))
-BACKGROUND_IMG1 = pygame.transform.scale(BACKGROUND_IMG1,
-                                         (Variables.WINDOW_WIDTH * 1.25, Variables.WINDOW_HEIGHT * 1.25))
+BACKGROUND_IMG1 = pygame.transform.scale(BACKGROUND_IMG1,(Variables.WINDOW_WIDTH * 1.25, Variables.WINDOW_HEIGHT * 1.25))
 BACKGROUND_IMG2 = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Map/background1.png'))
 BACKGROUND_IMG2 = pygame.transform.scale(BACKGROUND_IMG2,(Variables.WINDOW_WIDTH * 1.25, Variables.WINDOW_HEIGHT * 1.25))
 # Groundư
 GROUND_IMG = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Map/ground_new.png'))
 # GROUND_IMG = pygame.transform.scale(GROUND_IMG, (WINDOW_WIDTH, GROUND_HEIGHT))
 
-# Create Playera
+# Create Player
 Player1 = Player(150, 150, 1, 3)
 
 
 # Tư động sinh các đối tượng đá
 def re_spawn_stone():
     tmp = random.randint(1, 100)  # Chọn một số ngẫu nhiên từ 1 đến 10
-    if tmp <= 30:
+    if tmp <= 50:
         stone = Stone_fall.Stone(2, 'stone_fall1')
         Stone_fall.stones.add(stone)
-    elif tmp <= 80:
+    elif tmp <= 60:
         stone = Stone_fall.Stone(2, 'stone_fall2')
         Stone_fall.stones.add(stone)
-    # elif tmp <= 60:
-    #     stone = Boom.boom(2)
-    #     Stone_fall.stones.add(stone)a
+    elif tmp <= 80:
+        stone = Boom.boom(2)
+        Stone_fall.stones.add(stone)
     else:
         shield = Shield.shield(1)
         Shield.Shield_Group.add(shield)
-
 
 
 
@@ -69,7 +66,9 @@ while Variables.RUNNING:
     Variables.SCREEN.blit(GROUND_IMG, (0, Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT))
     Variables.SCREEN.blit(Variables.WALL_IMG1, (0, 0))
     Variables.SCREEN.blit(Variables.WALL_IMG2, (288, 0))
-    #Player1.update_animation()
+    Variables.SCREEN.blit(Variables.SHIELD_IMG, (30, 0))
+
+    Player1.update_animation()
     Player1.draw(Variables.SCREEN)
     Player1.move_and_jump(Variables.moving_left, Variables.moving_right)
 
@@ -120,13 +119,13 @@ while Variables.RUNNING:
         Variables.update_time = pygame.time.get_ticks()
         re_spawn_stone()
 
-        # effect_jump.draw(Variables.SCREEN,Player1.Animation_list[0][0])
+    #effect_jump.draw(Variables.SCREEN,Player1.Animation_list[0][0])
 
     Stone_fall.stones.update()
     Stone_fall.stones.draw(Variables.SCREEN)
 
-    # Boom.booms_effect.update()
-    # Boom.booms_effect.draw(Variables.SCREEN)
+    Boom.booms_effect.update()
+    Boom.booms_effect.draw(Variables.SCREEN)
 
 
     Shield.Shield_Group.update()
@@ -136,9 +135,11 @@ while Variables.RUNNING:
         shield.check_collision_player(Player1)
 
 
+
     # vẽ hình vuông bao quanh để kiểm tra va chạm
     for stone in Stone_fall.stones:
         pygame.draw.rect(Variables.SCREEN, (255, 0, 0), stone.rect, 2)
+
     print(Variables.quantity_shield)
     pygame.display.update()
     FPS_Clock.tick(FPS)

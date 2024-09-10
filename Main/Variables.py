@@ -20,15 +20,19 @@ GRAVITY = 0.3
 WALL_IMG1 = pygame.image.load(os.path.join(current_dir, 'Asset/Map/wall.png'))
 WALL_IMG1 = pygame.transform.scale(WALL_IMG1, (32, WINDOW_HEIGHT-GROUND_HEIGHT))
 WALL_RECT1 = WALL_IMG1.get_rect()
-
 WALL_IMG2 = pygame.image.load(os.path.join(current_dir, 'Asset/Map/wall.png'))
 WALL_IMG2 = pygame.transform.scale(WALL_IMG2, (32, WINDOW_HEIGHT-GROUND_HEIGHT))
 WALL_RECT2 = WALL_IMG2.get_rect()
+
+
+# Ảnh shield
+SHIELD_IMG = pygame.image.load(os.path.join(current_dir, 'Asset/Item/Shield/0.png'))
+
 # Update the wall rect positions
 WALL_RECT1.topleft = (0, 0)
 WALL_RECT2.topleft = (288, 0)
 
-# WALL_RECT.center = (0, 0)
+
 # Màu sắc
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -42,13 +46,16 @@ moving_left = False
 moving_right = False
 moving_jump = False
 quantity_shield = 0
+
+
 #Biến chạy hiệu ứng animation jump
 effect_jump_index = 0
 effect_list = []
 
+
 pygame.init()
+
 #SFX
-#Jump
 jump_sfx = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/jump.mp3'))
 walking_sfx = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/walking.mp3'))
 sound_background = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/sound_game.mp3'))
