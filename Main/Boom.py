@@ -111,6 +111,7 @@ class boom(pygame.sprite.Sprite):
         list_tmp = []
         boom_effect = Boom_effect(self.rect.centerx, self.rect.centery)
         booms_effect.add(boom_effect)
+        Variables.is_exploi = True
         self.kill()
 
     def check_to_delete(self):
@@ -151,5 +152,6 @@ class Boom_effect(pygame.sprite.Sprite):
             self.update_time = pygame.time.get_ticks()
             self.index += 1
         if self.index >= len(self.animation_list):
+            Variables.is_exploi = False
             self.kill()
 

@@ -7,6 +7,7 @@ import Shield
 from Players import Player
 import Stone_fall, Boom
 import Players
+import Menu
 
 # Thiết lập màn hình game
 # Thiết lập bề mặt màn hình chính
@@ -32,9 +33,11 @@ GROUND_IMG = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Map/gr
 # GROUND_IMG = pygame.transform.scale(GROUND_IMG, (WINDOW_WIDTH, GROUND_HEIGHT))
 
 # Create Player
-Player1 = Player(150, 150, 1, 3)
-update_time_score = pygame.time.get_ticks()
+Player1 = Player(150, 150, 1, 2)
 
+
+
+update_time_score = pygame.time.get_ticks()
 # Tư động sinh các đối tượng đá
 def re_spawn_stone():
     tmp = random.randint(1, 100)  # Chọn một số ngẫu nhiên từ 1 đến 10
@@ -63,8 +66,8 @@ pygame.init()
 # Variables.sound_background.play(loops=-1)
 
 while Variables.RUNNING:
-
-
+    # Menu.draw_button()
+    # Menu.settings_menu(Variables.SCREEN,Variables.score_title_font, 0,0,Variables.WINDOW)
     Variables.SCREEN.fill(Variables.BLACK)
     Variables.SCREEN.blit(BACKGROUND_IMG2, (0, 0))
     Variables.SCREEN.blit(BACKGROUND_IMG1, (0, 0))
@@ -77,13 +80,14 @@ while Variables.RUNNING:
     Variables.SCREEN.blit(Variables.SUB_AREA, (320, 0))
     Variables.SUB_AREA.blit(Variables.SUB_AREA_IMG, (0, 0))
     #Hiển thị high_score
-    Variables.draw_high_score(Variables.high_score,Variables.score_font,(186,145,88),60, 49)
+    Variables.draw_high_score(Variables.high_score,Variables.score_font,(186,145,88),90, 215)
     #Hiển thị Score
-    Variables.draw_score_title(Variables.score, Variables.score_title_font, (186,145,88), 80, 93)
-    Variables.draw_score(Variables.score, Variables.score_font, (186,145,88), Variables.score_x, 125)
+    Variables.draw_score(Variables.score, Variables.score_font, (186,145,88), Variables.score_x, 145)
+    #Hiển thị text item
+    Variables.draw_item_title( Variables.text_font, (121,144,78), 63 , 350 )
     # Hiển thị shield
-    Variables.SUB_AREA_IMG.blit(Variables.SHIELD_IMG, (0, 200))
-    Variables.draw_num_shield(Variables.quantity_shield, Variables.text_font, (197, 188, 157), 60, 215)
+    Variables.SUB_AREA_IMG.blit(Variables.SHIELD_IMG, (20, 370))
+    Variables.draw_num_shield(Variables.quantity_shield, Variables.text_font, (197, 188, 157), 60, 380)
     if pygame.time.get_ticks() - update_time_score > 100:
         Variables.score += 1
         update_time_score = pygame.time.get_ticks()
@@ -184,6 +188,11 @@ while Variables.RUNNING:
 
     for shield in Shield.Shield_Group:
         shield.check_collision_player(Player1)
+
+    if Variables.is_exploi:
+        Variables.Screen_shake_exploision(Variables.SCREEN, Variables.SCREEN_SHAKE)
+        # if Variables.SCREEN_SHAKE <= 0:  # Khi shake hoàn tất
+        #     Variables.is_exploiding = False  # Reset trạng thái d
 
     # vẽ hình vuông bao quanh để kiểm tra va chạm
     # for stone in Stone_fall.stones:

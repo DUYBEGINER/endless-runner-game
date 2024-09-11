@@ -1,6 +1,6 @@
 import os
 import pygame
-
+import random
 from pygame.sprite import Sprite
 from pygame.sprite import Group
 ####### ĐỊNH NGHĨA CÁC BIẾN ########
@@ -25,14 +25,28 @@ WALL_IMG2 = pygame.image.load(os.path.join(current_dir, 'Asset/Map/wall.png'))
 WALL_IMG2 = pygame.transform.scale(WALL_IMG2, (32, WINDOW_HEIGHT-GROUND_HEIGHT))
 WALL_RECT2 = WALL_IMG2.get_rect()
 
+
+#SHAKE EFFCT
+SCREEN_SHAKE = 30
+render_ofset = [0, 0]
+is_exploi = False
+def Screen_shake_exploision(SCREEN, SCREEN_SHAKE):
+    if SCREEN_SHAKE > 0:
+        SCREEN_SHAKE -= 1
+    render_ofset = [0, 0]
+    if SCREEN_SHAKE > 0:
+        render_ofset[0] = random.randint(-4, 4)  # Rung theo chiều ngang
+        render_ofset[1] = random.randint(-4, 4)  # Rung theo chiều dọc
+    SCREEN.blit(SCREEN, render_ofset)
+
 # Sub area
 SUB_AREA = pygame.surface.Surface((200,500))
-SUB_AREA_IMG = pygame.image.load(os.path.join(current_dir, 'Asset/Map/sub_area5.png'))
+SUB_AREA_IMG = pygame.image.load(os.path.join(current_dir, 'Asset/Map/sub_area_main.png'))
 
 
 # Ảnh shield
 SHIELD_IMG = pygame.image.load(os.path.join(current_dir, 'Asset/Item/Shield/0.png'))
-SHIELD_IMG = pygame.transform.scale(SHIELD_IMG, (SHIELD_IMG.get_width()*2, SHIELD_IMG.get_height()*2))
+SHIELD_IMG = pygame.transform.scale(SHIELD_IMG, (SHIELD_IMG.get_width()*1.25, SHIELD_IMG.get_height()*1.25))
 # Update the wall rect positions
 WALL_RECT1.topleft = (0, 0)
 WALL_RECT2.topleft = (288, 0)
@@ -46,7 +60,7 @@ GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 #........
 
-#SCORE
+#SCORE file
 fi = open(os.path.join(current_dir, 'Main/High_Score'), 'r')
 score = 0
 high_score = int(fi.read())
@@ -54,20 +68,14 @@ high_score = int(fi.read())
 
 #FONT TEXT
 pygame.font.init()
-text_font = pygame.font.Font(None, 50)
-score_title_font = pygame.font.Font(None, 20)
+text_font = pygame.font.Font(None, 30)
 score_font = pygame.font.Font(None, 30)
 score_x = 95
 score_up = 10
 
-def draw_score_title(text,font,text_col,x,y):
-    score_title = font.render(f'SCORE', True, text_col)
-    SUB_AREA.blit(score_title, (x, y))
-
 def draw_high_score(ext,font,text_col,x,y):
     recor = font.render(f'{high_score}', True, text_col)
     SUB_AREA.blit(recor, (x, y))
-
 
 def draw_score(text,font,text_col,x,y):
     score_game = font.render(f'{score}', True, text_col)
@@ -77,6 +85,9 @@ def draw_num_shield(text,font,text_col,x,y):
     img = font.render(f'x {quantity_shield}', True, text_col)
     SUB_AREA.blit(img, (x, y))
 
+def draw_item_title(font,text_col,x,y):
+    img = font.render(f'Item List', True, text_col)
+    SUB_AREA.blit(img, (x, y))
 
 #Các biến hành động nhân vật
 moving_left = False
