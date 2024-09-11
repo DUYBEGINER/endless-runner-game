@@ -137,8 +137,8 @@ class Boom_effect(pygame.sprite.Sprite):
         self.y = y
         self.update_time = pygame.time.get_ticks()
         # Load animation
-        for i in range(1, 6):
-            tmp_img = pygame.image.load(os.path.join(Variables.current_dir, f'Asset/Boom/Boom_effect/{i}.png'))
+        for i in range(1, 14):
+            tmp_img = pygame.image.load(os.path.join(Variables.current_dir, f'Asset/Boom/Boom_effect2/{i}.png'))
             self.animation_list.append(tmp_img)
         self.rect = self.animation_list[self.index].get_rect()
         self.rect.center = (self.x, self.y)
