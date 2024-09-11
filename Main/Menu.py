@@ -2,17 +2,16 @@ import pygame
 import sys, os
 import Variables
 
-
 pygame.init()
 
 # Constants
-SCREEN_WIDTH, SCREEN_HEIGHT = 280, 450  # Kích thước màn hình setting
+SCREEN_WIDTH, SCREEN_HEIGHT = 320, 500  # Kích thước màn hình
 WHITE = (255, 255, 255)
 BUTTON_COLOR = (0, 128, 255)  # Màu button
 BUTTON_HOVER_COLOR = (0, 100, 200)  # Màu button khi hover
-FONT_SIZE = 30  # Font chữ
-BUTTON_WIDTH, BUTTON_HEIGHT = 200, 50  # Kích thước button
-BUTTON_SPACING = 10  # Khoảng cách các button
+FONT_SIZE = 35  # Font chữ lớn hơn
+BUTTON_WIDTH, BUTTON_HEIGHT = 220, 50  # Kích thước button
+BUTTON_SPACING = 15  # Khoảng cách các button
 
 # Khởi tạo màn hình và đặt tên
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -45,7 +44,7 @@ def menu():
     
     # Vị trí của các nút
     start_button_x = (SCREEN_WIDTH - BUTTON_WIDTH) // 2
-    start_button_y = 140
+    start_button_y = SCREEN_HEIGHT // 2 - 1.5 * BUTTON_HEIGHT - BUTTON_SPACING
     settings_button_x = (SCREEN_WIDTH - BUTTON_WIDTH) // 2
     settings_button_y = start_button_y + BUTTON_HEIGHT + BUTTON_SPACING
     exit_button_x = (SCREEN_WIDTH - BUTTON_WIDTH) // 2
@@ -90,10 +89,14 @@ def settings_menu():
     global volume, difficulty, skin
     volume = 50
     difficulty = 'Normal'
-    skin = 'Default'
-
+    skin = 'Default'  # Biến lưu trữ skin hiện tại
+    
     # Danh sách các skin có sẵn
     skins = ['Default', 'Skin1', 'Skin2']
+
+    # Tải ảnh nền và thay đổi kích thước cho phù hợp
+    bg = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Setting/bg.jpg'))
+    bg = pygame.transform.scale(bg, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
     while True:
         for event in pygame.event.get():
@@ -104,11 +107,11 @@ def settings_menu():
                 mouse_x, mouse_y = pygame.mouse.get_pos()  # Nhận vị trí chuột khi click
                 
                 # Kiểm tra nút âm lượng
-                if 40 <= mouse_x <= 240 and 80 <= mouse_y <= 130:
+                if 50 <= mouse_x <= 270 and 80 <= mouse_y <= 130:
                     volume = (volume + 10) % 110  # Tăng âm lượng và quay lại 0 nếu vượt quá 100
                     print(f"Volume adjusted to {volume}")
                 # Kiểm tra nút độ khó
-                elif 40 <= mouse_x <= 240 and 150 <= mouse_y <= 200:
+                elif 50 <= mouse_x <= 270 and 150 <= mouse_y <= 200:
                     if difficulty == 'Easy':
                         difficulty = 'Normal'
                     elif difficulty == 'Normal':
@@ -117,22 +120,22 @@ def settings_menu():
                         difficulty = 'Easy'
                     print(f"Difficulty set to {difficulty}")
                 # Kiểm tra nút skin
-                elif 40 <= mouse_x <= 240 and 220 <= mouse_y <= 270:
+                elif 50 <= mouse_x <= 270 and 220 <= mouse_y <= 270:
                     current_skin_index = skins.index(skin)
                     skin = skins[(current_skin_index + 1) % len(skins)]
                     print(f"Skin changed to {skin}")
                 # Kiểm tra nút quay lại
-                elif 40 <= mouse_x <= 240 and 290 <= mouse_y <= 340:
+                elif 50 <= mouse_x <= 270 and 290 <= mouse_y <= 340:
                     return  # Quay lại menu chính
 
         # Vẽ nền
         screen.blit(bg, (0, 0))
         
         # Vẽ các button
-        draw_button(f"Volume: {volume}", 40, 80, BUTTON_WIDTH, BUTTON_HEIGHT)
-        draw_button(f"Difficulty: {difficulty}", 40, 150, BUTTON_WIDTH, BUTTON_HEIGHT)
-        draw_button(f"Skin: {skin}", 40, 220, BUTTON_WIDTH, BUTTON_HEIGHT)
-        draw_button("Back", 40, 290, BUTTON_WIDTH, BUTTON_HEIGHT)
+        draw_button(f"Volume: {volume}", 50, 80, BUTTON_WIDTH, BUTTON_HEIGHT)
+        draw_button(f"Difficulty: {difficulty}", 50, 150, BUTTON_WIDTH, BUTTON_HEIGHT)
+        draw_button(f"Skin: {skin}", 50, 220, BUTTON_WIDTH, BUTTON_HEIGHT)  # Hiển thị skin hiện tại
+        draw_button("Back", 50, 290, BUTTON_WIDTH, BUTTON_HEIGHT)
 
         # Cập nhật màn hình
         pygame.display.flip()
@@ -140,3 +143,4 @@ def settings_menu():
 # Chạy hàm menu khi chạy chương trình
 if __name__ == "__main__":
     menu()
+
