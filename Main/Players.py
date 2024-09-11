@@ -5,12 +5,11 @@ import Stone_fall
 from Stone_fall import stones
 from Boom import booms_effect
 from pygame.sprite import Group
-
+import update_high_score
 Stone_broken = Group()
 
+
 class Player(pygame.sprite.Sprite):
-
-
     def __init__(self, x, y, scale, speed):
         super().__init__()
         # Biến
@@ -130,6 +129,7 @@ class Player(pygame.sprite.Sprite):
         for stone in falling_stones:
             if self.rect.colliderect(stone.rect.left, stone.rect.bottom, stone.rect.width, 1) and not self.in_air:
                 if Variables.quantity_shield == 0:
+                    update_high_score.update_score()
                     Variables.RUNNING = False
                     print("over!")
                 else:
@@ -144,6 +144,7 @@ class Player(pygame.sprite.Sprite):
         for tile in booms_effect:
             if self.rect.colliderect(tile.rect.left, tile.rect.top, tile.rect.width, tile.rect.height):
                 if Variables.quantity_shield == 0:
+                    update_high_score.update_score()
                     Variables.RUNNING = False
                     print("over!")
                 else:

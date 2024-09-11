@@ -64,20 +64,33 @@ pygame.init()
 
 while Variables.RUNNING:
 
-    if pygame.time.get_ticks() - update_time_score > 200:
-        Variables.score +=1
-        update_time_score = pygame.time.get_ticks()
+
     Variables.SCREEN.fill(Variables.BLACK)
     Variables.SCREEN.blit(BACKGROUND_IMG2, (0, 0))
     Variables.SCREEN.blit(BACKGROUND_IMG1, (0, 0))
     Variables.SCREEN.blit(GROUND_IMG, (0, Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT))
     Variables.SCREEN.blit(Variables.WALL_IMG1, (0, 0))
     Variables.SCREEN.blit(Variables.WALL_IMG2, (288, 0))
+    # print(Variables.tmp_high_score)
 
+    ##########################################--KHU VỰC PHỤ--#################################################
+    Variables.SCREEN.blit(Variables.SUB_AREA, (320, 0))
+    Variables.SUB_AREA.blit(Variables.SUB_AREA_IMG, (0, 0))
+    #Hiển thị high_score
+    Variables.draw_high_score(Variables.high_score,Variables.score_font,(186,145,88),60, 49)
+    #Hiển thị Score
+    Variables.draw_score_title(Variables.score, Variables.score_title_font, (186,145,88), 80, 93)
+    Variables.draw_score(Variables.score, Variables.score_font, (186,145,88), Variables.score_x, 125)
     # Hiển thị shield
-    Variables.SCREEN.blit(Variables.SHIELD_IMG, (30, 0))
-    Variables.draw_num_shield(Variables.quantity_shield,Variables.text_font, Variables.WHITE  , 60, 5)
-    Variables.draw_text(Variables.score, Variables.text_font, Variables.WHITE, 40, 50)
+    Variables.SUB_AREA_IMG.blit(Variables.SHIELD_IMG, (0, 200))
+    Variables.draw_num_shield(Variables.quantity_shield, Variables.text_font, (197, 188, 157), 60, 215)
+    if pygame.time.get_ticks() - update_time_score > 100:
+        Variables.score += 1
+        update_time_score = pygame.time.get_ticks()
+        if Variables.score % Variables.score_up == 0:
+            Variables.score_up *= 10
+            Variables.score_x -=5
+    #############################################################################################################
 
 
     Player1.update_animation()
