@@ -7,7 +7,7 @@ from Boom import booms_effect
 from pygame.sprite import Group
 import update_high_score
 Stone_broken = Group()
-
+Boom_broken = Group()
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y, scale, speed):
@@ -19,6 +19,8 @@ class Player(pygame.sprite.Sprite):
         self.jump = False
         self.in_air = True
         self.vel_y = 0  # Vận tốc
+
+
         self.update_time = pygame.time.get_ticks()
         # Load all animation
         Animation_type = ['Idle', 'Run', 'Jump2']
@@ -134,8 +136,14 @@ class Player(pygame.sprite.Sprite):
                     print("over!")
                 else:
                     Variables.quantity_shield -= 1
-                    stone_broken= Broken_effect(stone.rect.centerx, self.rect.centery-32)
-                    Stone_broken.add(stone_broken)
+                    if isinstance(stone,Stone_fall.Stone):
+                        stone_broken= Stone_broken_effect(stone.rect.centerx, self.rect.centery-32)
+                        Stone_broken.add(stone_broken)
+                        Variables.check_collision_boom = False
+                    else:
+                        boom_broken = Boom_broken_effect(stone.rect.centerx, self.rect.centery - 32)
+                        Boom_broken.add(boom_broken)
+                        Variables.check_collision_boom = True
                     stone.kill()
                     dy = 0
                     break
@@ -149,8 +157,9 @@ class Player(pygame.sprite.Sprite):
                     print("over!")
                 else:
                     Variables.quantity_shield -= 1
-                    # stone_broken_effect = Broken_effect(tile.rect.left, tile.rect.top)
-                    # Stone_broken.add(stone_broken_effect)
+
+
+
 
         if not self.on_ground:
             self.in_air = True
@@ -185,7 +194,7 @@ class Player(pygame.sprite.Sprite):
         #     self.update_time = pygame.time.get_ticks()
         #     self.index += 1
 
-class Broken_effect(pygame.sprite.Sprite):
+class Stone_broken_effect(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
         self.animation_list = []
@@ -196,6 +205,32 @@ class Broken_effect(pygame.sprite.Sprite):
         # Load animation
         for i in range(20):
             img = pygame.image.load(os.path.join(Variables.current_dir, f'Asset/Map/animation_broken/{i}.png'))
+            img = pygame.transform.scale(img, (32, 32))
+            self.animation_list.append(img)
+        self.rect = self.animation_list[self.index].get_rect()
+        self.rect.center = (self.x, self.y)
+
+    def update(self):
+        ANIMATION_COOLDOWN_effect = 10
+        # Cập nhật frame ảnh hiện tại
+        self.image = self.animation_list[self.index]
+        if pygame.time.get_ticks() - self.update_time > ANIMATION_COOLDOWN_effect:
+            self.update_time = pygame.time.get_ticks()
+            self.index += 1
+        if self.index >= len(self.animation_list):
+            self.kill()
+
+class Boom_broken_effect(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.animation_list = []
+        self.index = 0
+        self.x = x
+        self.y = y
+        self.update_time = pygame.time.get_ticks()
+        # Load animation
+        for i in range(16):
+            img = pygame.image.load(os.path.join(Variables.current_dir, f'Asset/Map/boom_broken/{i}.png'))
             img = pygame.transform.scale(img, (32, 32))
             self.animation_list.append(img)
         self.rect = self.animation_list[self.index].get_rect()

@@ -99,6 +99,8 @@ quantity_shield = 0
 #Biến chạy hiệu ứng animation jump
 effect_list = []
 effect_jump_index = 0
+check_collision_boom = False
+
 
 pygame.init()
 

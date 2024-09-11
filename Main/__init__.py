@@ -44,14 +44,14 @@ def re_spawn_stone():
     if tmp <= 60:
         stone = Stone_fall.Stone(2, 'stone_fall1')
         Stone_fall.stones.add(stone)
-    elif tmp <= 70:
+    elif tmp <= 85:
         stone = Stone_fall.Stone(2, 'stone_fall2')
         Stone_fall.stones.add(stone)
     else:
         stone = Boom.boom(2)
         Stone_fall.stones.add(stone)
     tmp = random.randint(1, 100)
-    if tmp > 70:
+    if tmp > 90:
         shield = Shield.shield(1)
         Shield.Shield_Group.add(shield)
 
@@ -105,7 +105,7 @@ while Variables.RUNNING:
     if Player1.in_air:
         Player1.update_action(2)
     elif Variables.moving_left or Variables.moving_right:
-        Player1.update_action(1)  # Runa
+        Player1.update_action(1)  # Run
     else:
         Player1.update_action(0)  # Idlea
 
@@ -172,18 +172,19 @@ while Variables.RUNNING:
     Stone_fall.stones.update()
     Stone_fall.stones.draw(Variables.SCREEN)
 
-
-
     Boom.booms_effect.update()
     Boom.booms_effect.draw(Variables.SCREEN)
-
 
     Shield.Shield_Group.update()
     Shield.Shield_Group.draw(Variables.SCREEN)
 
     #Chạy animation stone broken
-    Players.Stone_broken.update()
-    Players.Stone_broken.draw(Variables.SCREEN)
+    if Variables.check_collision_boom:
+        Players.Boom_broken.update()
+        Players.Boom_broken.draw(Variables.SCREEN)
+    else:
+        Players.Stone_broken.update()
+        Players.Stone_broken.draw(Variables.SCREEN)
 
 
     for shield in Shield.Shield_Group:
