@@ -154,4 +154,3 @@ class Boom_effect(pygame.sprite.Sprite):
         if self.index >= len(self.animation_list):
             Variables.is_exploi = False
             self.kill()
-
