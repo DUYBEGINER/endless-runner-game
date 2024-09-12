@@ -13,6 +13,8 @@ FONT_SIZE = 35  # Font chữ lớn hơn
 BUTTON_WIDTH, BUTTON_HEIGHT = 220, 50  # Kích thước button
 BUTTON_SPACING = 15  # Khoảng cách các button
 
+
+
 # Khởi tạo màn hình và đặt tên
 screen = pygame.display.set_mode((SCREEN_WIDTH_MENU, SCREEN_HEIGHT_MENU))
 pygame.display.set_caption("Menu")
@@ -50,10 +52,14 @@ settings_button_y = start_button_y + BUTTON_HEIGHT + BUTTON_SPACING
 exit_button_x = (SCREEN_WIDTH_MENU - BUTTON_WIDTH) // 2
 exit_button_y = settings_button_y + BUTTON_HEIGHT + BUTTON_SPACING
 
+
+
 # Tạo các đối tượng pygame.Rect cho các button
 start_button_rect = pygame.Rect(start_button_x, start_button_y, BUTTON_WIDTH, BUTTON_HEIGHT)
 settings_button_rect = pygame.Rect(settings_button_x, settings_button_y, BUTTON_WIDTH, BUTTON_HEIGHT)
 exit_button_rect = pygame.Rect(exit_button_x, exit_button_y, BUTTON_WIDTH, BUTTON_HEIGHT)
+
+
 
 # while True:
 #     for event in pygame.event.get():
@@ -137,3 +143,12 @@ def settings_menu():
 
         # Cập nhật màn hình
         pygame.display.flip()
+
+
+# def draw_button_img( x, y,scale):
+#     mouse_pos = pygame.mouse.get_pos()  # Lấy vị trí chuột
+#     is_hovered = pygame.Rect(x, y,HOME_BUTTON_IMG.get_width(), HOME_BUTTON_IMG.get_height()).collidepoint(mouse_pos)
+#     Home_button_image = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Button/home/Default.png'))
+#     Home_button_image = pygame.transform.scale(Home_button_image, (int(Home_button_image.get_width() * scale), int(Home_button_image.get_height() * scale)))
+#     pygame.draw.rect(Variables.SCREEN, WHITE, HOME_BUTTON_IMG.get_rect())
+#     Variables.SCREEN.blit(Home_button_image,(x,y))

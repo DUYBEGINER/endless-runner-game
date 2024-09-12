@@ -72,7 +72,6 @@ class Player(pygame.sprite.Sprite):
         # Gravity
         self.vel_y += Variables.GRAVITY
         dy += self.vel_y
-
         # Collision checking
         dx, dy = self.check_collision(dx, dy)
 
@@ -80,9 +79,6 @@ class Player(pygame.sprite.Sprite):
         if self.rect.bottom + dy > Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT:
             dy = Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT - self.rect.bottom
             self.in_air = False
-
-        #Kiểm tra bién in_air
-        # print('in_air: ', self.in_air)
 
         # Update player position
         self.rect.x += dx
@@ -126,16 +122,17 @@ class Player(pygame.sprite.Sprite):
                 self.in_air = False
                 self.on_ground = True
 
+        #Tạo list đá đang rơi
         falling_stones = [stone for stone in stones if stone.rect.bottom > self.rect.top]
-        #Kiểm tra điều kiện dừng
+
+        #Kiểm tra bị đá đè
         for stone in falling_stones:
             if self.rect.colliderect(stone.rect.left, stone.rect.bottom, stone.rect.width, 1) and not self.in_air:
                 if Variables.quantity_shield == 0:
-                    update_high_score.update_score()
                     self.alive = False
-                    print("over!")
                 else:
                     Variables.quantity_shield -= 1
+                    #Kiểm tra va chạm với stone hay boom để chạy animetion tương ứng
                     if isinstance(stone,Stone_fall.Stone):
                         stone_broken= Stone_broken_effect(stone.rect.centerx, self.rect.centery-32)
                         Stone_broken.add(stone_broken)
@@ -148,22 +145,17 @@ class Player(pygame.sprite.Sprite):
                     dy = 0
                     break
 
-
+        # Bị boom nổ
         for tile in booms_effect:
             if self.rect.colliderect(tile.rect.left, tile.rect.top, tile.rect.width, tile.rect.height):
                 if Variables.quantity_shield == 0:
-                    update_high_score.update_score()
                     self.alive = False
                     print("over!")
                 else:
                     Variables.quantity_shield -= 1
-
-
-
-
+        #Kiểm tra player có đứng trên mặt đất không
         if not self.on_ground:
             self.in_air = True
-
         #Giảm giật
         if abs(dy) < 1:
             dy = 0
@@ -187,12 +179,6 @@ class Player(pygame.sprite.Sprite):
             self.action = new_action
             self.update_time = pygame.time.get_ticks()
             self.index = 0
-
-    # def animation_broken(self,x,y):
-        # ANIMATION_COOLDOWN = 20
-        # if pygame.time.get_ticks() - self.update_time > ANIMATION_COOLDOWN:
-        #     self.update_time = pygame.time.get_ticks()
-        #     self.index += 1
 
 class Stone_broken_effect(pygame.sprite.Sprite):
     def __init__(self, x, y):
