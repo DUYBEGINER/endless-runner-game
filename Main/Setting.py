@@ -1,4 +1,4 @@
-# setting trong khi chơi game
+#setting trong khi chơi game
 # settings.py
 import pygame
 import sys, os
@@ -7,7 +7,6 @@ import Variables
 # Constants
 WHITE = (255, 255, 255)
 BUTTON_WIDTH, BUTTON_HEIGHT = 200, 50
-
 
 def draw_button(screen, font, text, x, y, width, height):
     BUTTON_COLOR = (0, 128, 255)
@@ -19,7 +18,6 @@ def draw_button(screen, font, text, x, y, width, height):
     text_surface = font.render(text, True, WHITE)
     text_rect = text_surface.get_rect(center=(x + width // 2, y + height // 2))
     screen.blit(text_surface, text_rect)
-
 
 def settings_menu(screen, font):
     volume = 50

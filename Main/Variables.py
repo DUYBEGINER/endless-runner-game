@@ -11,7 +11,7 @@ current_dir = os.path.dirname(current_dir_tmp) # Đường dẫn tới ../Game_p
 WINDOW_WIDTH = 320
 WINDOW_HEIGHT = 500
 RUNNING = True
-SCREEN = pygame.display.set_mode((WINDOW_WIDTH+200, WINDOW_HEIGHT))
+SCREEN = pygame.display.set_mode((WINDOW_WIDTH + 200, WINDOW_HEIGHT))
 # Kích thước các đối tượng trong game
 GROUND_HEIGHT = 64      # Chiều dày mặt đất
 BLOCK_SIZE = 32         # Kích thước khối block
@@ -101,7 +101,9 @@ effect_list = []
 effect_jump_index = 0
 check_collision_boom = False
 
-
+# Biến thực hiện các màn hình
+mode_1player = False
+RUNNING = True
 pygame.init()
 
 

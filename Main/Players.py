@@ -19,7 +19,7 @@ class Player(pygame.sprite.Sprite):
         self.jump = False
         self.in_air = True
         self.vel_y = 0  # Vận tốc
-
+        self.alive = True
 
         self.update_time = pygame.time.get_ticks()
         # Load all animation
@@ -132,7 +132,7 @@ class Player(pygame.sprite.Sprite):
             if self.rect.colliderect(stone.rect.left, stone.rect.bottom, stone.rect.width, 1) and not self.in_air:
                 if Variables.quantity_shield == 0:
                     update_high_score.update_score()
-                    Variables.RUNNING = False
+                    self.alive = False
                     print("over!")
                 else:
                     Variables.quantity_shield -= 1
@@ -153,7 +153,7 @@ class Player(pygame.sprite.Sprite):
             if self.rect.colliderect(tile.rect.left, tile.rect.top, tile.rect.width, tile.rect.height):
                 if Variables.quantity_shield == 0:
                     update_high_score.update_score()
-                    Variables.RUNNING = False
+                    self.alive = False
                     print("over!")
                 else:
                     Variables.quantity_shield -= 1
