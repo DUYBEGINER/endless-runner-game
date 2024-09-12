@@ -7,8 +7,6 @@ import Shield
 from Players import Player
 import Stone_fall, Boom
 import Players
-import Menu
-
 # Thiết lập màn hình game
 # Thiết lập bề mặt màn hình chính
 pygame.display.set_caption('Name_of_game')  # Thiết lập tên cửa sổ game
