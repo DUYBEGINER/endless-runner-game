@@ -92,7 +92,7 @@ class boom(pygame.sprite.Sprite):
             if pygame.time.get_ticks() - self.update_time > ANIMATION_COOLDOWN:
                 self.update_time = pygame.time.get_ticks()
                 self.index += 1
-            if self.index >= len(self.animation_list):
+            if self.index >= len(self.animation_list) and Variables.mode_1player:
                 countdown_boom.stop()
                 self.booom()
                 exploision_sfx.play()

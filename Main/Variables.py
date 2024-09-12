@@ -94,7 +94,8 @@ moving_left = False
 moving_right = False
 moving_jump = False
 quantity_shield = 0
-
+# Biến thực hiện các màn hình
+mode_1player = False
 
 #Biến chạy hiệu ứng animation jump
 effect_list = []

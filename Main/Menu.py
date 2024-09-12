@@ -5,7 +5,7 @@ import Variables
 pygame.init()
 
 # Constants
-SCREEN_WIDTH, SCREEN_HEIGHT = 320, 500  # Kích thước màn hình
+SCREEN_WIDTH_MENU, SCREEN_HEIGHT_MENU = 520, 500  # Kích thước màn hình
 WHITE = (255, 255, 255)
 BUTTON_COLOR = (0, 128, 255)  # Màu button
 BUTTON_HOVER_COLOR = (0, 100, 200)  # Màu button khi hover
@@ -14,12 +14,12 @@ BUTTON_WIDTH, BUTTON_HEIGHT = 220, 50  # Kích thước button
 BUTTON_SPACING = 15  # Khoảng cách các button
 
 # Khởi tạo màn hình và đặt tên
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+screen = pygame.display.set_mode((SCREEN_WIDTH_MENU, SCREEN_HEIGHT_MENU))
 pygame.display.set_caption("Menu")
 
 # Tải ảnh nền và thay đổi kích thước cho phù hợp
 bg = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Setting/bg.jpg'))
-bg = pygame.transform.scale(bg, (SCREEN_WIDTH, SCREEN_HEIGHT))
+bg = pygame.transform.scale(bg, (SCREEN_WIDTH_MENU, SCREEN_HEIGHT_MENU))
 
 # Tạo font chữ
 font = pygame.font.Font(None, FONT_SIZE)
@@ -39,50 +39,48 @@ def draw_button(text, x, y, width, height):
     screen.blit(text_surface, text_rect)
 
 # Hàm hiển thị menu chính
-def menu():
-    global start_button_rect, settings_button_rect, exit_button_rect
-    
-    # Vị trí của các nút
-    start_button_x = (SCREEN_WIDTH - BUTTON_WIDTH) // 2
-    start_button_y = SCREEN_HEIGHT // 2 - 1.5 * BUTTON_HEIGHT - BUTTON_SPACING
-    settings_button_x = (SCREEN_WIDTH - BUTTON_WIDTH) // 2
-    settings_button_y = start_button_y + BUTTON_HEIGHT + BUTTON_SPACING
-    exit_button_x = (SCREEN_WIDTH - BUTTON_WIDTH) // 2
-    exit_button_y = settings_button_y + BUTTON_HEIGHT + BUTTON_SPACING
 
-    # Tạo các đối tượng pygame.Rect cho các button
-    start_button_rect = pygame.Rect(start_button_x, start_button_y, BUTTON_WIDTH, BUTTON_HEIGHT)
-    settings_button_rect = pygame.Rect(settings_button_x, settings_button_y, BUTTON_WIDTH, BUTTON_HEIGHT)
-    exit_button_rect = pygame.Rect(exit_button_x, exit_button_y, BUTTON_WIDTH, BUTTON_HEIGHT)
+global start_button_rect, settings_button_rect, exit_button_rect
 
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()  # Thoát game nếu đóng cửa sổ
-            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                mouse_x, mouse_y = pygame.mouse.get_pos()  # Nhận vị trí chuột khi click
-                # Kiểm tra xem chuột có click vào button nào không và thực hiện hành động tương ứng
-                if start_button_rect.collidepoint(mouse_x, mouse_y):
-                    print("Start Game clicked!")
-                    # Thực hiện start game
-                elif settings_button_rect.collidepoint(mouse_x, mouse_y):
-                    print("Settings clicked!")
-                    settings_menu()
-                elif exit_button_rect.collidepoint(mouse_x, mouse_y):
-                    pygame.quit()
-                    sys.exit()  # Thoát game nếu click chuột vào nút Exit
-        
-        # Vẽ nền
-        screen.blit(bg, (0, 0))
+# Vị trí của các nút
+start_button_x = (SCREEN_WIDTH_MENU - BUTTON_WIDTH) // 2
+start_button_y = SCREEN_HEIGHT_MENU // 2 - 1.5 * BUTTON_HEIGHT - BUTTON_SPACING
+settings_button_x = (SCREEN_WIDTH_MENU - BUTTON_WIDTH) // 2
+settings_button_y = start_button_y + BUTTON_HEIGHT + BUTTON_SPACING
+exit_button_x = (SCREEN_WIDTH_MENU - BUTTON_WIDTH) // 2
+exit_button_y = settings_button_y + BUTTON_HEIGHT + BUTTON_SPACING
 
-        # Vẽ các button
-        draw_button("Start Game", start_button_x, start_button_y, BUTTON_WIDTH, BUTTON_HEIGHT)
-        draw_button("Settings", settings_button_x, settings_button_y, BUTTON_WIDTH, BUTTON_HEIGHT)
-        draw_button("Exit", exit_button_x, exit_button_y, BUTTON_WIDTH, BUTTON_HEIGHT)
+# Tạo các đối tượng pygame.Rect cho các button
+start_button_rect = pygame.Rect(start_button_x, start_button_y, BUTTON_WIDTH, BUTTON_HEIGHT)
+settings_button_rect = pygame.Rect(settings_button_x, settings_button_y, BUTTON_WIDTH, BUTTON_HEIGHT)
+exit_button_rect = pygame.Rect(exit_button_x, exit_button_y, BUTTON_WIDTH, BUTTON_HEIGHT)
 
-        # Cập nhật màn hình
-        pygame.display.flip()
+# while True:
+#     for event in pygame.event.get():
+#         if event.type == pygame.QUIT:
+#             pygame.quit()
+#             sys.exit()  # Thoát game nếu đóng cửa sổ
+#         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+#             mouse_x, mouse_y = pygame.mouse.get_pos()  # Nhận vị trí chuột khi click
+#             # Kiểm tra xem chuột có click vào button nào không và thực hiện hành động tương ứng
+#             if start_button_rect.collidepoint(mouse_x, mouse_y):
+#                 print("Start Game clicked!")
+#                 # Thực hiện start game
+#             elif settings_button_rect.collidepoint(mouse_x, mouse_y):
+#                 print("Settings clicked!")
+#                 settings_menu()
+#             elif exit_button_rect.collidepoint(mouse_x, mouse_y):
+#                 pygame.quit()
+#                 sys.exit()  # Thoát game nếu click chuột vào nút Exit
+#     # Vẽ nền
+#     screen.blit(bg, (0, 0))
+#     # Vẽ các button
+#     draw_button("Start Game", start_button_x, start_button_y, BUTTON_WIDTH, BUTTON_HEIGHT)
+#     draw_button("Settings", settings_button_x, settings_button_y, BUTTON_WIDTH, BUTTON_HEIGHT)
+#     draw_button("Exit", exit_button_x, exit_button_y, BUTTON_WIDTH, BUTTON_HEIGHT)
+
+#     # Cập nhật màn hình
+#     pygame.display.flip()
 
 # Hàm hiển thị menu cài đặt
 def settings_menu():
@@ -96,7 +94,7 @@ def settings_menu():
 
     # Tải ảnh nền và thay đổi kích thước cho phù hợp
     bg = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Setting/bg.jpg'))
-    bg = pygame.transform.scale(bg, (SCREEN_WIDTH, SCREEN_HEIGHT))
+    bg = pygame.transform.scale(bg, (SCREEN_WIDTH_MENU, SCREEN_HEIGHT_MENU))
 
     while True:
         for event in pygame.event.get():
@@ -139,7 +137,3 @@ def settings_menu():
 
         # Cập nhật màn hình
         pygame.display.flip()
-
-# Chạy hàm menu khi chạy chương trình
-if __name__ == "__main__":
-    menu()
