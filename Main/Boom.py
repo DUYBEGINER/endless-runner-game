@@ -4,13 +4,20 @@ from pygame.sprite import Group
 from Stone_fall import stones
 
 import Variables
-import Stone_fall
+
 
 GRAVITY_BOOM = 0.025
 
 booms_effect = Group()
 # Cài đặt thời gian chờ
 ANIMATION_COOLDOWN = 360
+pygame.mixer.init()
+exploision_sfx =   pygame.mixer.Sound(os.path.join(Variables.current_dir, f'Asset/SFX/exploision.mp3'))
+countdown_boom =   pygame.mixer.Sound(os.path.join(Variables.current_dir, f'Asset/SFX/countdown_boom.mp3'))
+countdown_boom.set_volume(0.1)
+exploision_sfx.set_volume(0.5)
+# channel1 = pygame.mixer.Channel(1)  # Chọn kênh 1
+# channel2 =  pygame.mixer.Channel(2)
 
 
 class boom(pygame.sprite.Sprite):
@@ -22,6 +29,8 @@ class boom(pygame.sprite.Sprite):
         self.index = 0
         self.update_time = pygame.time.get_ticks()
         self.active = False
+        # self.countdown_sound = countdown_boom
+        # self.exploision_sound = exploision_sfx
         # Load image
         for i in range(1, 9):
             img = pygame.image.load(os.path.join(Variables.current_dir, f'Asset/Boom/{i}.png'))
@@ -76,6 +85,7 @@ class boom(pygame.sprite.Sprite):
 
     def update_animation(self):
         if self.active:
+            countdown_boom.play()
             # Cập nhật frame ảnh hiện tại
             self.image = self.animation_list[self.index]
             #
@@ -83,7 +93,11 @@ class boom(pygame.sprite.Sprite):
                 self.update_time = pygame.time.get_ticks()
                 self.index += 1
             if self.index >= len(self.animation_list):
+                countdown_boom.stop()
                 self.booom()
+                exploision_sfx.play()
+
+
 
     def booom(self):
         list_tmp = []
@@ -94,8 +108,10 @@ class boom(pygame.sprite.Sprite):
                     list_tmp.append(stone)
         for i in list_tmp:
             i.kill()
+        list_tmp = []
         boom_effect = Boom_effect(self.rect.centerx, self.rect.centery)
         booms_effect.add(boom_effect)
+        Variables.is_exploi = True
         self.kill()
 
     def check_to_delete(self):
@@ -105,8 +121,11 @@ class boom(pygame.sprite.Sprite):
             if (i.rect.bottom >= Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT - 2):
                 self.list_to_delete.append(i)
         if len(self.list_to_delete) == 8:
+            # self.countdown_sound.stop()
             for i in self.list_to_delete:
                 i.kill()
+
+
 
 
 class Boom_effect(pygame.sprite.Sprite):
@@ -118,8 +137,8 @@ class Boom_effect(pygame.sprite.Sprite):
         self.y = y
         self.update_time = pygame.time.get_ticks()
         # Load animation
-        for i in range(1, 6):
-            tmp_img = pygame.image.load(os.path.join(Variables.current_dir, f'Asset/Boom/Boom_effect/{i}.png'))
+        for i in range(1, 14):
+            tmp_img = pygame.image.load(os.path.join(Variables.current_dir, f'Asset/Boom/Boom_effect2/{i}.png'))
             self.animation_list.append(tmp_img)
         self.rect = self.animation_list[self.index].get_rect()
         self.rect.center = (self.x, self.y)
@@ -128,9 +147,11 @@ class Boom_effect(pygame.sprite.Sprite):
         ANIMATION_COOLDOWN_effect = 10
         # Cập nhật frame ảnh hiện tại
         self.image = self.animation_list[self.index]
-        #
+
         if pygame.time.get_ticks() - self.update_time > ANIMATION_COOLDOWN_effect:
             self.update_time = pygame.time.get_ticks()
             self.index += 1
         if self.index >= len(self.animation_list):
+            Variables.is_exploi = False
             self.kill()
+

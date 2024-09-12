@@ -4,7 +4,10 @@ import Variables
 import Stone_fall
 from Stone_fall import stones
 from Boom import booms_effect
-
+from pygame.sprite import Group
+import update_high_score
+Stone_broken = Group()
+Boom_broken = Group()
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y, scale, speed):
@@ -16,8 +19,9 @@ class Player(pygame.sprite.Sprite):
         self.jump = False
         self.in_air = True
         self.vel_y = 0  # Vận tốc
-        self.update_time = pygame.time.get_ticks()
 
+
+        self.update_time = pygame.time.get_ticks()
         # Load all animation
         Animation_type = ['Idle', 'Run', 'Jump2']
         for animation in Animation_type:
@@ -78,7 +82,7 @@ class Player(pygame.sprite.Sprite):
             self.in_air = False
 
         #Kiểm tra bién in_air
-        print('in_air: ', self.in_air)
+        # print('in_air: ', self.in_air)
 
         # Update player position
         self.rect.x += dx
@@ -88,13 +92,13 @@ class Player(pygame.sprite.Sprite):
         self.update_animation()
         # Xuất hình ảnh, chỉnh sửa diện tích hiển thị
         SCREEN.blit(pygame.transform.flip(self.image, self.flip, False), self.rect, (6, 0, self.width + 5, self.height))
-        pygame.draw.rect(SCREEN, (255, 0, 0), self.rect, 2)
+        # pygame.draw.rect(SCREEN, (255, 0, 0), self.rect, 2)
+
 
     def check_collision(self, dx, dy):
         """
         Kiểm tra va chạm với các đối tượng tường, đá
         """
-
         on_ground = False        # Kiem tra va cham tuong
         if Variables.WALL_RECT1.colliderect(self.rect.left + dx, self.rect.top, self.rect.width, self.rect.height):
             self.rect.left = Variables.WALL_RECT1.right
@@ -112,7 +116,6 @@ class Player(pygame.sprite.Sprite):
                 if self.vel_y < 0:
                     self.vel_y = tile.vel_y
                     dy = self.vel_y
-
                 elif self.vel_y >= 0:
                     self.vel_y = 0
                     dy = tile.rect.top - self.rect.bottom
@@ -127,12 +130,36 @@ class Player(pygame.sprite.Sprite):
         #Kiểm tra điều kiện dừng
         for stone in falling_stones:
             if self.rect.colliderect(stone.rect.left, stone.rect.bottom, stone.rect.width, 1) and not self.in_air:
-                Variables.RUNNING = False
-                print("over!")
+                if Variables.quantity_shield == 0:
+                    update_high_score.update_score()
+                    Variables.RUNNING = False
+                    print("over!")
+                else:
+                    Variables.quantity_shield -= 1
+                    if isinstance(stone,Stone_fall.Stone):
+                        stone_broken= Stone_broken_effect(stone.rect.centerx, self.rect.centery-32)
+                        Stone_broken.add(stone_broken)
+                        Variables.check_collision_boom = False
+                    else:
+                        boom_broken = Boom_broken_effect(stone.rect.centerx, self.rect.centery - 32)
+                        Boom_broken.add(boom_broken)
+                        Variables.check_collision_boom = True
+                    stone.kill()
+                    dy = 0
+                    break
+
+
         for tile in booms_effect:
             if self.rect.colliderect(tile.rect.left, tile.rect.top, tile.rect.width, tile.rect.height):
-                Variables.RUNNING = False
-                print("over!")
+                if Variables.quantity_shield == 0:
+                    update_high_score.update_score()
+                    Variables.RUNNING = False
+                    print("over!")
+                else:
+                    Variables.quantity_shield -= 1
+
+
+
 
         if not self.on_ground:
             self.in_air = True
@@ -140,7 +167,6 @@ class Player(pygame.sprite.Sprite):
         #Giảm giật
         if abs(dy) < 1:
             dy = 0
-
         return dx, dy
 
     def update_animation(self):
@@ -161,3 +187,61 @@ class Player(pygame.sprite.Sprite):
             self.action = new_action
             self.update_time = pygame.time.get_ticks()
             self.index = 0
+
+    # def animation_broken(self,x,y):
+        # ANIMATION_COOLDOWN = 20
+        # if pygame.time.get_ticks() - self.update_time > ANIMATION_COOLDOWN:
+        #     self.update_time = pygame.time.get_ticks()
+        #     self.index += 1
+
+class Stone_broken_effect(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.animation_list = []
+        self.index = 0
+        self.x = x
+        self.y = y
+        self.update_time = pygame.time.get_ticks()
+        # Load animation
+        for i in range(20):
+            img = pygame.image.load(os.path.join(Variables.current_dir, f'Asset/Map/animation_broken/{i}.png'))
+            img = pygame.transform.scale(img, (32, 32))
+            self.animation_list.append(img)
+        self.rect = self.animation_list[self.index].get_rect()
+        self.rect.center = (self.x, self.y)
+
+    def update(self):
+        ANIMATION_COOLDOWN_effect = 10
+        # Cập nhật frame ảnh hiện tại
+        self.image = self.animation_list[self.index]
+        if pygame.time.get_ticks() - self.update_time > ANIMATION_COOLDOWN_effect:
+            self.update_time = pygame.time.get_ticks()
+            self.index += 1
+        if self.index >= len(self.animation_list):
+            self.kill()
+
+class Boom_broken_effect(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.animation_list = []
+        self.index = 0
+        self.x = x
+        self.y = y
+        self.update_time = pygame.time.get_ticks()
+        # Load animation
+        for i in range(16):
+            img = pygame.image.load(os.path.join(Variables.current_dir, f'Asset/Map/boom_broken/{i}.png'))
+            img = pygame.transform.scale(img, (32, 32))
+            self.animation_list.append(img)
+        self.rect = self.animation_list[self.index].get_rect()
+        self.rect.center = (self.x, self.y)
+
+    def update(self):
+        ANIMATION_COOLDOWN_effect = 10
+        # Cập nhật frame ảnh hiện tại
+        self.image = self.animation_list[self.index]
+        if pygame.time.get_ticks() - self.update_time > ANIMATION_COOLDOWN_effect:
+            self.update_time = pygame.time.get_ticks()
+            self.index += 1
+        if self.index >= len(self.animation_list):
+            self.kill()
