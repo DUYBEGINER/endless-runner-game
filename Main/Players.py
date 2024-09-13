@@ -148,11 +148,14 @@ class Player(pygame.sprite.Sprite):
         # Bị boom nổ
         for tile in booms_effect:
             if self.rect.colliderect(tile.rect.left, tile.rect.top, tile.rect.width, tile.rect.height):
-                if Variables.quantity_shield == 0:
+                if Variables.quantity_shield < 0:
                     self.alive = False
                     print("over!")
-                else:
+                elif tile.boom_broken_shield != 0: #Khi nào số khiên cần phải mất khi boom nổ chưa đủ thì trừ dần về 0
                     Variables.quantity_shield -= 1
+                    tile.boom_broken_shield -= 1
+
+
         #Kiểm tra player có đứng trên mặt đất không
         if not self.on_ground:
             self.in_air = True

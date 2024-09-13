@@ -114,6 +114,7 @@ sound_background = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/soun
 collect_shield_sfx = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/collect_shield.mp3'))
 click_button_sfx = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/click_button.mp3'))
 hover_button_sfx = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/hover_button.mp3'))
+background_music = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/sound_game.mp3'))
 # countdown_boom.set_volume(0.3)
 jump_sfx.set_volume(0.3)
 walking_sfx.set_volume(1)
@@ -122,6 +123,7 @@ pygame.mixer.init()
 channel_collect = pygame.mixer.Channel(0)  # Chọn kênh 0
 channel_jump = pygame.mixer.Channel(1)
 channel_walk = pygame.mixer.Channel(2)
+channel_music = pygame.mixer.Channel(3)
 
 # play_channel_collect = channel_collect.play(collect_shield_sfx)
 # play_channel_boom = channel_countdown_boom.play(countdown_boom)
@@ -137,3 +139,4 @@ for i in range(7):
     img = pygame.image.load(os.path.join(current_dir, f'Asset/character/distribute/{i}.png'))
     # img = pygame.transform.scale(img, (int((img.get_width() * scale)), (img.get_height() * scale)))
     effect_list.append(img)
+difficult = 1

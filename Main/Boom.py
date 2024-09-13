@@ -61,9 +61,9 @@ class boom(pygame.sprite.Sprite):
         self.update_animation()
         # Áp dụng Gravity
         if self.in_air:
-            self.vel_y += GRAVITY_BOOM
-            if self.vel_y > self.MAX_VEL:
-                self.vel_y = self.MAX_VEL
+            self.vel_y += GRAVITY_BOOM * Variables.difficult
+            if self.vel_y > self.MAX_VEL * Variables.difficult:
+                self.vel_y = self.MAX_VEL * Variables.difficult
         dy = self.vel_y
         self.rect.centery += dy
         self.check_to_delete()
@@ -135,6 +135,7 @@ class Boom_effect(pygame.sprite.Sprite):
         self.index = 0
         self.x = x
         self.y = y
+        self.boom_broken_shield = 5
         self.update_time = pygame.time.get_ticks()
         # Load animation
         for i in range(1, 14):

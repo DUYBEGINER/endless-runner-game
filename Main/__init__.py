@@ -49,21 +49,22 @@ GROUND_IMG = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Map/gr
 pause = False
 
 update_time_score = pygame.time.get_ticks()
+
 # Tư động sinh các đối tượng đád
 def re_spawn_stone():
     if not pause:
         tmp = random.randint(1, 100)  # Chọn một số ngẫu nhiên từ 1 đến 10
-        if tmp <= 60:
+        if tmp <= 50:
             stone = Stone_fall.Stone(2, 'stone_fall1')
             Stone_fall.stones.add(stone)
-        elif tmp <= 85:
+        elif tmp <= 75:
             stone = Stone_fall.Stone(2, 'stone_fall2')
             Stone_fall.stones.add(stone)
         else:
             stone = Boom.boom(2)
             Stone_fall.stones.add(stone)
         tmp = random.randint(1, 100)
-        if tmp > 90:
+        if tmp > 50:
             shield = Shield.shield(1)
             Shield.Shield_Group.add(shield)
 
@@ -178,6 +179,7 @@ while Variables.RUNNING:
     if not restart:
     ############################### MÀN HÌNH MENU #####################################
         handle_menu_events()
+        Variables.channel_music.play(Variables.background_music, loops=-1)
     ####################################################################################
 
     one_flip = True     #biến để cập nhật màn hình over_game đúng 1 lần
@@ -188,6 +190,7 @@ while Variables.RUNNING:
 
     #################################### MÀN HÌNH CHÍNH CỦA GAME ####################################
     while Variables.mode_1player:
+
         draw_background()
         draw_sub_area()
         #count score

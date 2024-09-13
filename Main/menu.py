@@ -13,8 +13,6 @@ FONT_SIZE = 35  # Font chữ lớn hơn
 BUTTON_WIDTH, BUTTON_HEIGHT = 220, 50  # Kích thước button
 BUTTON_SPACING = 15  # Khoảng cách các button
 
-
-
 # Khởi tạo màn hình và đặt tên
 screen = pygame.display.set_mode((SCREEN_WIDTH_MENU, SCREEN_HEIGHT_MENU))
 pygame.display.set_caption("Menu")
@@ -26,11 +24,13 @@ bg = pygame.transform.scale(bg, (SCREEN_WIDTH_MENU, SCREEN_HEIGHT_MENU))
 # Tạo font chữ
 font = pygame.font.Font(None, FONT_SIZE)
 
+
 # Hàm vẽ nút
 def draw_button(text, x, y, width, height, Vẽ=None):
     mouse_pos = pygame.mouse.get_pos()  # Lấy vị trí chuột
-    is_hovered = pygame.Rect(x, y, width, height).collidepoint(mouse_pos)  # Kiểm tra xem chuột có đang hover vào button hay không
-    
+    is_hovered = pygame.Rect(x, y, width, height).collidepoint(
+        mouse_pos)  # Kiểm tra xem chuột có đang hover vào button hay không
+
     # Chọn màu button dựa trên việc chuột có đang hover không
     button_color = BUTTON_HOVER_COLOR if is_hovered else BUTTON_COLOR
     pygame.draw.rect(screen, button_color, (x, y, width, height))
@@ -44,6 +44,7 @@ def draw_button(text, x, y, width, height, Vẽ=None):
     text_rect = text_surface.get_rect(center=(x + width // 2, y + height // 2))
     screen.blit(text_surface, text_rect)
 
+
 # Hàm hiển thị menu chính
 
 global start_button_rect, settings_button_rect, exit_button_rect
@@ -56,13 +57,10 @@ settings_button_y = start_button_y + BUTTON_HEIGHT + BUTTON_SPACING
 exit_button_x = (SCREEN_WIDTH_MENU - BUTTON_WIDTH) // 2
 exit_button_y = settings_button_y + BUTTON_HEIGHT + BUTTON_SPACING
 
-
-
 # Tạo các đối tượng pygame.Rect cho các button
 start_button_rect = pygame.Rect(start_button_x, start_button_y, BUTTON_WIDTH, BUTTON_HEIGHT)
 settings_button_rect = pygame.Rect(settings_button_x, settings_button_y, BUTTON_WIDTH, BUTTON_HEIGHT)
 exit_button_rect = pygame.Rect(exit_button_x, exit_button_y, BUTTON_WIDTH, BUTTON_HEIGHT)
-
 
 
 # while True:
@@ -96,11 +94,12 @@ exit_button_rect = pygame.Rect(exit_button_x, exit_button_y, BUTTON_WIDTH, BUTTO
 def settings_menu():
     global volume, difficulty, skin
     volume = 50
-    difficulty = 'Normal'
-    skin = 'Default'  # Biến lưu trữ skin hiện tại
-    
+    difficulty = 'Easy'
+    Variables.difficult = 1
+    skin = 'WHITE'  # Biến lưu trữ skin hiện tại
+
     # Danh sách các skin có sẵn
-    skins = ['Default', 'Skin1', 'Skin2']
+    skins = ['WHITE', 'BLACK']
 
     # Tải ảnh nền và thay đổi kích thước cho phù hợp
     bg = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Setting/bg.jpg'))
@@ -113,7 +112,7 @@ def settings_menu():
                 sys.exit()  # Thoát game nếu đóng cửa sổ
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 mouse_x, mouse_y = pygame.mouse.get_pos()  # Nhận vị trí chuột khi click
-                
+
                 # Kiểm tra nút âm lượng
                 if 50 <= mouse_x <= 270 and 80 <= mouse_y <= 130:
                     volume = (volume + 10) % 110  # Tăng âm lượng và quay lại 0 nếu vượt quá 100
@@ -122,11 +121,13 @@ def settings_menu():
                 elif 50 <= mouse_x <= 270 and 150 <= mouse_y <= 200:
                     if difficulty == 'Easy':
                         difficulty = 'Normal'
+                        Variables.difficult = 1.25
                     elif difficulty == 'Normal':
+                        Variables.difficult = 100
                         difficulty = 'Hard'
-                    else:
+                    elif difficulty == 'Hard':
+                        Variables.difficult = 1
                         difficulty = 'Easy'
-                    print(f"Difficulty set to {difficulty}")
                 # Kiểm tra nút skin
                 elif 50 <= mouse_x <= 270 and 220 <= mouse_y <= 270:
                     current_skin_index = skins.index(skin)
@@ -138,7 +139,7 @@ def settings_menu():
 
         # Vẽ nền
         screen.blit(bg, (0, 0))
-        
+
         # Vẽ các button
         draw_button(f"Volume: {volume}", 50, 80, BUTTON_WIDTH, BUTTON_HEIGHT)
         draw_button(f"Difficulty: {difficulty}", 50, 150, BUTTON_WIDTH, BUTTON_HEIGHT)
@@ -147,7 +148,6 @@ def settings_menu():
 
         # Cập nhật màn hình
         pygame.display.flip()
-
 
 # def draw_button_img( x, y,scale):
 #     mouse_pos = pygame.mouse.get_pos()  # Lấy vị trí chuột
