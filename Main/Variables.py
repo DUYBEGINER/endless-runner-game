@@ -94,15 +94,16 @@ moving_left = False
 moving_right = False
 moving_jump = False
 quantity_shield = 0
-# Biến thực hiện các màn hình
-mode_1player = False
+
 
 #Biến chạy hiệu ứng animation jump
 effect_list = []
 effect_jump_index = 0
 check_collision_boom = False
 
-
+# Biến thực hiện các màn hình
+mode_1player = False
+RUNNING = True
 pygame.init()
 
 
@@ -111,7 +112,8 @@ jump_sfx = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/jump.mp3'))
 walking_sfx = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/walking.mp3'))
 sound_background = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/sound_game.mp3'))
 collect_shield_sfx = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/collect_shield.mp3'))
-
+click_button_sfx = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/click_button.mp3'))
+hover_button_sfx = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/hover_button.mp3'))
 # countdown_boom.set_volume(0.3)
 jump_sfx.set_volume(0.3)
 walking_sfx.set_volume(1)
@@ -135,3 +137,8 @@ for i in range(7):
     img = pygame.image.load(os.path.join(current_dir, f'Asset/character/distribute/{i}.png'))
     # img = pygame.transform.scale(img, (int((img.get_width() * scale)), (img.get_height() * scale)))
     effect_list.append(img)
+difficult = 1
+global volume, difficulty, skin
+volume = 50
+difficulty = 'Easy'
+skin = 'WHITE'

@@ -7,6 +7,11 @@ from Players import Player
 import Stone_fall, Boom
 import Players
 import menu
+import Button
+import update_high_score
+
+
+
 # Thiết lập màn hình game
 # Thiết lập bề mặt màn hình chính
 pygame.display.set_caption('Name_of_game')  # Thiết lập tên cửa sổ game
@@ -20,60 +25,76 @@ FPS = 120
 FPS_Clock = pygame.time.Clock()
 
 #### Load ảnh ####
-
 # Background
 BACKGROUND_IMG1 = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Map/background3.png'))
 BACKGROUND_IMG1 = pygame.transform.scale(BACKGROUND_IMG1,(Variables.WINDOW_WIDTH * 1.25, Variables.WINDOW_HEIGHT * 1.25))
 BACKGROUND_IMG2 = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Map/background1.png'))
 BACKGROUND_IMG2 = pygame.transform.scale(BACKGROUND_IMG2,(Variables.WINDOW_WIDTH * 1.25, Variables.WINDOW_HEIGHT * 1.25))
-# Groundư
+
+GAMEOVER_IMG = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/gameover.png'))
+# HOME_BUTTON_IMG = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Button/home/Default.png')).convert_alpha()
+home_button_default_img = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Button/home/Default.png'))
+home_button_hover_img = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Button/home/Hover.png'))
+restart_button_default_img = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Button/Restart/Default.png'))
+restart_button_hover_img = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Button/Restart/Hover.png'))
+restart = False
+
+home_button = Button.button(home_button_default_img,home_button_hover_img,150,400,0.8)
+restart_button = Button.button(restart_button_default_img,restart_button_hover_img, 250,400,0.8)
+# Ground
 GROUND_IMG = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Map/ground_new.png'))
+pause = False
 
 update_time_score = pygame.time.get_ticks()
-# Tư động sinh các đối tượng đá
+# Tư động sinh các đối tượng đád
 def re_spawn_stone():
-    tmp = random.randint(1, 100)  # Chọn một số ngẫu nhiên từ 1 đến 10
-    if tmp <= 60:
-        stone = Stone_fall.Stone(2, 'stone_fall1')
-        Stone_fall.stones.add(stone)
-    elif tmp <= 85:
-        stone = Stone_fall.Stone(2, 'stone_fall2')
-        Stone_fall.stones.add(stone)
-    else:
-        stone = Boom.boom(2)
-        Stone_fall.stones.add(stone)
-    tmp = random.randint(1, 100)
-    if tmp > 90:
-        shield = Shield.shield(1)
-        Shield.Shield_Group.add(shield)
+    if not pause:
+        tmp = random.randint(1, 100)  # Chọn một số ngẫu nhiên từ 1 đến 10
+        if tmp <= 50:
+            stone = Stone_fall.Stone(2, 'stone_fall1')
+            Stone_fall.stones.add(stone)
+        elif tmp <= 75:
+            stone = Stone_fall.Stone(2, 'stone_fall2')
+            Stone_fall.stones.add(stone)
+        else:
+            stone = Boom.boom(2)
+            Stone_fall.stones.add(stone)
+        tmp = random.randint(1, 100)
+        if tmp > 90:
+            shield = Shield.shield(1)
+            Shield.Shield_Group.add(shield)
 
+def draw_background():
+    Variables.SCREEN.blit(BACKGROUND_IMG2, (0, 0))
+    Variables.SCREEN.blit(BACKGROUND_IMG1, (0, 0))
+    Variables.SCREEN.blit(GROUND_IMG, (0, Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT))
+    Variables.SCREEN.blit(Variables.WALL_IMG1, (0, 0))
+    Variables.SCREEN.blit(Variables.WALL_IMG2, (288, 0))
 
+def draw_sub_area():
+    Variables.SCREEN.blit(Variables.SUB_AREA, (320, 0))
+    Variables.SUB_AREA.blit(Variables.SUB_AREA_IMG, (0, 0))
+    Variables.draw_high_score(Variables.high_score, Variables.score_font, (186, 145, 88), 90, 215)
+    Variables.draw_score(Variables.score, Variables.score_font, (186, 145, 88), Variables.score_x, 145)
+    Variables.draw_item_title(Variables.text_font, (121, 144, 78), 63, 350)
+    Variables.SUB_AREA_IMG.blit(Variables.SHIELD_IMG, (20, 370))
+    Variables.draw_num_shield(Variables.quantity_shield, Variables.text_font, (197, 188, 157), 60, 380)
 
-
-# Kiểm tra player có vừa mới nhảy không, nếu có thì thêm hiệu ứng
-just_jump = False
-sound_playing = False
-update_time_broken = pygame.time.get_ticks()
-########## VÒNG LẶP GAME ### #######
-pygame.init()
-# Variables.sound_background.play(loops=-1)
-while True:
+def handle_menu_events():
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()  # Thoát game nếu đóng cửa sổ
+            Variables.RUNNING = False
+            # pygame.quit()
+            # sys.exit()  # Thoát game nếu đóng cửa sổ
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             mouse_x, mouse_y = pygame.mouse.get_pos()  # Nhận vị trí chuột khi click
             # Kiểm tra xem chuột có click vào button nào không và thực hiện hành động tương ứng
             if menu.start_button_rect.collidepoint(mouse_x, mouse_y):
-                print("Start Game clicked!")
                 Variables.mode_1player = True
             elif menu.settings_button_rect.collidepoint(mouse_x, mouse_y):
-                print("Settings clicked!")
                 menu.settings_menu()
             elif menu.exit_button_rect.collidepoint(mouse_x, mouse_y):
-                pygame.quit()
-                sys.exit()  # Thoát game nếu click chuột vào nút Exit
+                Variables.RUNNING = False
     # Vẽ nền
     menu.screen.blit(menu.bg, (0, 0))
     # Vẽ các button
@@ -82,42 +103,98 @@ while True:
     menu.draw_button("Exit", menu.exit_button_x, menu.exit_button_y, menu.BUTTON_WIDTH, menu.BUTTON_HEIGHT)
     # Cập nhật màn hình
     pygame.display.flip()
+
+
+def handle_gameover_events():
+    # for event in pygame.event.get():
+    #     if event.type == pygame.KEYDOWN:
+    #         if event.key == pygame.K_ESCAPE:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            Variables.RUNNING = False
+            pause = False
+        elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            mouse_x, mouse_y = pygame.mouse.get_pos()  # Nhận vị trí chuột khi click
+            # Kiểm tra xem chuột có click vào button nào không và thực hiện hành động tương ứng
+            if menu.home_button_rect.collidepoint(mouse_x, mouse_y):
+                pause = False
+                stop_game()
+            # elif menu.settings_button_rect.collidepoint(mouse_x, mouse_y):
+            #     menu.settings_menu()
+            # elif menu.exit_button_rect.collidepoint(mouse_x, mouse_y):
+            #     Variables.RUNNING = False
+
+
+
+
+
+def stop_game():
+    Player1.kill()
+    Stone_fall.stones.empty()
+    Shield.Shield_Group.empty()
+    Boom.booms_effect.empty()
+    Players.Stone_broken.empty()
+    Players.Boom_broken.empty()
+    Variables.is_exploi = False
+    Variables.score = 0
+
+    Variables.moving_left = False
+    Variables.moving_right = False
+    Variables.moving_jump = False
+    Variables.quantity_shield = 0
+    Variables.jump_sfx.stop()
+    Variables.walking_sfx.stop()
+    Variables .collect_shield_sfx.stop()
+    # Boom.exploision_sfx.stop()
+    Boom.countdown_boom.stop()
+
+def pause_game():
+    Variables.is_exploi = False
+    Variables.moving_left = False
+    Variables.moving_right = False
+    Variables.moving_jump = False
+    Variables.jump_sfx.stop()
+    Variables.walking_sfx.stop()
+    Variables.collect_shield_sfx.stop()
+    # Boom.exploision_sfx.stop()
+    Boom.countdown_boom.stop()
+
+pygame.font.init()
+gameover_font = pygame.font.SysFont('Arial', 50)
+
+# Kiểm tra player có vừa mới nhảy không, nếu có thì thêm hiệu ứng
+just_jump = False
+sound_playing = False
+update_time_broken = pygame.time.get_ticks()
+
+
+########## VÒNG LẶP GAME ### #######
+pygame.init()
+while Variables.RUNNING:
+
+    if not restart:
+    ############################### MÀN HÌNH MENU #####################################
+        handle_menu_events()
+    ####################################################################################
+
+    one_flip = True     #biến để cập nhật màn hình over_game đúng 1 lần
     if Variables.mode_1player:
         # Create Player
         Player1 = Player(150, 150, 1, 2)
 
-    while Variables.mode_1player:
-        # Menu.draw_button()
-        # Menu.settings_menu(Variables.SCREEN,Variables.score_title_font, 0,0,Variables.WINDOW)
-        Variables.SCREEN.fill(Variables.BLACK)
-        Variables.SCREEN.blit(BACKGROUND_IMG2, (0, 0))
-        Variables.SCREEN.blit(BACKGROUND_IMG1, (0, 0))
-        Variables.SCREEN.blit(GROUND_IMG, (0, Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT))
-        Variables.SCREEN.blit(Variables.WALL_IMG1, (0, 0))
-        Variables.SCREEN.blit(Variables.WALL_IMG2, (288, 0))
-        # print(Variables.tmp_high_score)
 
-        ##########################################--KHU VỰC PHỤ--#################################################
-        Variables.SCREEN.blit(Variables.SUB_AREA, (320, 0))
-        Variables.SUB_AREA.blit(Variables.SUB_AREA_IMG, (0, 0))
-        #Hiển thị high_score
-        Variables.draw_high_score(Variables.high_score,Variables.score_font,(186,145,88),90, 215)
-        #Hiển thị Score
-        Variables.draw_score(Variables.score, Variables.score_font, (186,145,88), Variables.score_x, 145)
-        #Hiển thị text item
-        Variables.draw_item_title( Variables.text_font, (121,144,78), 63 , 350 )
-        # Hiển thị shield
-        Variables.SUB_AREA_IMG.blit(Variables.SHIELD_IMG, (20, 370))
-        Variables.draw_num_shield(Variables.quantity_shield, Variables.text_font, (197, 188, 157), 60, 380)
+    #################################### MÀN HÌNH CHÍNH CỦA GAME ####################################
+    while Variables.mode_1player:
+        draw_background()
+        draw_sub_area()
+        #count score
         if pygame.time.get_ticks() - update_time_score > 100:
             Variables.score += 1
             update_time_score = pygame.time.get_ticks()
             if Variables.score % Variables.score_up == 0:
                 Variables.score_up *= 10
                 Variables.score_x -=5
-        #############################################################################################################
-
-
+        #Cập nhật player
         Player1.update_animation()
         Player1.draw(Variables.SCREEN)
         Player1.move_and_jump(Variables.moving_left, Variables.moving_right)
@@ -130,7 +207,11 @@ while True:
         else:
             Player1.update_action(0)  # Idlea
 
+        #Xử lí đầu vào từ bàn phím
         for event in pygame.event.get():
+            #KEY_DOWN
+            if event.type == pygame.QUIT:
+                Variables.RUNNING = False
             if event == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     Variables.mode_1player = False
@@ -149,6 +230,7 @@ while True:
                     Player1.jump = True
                     Variables.channel_jump.play(Variables.jump_sfx)
                     just_jump = True
+            #KEY_UP
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_a:
                     Variables.moving_left = False
@@ -183,13 +265,10 @@ while True:
                 Variables.effect_jump_index = 0
                 just_jump = False
 
-
         # Update class Stone
         if pygame.time.get_ticks() - Variables.update_time > Variables.COOLDOWN_SPAWN:
             Variables.update_time = pygame.time.get_ticks()
             re_spawn_stone()
-
-        #effect_jump.draw(Variables.SCREEN,Player1.Animation_list[0][0])
 
         Stone_fall.stones.update()
         Stone_fall.stones.draw(Variables.SCREEN)
@@ -200,7 +279,7 @@ while True:
         Shield.Shield_Group.update()
         Shield.Shield_Group.draw(Variables.SCREEN)
 
-        #Chạy animation stone broken
+        #Chạy animation Broken đối với stone hoặc boom tương ứng
         if Variables.check_collision_boom:
             Players.Boom_broken.update()
             Players.Boom_broken.draw(Variables.SCREEN)
@@ -208,31 +287,53 @@ while True:
             Players.Stone_broken.update()
             Players.Stone_broken.draw(Variables.SCREEN)
 
-
+        # Nhặt shield
         for shield in Shield.Shield_Group:
             shield.check_collision_player(Player1)
-
         if Variables.is_exploi:
             Variables.Screen_shake_exploision(Variables.SCREEN, Variables.SCREEN_SHAKE)
-            # if Variables.SCREEN_SHAKE <= 0:  # Khi shake hoàn tất
-            #     Variables.is_exploiding = False  # Reset trạng thái d
-
-        # vẽ hình vuông bao quanh để kiểm tra va chạm
-        # for stone in Stone_fall.stones:
-        #     pygame.draw.rect(Variables.SCREEN, (255, 0, 0), stone.rect, 2)
-        if not Variables.mode_1player:
-            Player1.kill()
-            for i in Stone_fall.stones:
-                i.kill()
-            for i in Shield.Shield_Group:
-                i.kill()
-            for i in Boom.booms_effect:
-                i.kill()
-            Variables.score = 0
-            Variables.moving_left = False
-            Variables.moving_right = False
-            Variables.moving_jump = False
-            Variables.quantity_shield = 0
-            
+        #CHECK GAME OVER
+        if not Player1.alive:
+            Variables.mode_1player = False
+            update_high_score.update_score()
+            pause_game()
+            pause = True
         pygame.display.update()
         FPS_Clock.tick(FPS)
+
+    ################################## Màn hình GAME OVER #############################################
+    while pause:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                Variables.RUNNING = False
+                pause = False
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+
+                mouse_x, mouse_y = pygame.mouse.get_pos()  # Nhận vị trí chuột khi click
+                # Kiểm tra xem chuột có click vào button nào không và thực hiện hành động tương ứng
+                if home_button.rect.collidepoint(mouse_x, mouse_y):
+                    Variables.hover_button_sfx.play()
+                    # Variables.click_button_sfx.play()
+                    pause = False
+                    restart = False
+                    stop_game()
+                elif restart_button.rect.collidepoint(mouse_x, mouse_y):
+                    Variables.mode_1player = True
+                    pause = False
+                    restart = True
+                    stop_game()
+
+        Variables.SCREEN.blit(GAMEOVER_IMG, (100,100))
+        home_button.draw()
+        restart_button.draw()
+        list_display_update = [GAMEOVER_IMG.get_rect(topleft=(100,100)), home_button.rect, restart_button.rect]
+        pygame.display.update(list_display_update)
+
+        draw_background()
+        draw_sub_area()
+        Variables.SCREEN.blit(Player1.image, (Player1.rect.x, Player1.rect.y))
+        Boom.booms_effect.draw(Variables.SCREEN)
+        Shield.Shield_Group.draw(Variables.SCREEN)
+        Stone_fall.stones.draw(Variables.SCREEN)
+
+pygame.quit()

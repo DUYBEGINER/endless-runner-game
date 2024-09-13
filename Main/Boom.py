@@ -61,9 +61,9 @@ class boom(pygame.sprite.Sprite):
         self.update_animation()
         # Áp dụng Gravity
         if self.in_air:
-            self.vel_y += GRAVITY_BOOM
-            if self.vel_y > self.MAX_VEL:
-                self.vel_y = self.MAX_VEL
+            self.vel_y += GRAVITY_BOOM * Variables.difficult
+            if self.vel_y > self.MAX_VEL * Variables.difficult:
+                self.vel_y = self.MAX_VEL * Variables.difficult
         dy = self.vel_y
         self.rect.centery += dy
         self.check_to_delete()
@@ -92,7 +92,7 @@ class boom(pygame.sprite.Sprite):
             if pygame.time.get_ticks() - self.update_time > ANIMATION_COOLDOWN:
                 self.update_time = pygame.time.get_ticks()
                 self.index += 1
-            if self.index >= len(self.animation_list) and Variables.mode_1player:
+            if self.index >= len(self.animation_list):
                 countdown_boom.stop()
                 self.booom()
                 exploision_sfx.play()
