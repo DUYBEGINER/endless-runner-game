@@ -48,9 +48,9 @@ class Stone(Sprite):
         self.check_collision_otherStone()
         # Áp dụng 
         if (self.in_air):
-            self.vel_y += GRAVITY_STONE
-            if self.vel_y > self.MAX_VEL:
-                self.vel_y = self.MAX_VEL
+            self.vel_y += GRAVITY_STONE * Variables.difficult
+            if self.vel_y > self.MAX_VEL * Variables.difficult:
+                self.vel_y = self.MAX_VEL * Variables.difficult
         dy = self.vel_y
         self.rect.centery += dy
         # Kiểm tra và xóa các đối tượng chạm mặt đâts nếu đủ điều kiện

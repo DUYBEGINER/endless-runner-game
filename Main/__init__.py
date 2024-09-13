@@ -50,10 +50,10 @@ update_time_score = pygame.time.get_ticks()
 def re_spawn_stone():
     if not pause:
         tmp = random.randint(1, 100)  # Chọn một số ngẫu nhiên từ 1 đến 10
-        if tmp <= 60:
+        if tmp <= 50:
             stone = Stone_fall.Stone(2, 'stone_fall1')
             Stone_fall.stones.add(stone)
-        elif tmp <= 85:
+        elif tmp <= 75:
             stone = Stone_fall.Stone(2, 'stone_fall2')
             Stone_fall.stones.add(stone)
         else:

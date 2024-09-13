@@ -61,9 +61,9 @@ class boom(pygame.sprite.Sprite):
         self.update_animation()
         # Áp dụng Gravity
         if self.in_air:
-            self.vel_y += GRAVITY_BOOM
-            if self.vel_y > self.MAX_VEL:
-                self.vel_y = self.MAX_VEL
+            self.vel_y += GRAVITY_BOOM * Variables.difficult
+            if self.vel_y > self.MAX_VEL * Variables.difficult:
+                self.vel_y = self.MAX_VEL * Variables.difficult
         dy = self.vel_y
         self.rect.centery += dy
         self.check_to_delete()
