@@ -140,3 +140,7 @@ for i in range(7):
     # img = pygame.transform.scale(img, (int((img.get_width() * scale)), (img.get_height() * scale)))
     effect_list.append(img)
 difficult = 1
+global volume, difficulty, skin
+volume = 50
+difficulty = 'Easy'
+skin = 'WHITE'
