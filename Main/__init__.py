@@ -32,13 +32,16 @@ BACKGROUND_IMG2 = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/M
 BACKGROUND_IMG2 = pygame.transform.scale(BACKGROUND_IMG2,(Variables.WINDOW_WIDTH * 1.25, Variables.WINDOW_HEIGHT * 1.25))
 
 GAMEOVER_IMG = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/gameover.png'))
-# HOME_BUTTON_IMG = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Button/home/Default.png')).convert_alpha()
+
+
+####Load các ảnh và khởi tại button
 home_button_default_img = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Button/home/Default.png'))
 home_button_hover_img = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Button/home/Hover.png'))
 restart_button_default_img = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Button/Restart/Default.png'))
 restart_button_hover_img = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Button/Restart/Hover.png'))
 restart = False
 
+#Khởi tạo button
 home_button = Button.button(home_button_default_img,home_button_hover_img,150,400,0.8)
 restart_button = Button.button(restart_button_default_img,restart_button_hover_img, 250,400,0.8)
 # Ground
@@ -312,8 +315,8 @@ while Variables.RUNNING:
                 mouse_x, mouse_y = pygame.mouse.get_pos()  # Nhận vị trí chuột khi click
                 # Kiểm tra xem chuột có click vào button nào không và thực hiện hành động tương ứng
                 if home_button.rect.collidepoint(mouse_x, mouse_y):
-                    Variables.hover_button_sfx.play()
-                    # Variables.click_button_sfx.play()
+                    # Variables.hover_button_sfx.play()
+                    Variables.click_button_sfx.play()
                     pause = False
                     restart = False
                     stop_game()
@@ -321,6 +324,7 @@ while Variables.RUNNING:
                     Variables.mode_1player = True
                     pause = False
                     restart = True
+                    Variables.click_button_sfx.play()
                     stop_game()
 
         Variables.SCREEN.blit(GAMEOVER_IMG, (100,100))

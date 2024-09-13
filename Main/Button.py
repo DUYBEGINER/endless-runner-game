@@ -3,8 +3,6 @@ import pygame, os
 from pygame.examples.cursors import image
 
 
-
-
 class button():
     def __init__(self, default_img, hover_img,x,y,scale):
         super().__init__()
