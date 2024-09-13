@@ -56,6 +56,7 @@ sound_playing = False
 update_time_broken = pygame.time.get_ticks()
 ########## VÒNG LẶP GAME ### #######
 pygame.init()
+
 # Variables.sound_background.play(loops=-1)
 while True:
     for event in pygame.event.get():
