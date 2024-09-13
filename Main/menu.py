@@ -27,14 +27,18 @@ bg = pygame.transform.scale(bg, (SCREEN_WIDTH_MENU, SCREEN_HEIGHT_MENU))
 font = pygame.font.Font(None, FONT_SIZE)
 
 # Hàm vẽ nút
-def draw_button(text, x, y, width, height):
+def draw_button(text, x, y, width, height, Vẽ=None):
     mouse_pos = pygame.mouse.get_pos()  # Lấy vị trí chuột
     is_hovered = pygame.Rect(x, y, width, height).collidepoint(mouse_pos)  # Kiểm tra xem chuột có đang hover vào button hay không
     
     # Chọn màu button dựa trên việc chuột có đang hover không
     button_color = BUTTON_HOVER_COLOR if is_hovered else BUTTON_COLOR
     pygame.draw.rect(screen, button_color, (x, y, width, height))
-    
+
+    if is_hovered:
+        Variables.hover_button_sfx.play()
+    else:
+        Variables.hover_button_sfx.stop()
     # Vẽ văn bản trên button
     text_surface = font.render(text, True, WHITE)
     text_rect = text_surface.get_rect(center=(x + width // 2, y + height // 2))

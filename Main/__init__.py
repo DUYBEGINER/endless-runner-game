@@ -33,7 +33,14 @@ BACKGROUND_IMG2 = pygame.transform.scale(BACKGROUND_IMG2,(Variables.WINDOW_WIDTH
 
 GAMEOVER_IMG = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/gameover.png'))
 # HOME_BUTTON_IMG = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Button/home/Default.png')).convert_alpha()
-home_button = Button.button(150,400,0.8)
+home_button_default_img = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Button/home/Default.png'))
+home_button_hover_img = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Button/home/Hover.png'))
+restart_button_default_img = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Button/Restart/Default.png'))
+restart_button_hover_img = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Button/Restart/Hover.png'))
+restart = False
+
+home_button = Button.button(home_button_default_img,home_button_hover_img,150,400,0.8)
+restart_button = Button.button(restart_button_default_img,restart_button_hover_img, 250,400,0.8)
 # Ground
 GROUND_IMG = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Map/ground_new.png'))
 pause = False
@@ -165,15 +172,18 @@ update_time_broken = pygame.time.get_ticks()
 pygame.init()
 while Variables.RUNNING:
 
-    ########### MÀN HÌNH MENU ###############
-    handle_menu_events()
-    ########################################
+    if not restart:
+    ############################### MÀN HÌNH MENU #####################################
+        handle_menu_events()
+    ####################################################################################
 
     one_flip = True     #biến để cập nhật màn hình over_game đúng 1 lần
     if Variables.mode_1player:
         # Create Player
         Player1 = Player(150, 150, 1, 2)
 
+
+    #################################### MÀN HÌNH CHÍNH CỦA GAME ####################################
     while Variables.mode_1player:
         draw_background()
         draw_sub_area()
@@ -282,9 +292,6 @@ while Variables.RUNNING:
             shield.check_collision_player(Player1)
         if Variables.is_exploi:
             Variables.Screen_shake_exploision(Variables.SCREEN, Variables.SCREEN_SHAKE)
-            # if Variables.SCREEN_SHAKE <= 0:  # Khi shake hoàn tất
-            #     Variables.is_exploiding = False  # Reset trạng thái d
-
         #CHECK GAME OVER
         if not Player1.alive:
             Variables.mode_1player = False
@@ -294,27 +301,33 @@ while Variables.RUNNING:
         pygame.display.update()
         FPS_Clock.tick(FPS)
 
-    #Màn hình GAME OVER
+    ################################## Màn hình GAME OVER #############################################
     while pause:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 Variables.RUNNING = False
                 pause = False
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+
                 mouse_x, mouse_y = pygame.mouse.get_pos()  # Nhận vị trí chuột khi click
                 # Kiểm tra xem chuột có click vào button nào không và thực hiện hành động tương ứng
                 if home_button.rect.collidepoint(mouse_x, mouse_y):
-
+                    Variables.hover_button_sfx.play()
+                    # Variables.click_button_sfx.play()
                     pause = False
+                    restart = False
                     stop_game()
+                elif restart_button.rect.collidepoint(mouse_x, mouse_y):
+                    Variables.mode_1player = True
+                    pause = False
+                    restart = True
+                    stop_game()
+
         Variables.SCREEN.blit(GAMEOVER_IMG, (100,100))
         home_button.draw()
-
-        # display_game_over = gameover_font.render("Game over", True, Variables.WHITE)
-        # return_menu_text = gameover_font.render("Press ESC to return Menu!", True, Variables.WHITE)
-        # Variables.SCREEN.blit(display_game_over, (100, 200))
-        # Variables.SCREEN.blit(return_menu_text, (0, 250))
-        pygame.display.flip()
+        restart_button.draw()
+        list_display_update = [GAMEOVER_IMG.get_rect(topleft=(100,100)), home_button.rect, restart_button.rect]
+        pygame.display.update(list_display_update)
 
         draw_background()
         draw_sub_area()

@@ -6,10 +6,10 @@ from pygame.examples.cursors import image
 
 
 class button():
-    def __init__(self,x,y,scale):
+    def __init__(self, default_img, hover_img,x,y,scale):
         super().__init__()
-        self.default_image = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Button/home/Default.png'))
-        self.hover_image = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Button/home/Hover.png'))
+        self.default_image = default_img
+        self.hover_image = hover_img
         width = self.default_image.get_width()
         height = self.default_image.get_height()
 
