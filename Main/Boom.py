@@ -21,7 +21,7 @@ exploision_sfx.set_volume(0.5)
 
 
 class boom(pygame.sprite.Sprite):
-    def __init__(self, scale):
+    def __init__(self, scale, mode):
         pygame.sprite.Sprite.__init__(self)
         self.scale = scale
         self.animation_list = []
@@ -39,7 +39,12 @@ class boom(pygame.sprite.Sprite):
         self.image = self.animation_list[self.index]
         self.rect = self.image.get_rect()
         # Tạo vị trí ban đầu
-        tmp = random.randint(1, 8)
+        if mode == 'mode1':
+            tmp = random.randint(1, 8)
+        elif mode == 'mode2':
+            tmp = random.randint(1, 6)
+        else:
+            tmp = random.randint(9,14)
         self.rect.center = (tmp * self.image.get_width() + self.image.get_width() / 2, -30)
         # Taọ các biến liên quan đến rơi
         self.in_air = True

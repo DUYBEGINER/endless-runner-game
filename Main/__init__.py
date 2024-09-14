@@ -51,17 +51,17 @@ def re_spawn_stone():
     if not pause:
         tmp = random.randint(1, 100)  # Chọn một số ngẫu nhiên từ 1 đến 10
         if tmp <= 50:
-            stone = Stone_fall.Stone(2, 'stone_fall1')
+            stone = Stone_fall.Stone(2, 'stone_fall1', 'mode1')
             Stone_fall.stones.add(stone)
         elif tmp <= 75:
-            stone = Stone_fall.Stone(2, 'stone_fall2')
+            stone = Stone_fall.Stone(2, 'stone_fall2', 'mode1')
             Stone_fall.stones.add(stone)
         else:
-            stone = Boom.boom(2)
+            stone = Boom.boom(2, 'mode1')
             Stone_fall.stones.add(stone)
         tmp = random.randint(1, 100)
         if tmp > 90:
-            shield = Shield.shield(1)
+            shield = Shield.shield(1, 'mode1')
             Shield.Shield_Group.add(shield)
 
 def draw_background():
@@ -124,10 +124,6 @@ def handle_gameover_events():
             # elif menu.exit_button_rect.collidepoint(mouse_x, mouse_y):
             #     Variables.RUNNING = False
 
-
-
-
-
 def stop_game():
     Player1.kill()
     Stone_fall.stones.empty()
@@ -180,7 +176,7 @@ while Variables.RUNNING:
     one_flip = True     #biến để cập nhật màn hình over_game đúng 1 lần
     if Variables.mode_1player:
         # Create Player
-        Player1 = Player(150, 150, 1, 2)
+        Player1 = Player(150, 150, 1, 2, 'mode1')
 
 
     #################################### MÀN HÌNH CHÍNH CỦA GAME ####################################
@@ -197,12 +193,12 @@ while Variables.RUNNING:
         #Cập nhật player
         Player1.update_animation()
         Player1.draw(Variables.SCREEN)
-        Player1.move_and_jump(Variables.moving_left, Variables.moving_right)
+        Player1.move_and_jump(Variables.moving_left_pl1, Variables.moving_right_pl1)
 
         # Update player action
         if Player1.in_air:
             Player1.update_action(2)
-        elif Variables.moving_left or Variables.moving_right:
+        elif Variables.moving_left_pl1 or Variables.moving_right_pl1:
             Player1.update_action(1)  # Run
         else:
             Player1.update_action(0)  # Idlea
@@ -217,12 +213,12 @@ while Variables.RUNNING:
                     Variables.mode_1player = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_a:
-                    Variables.moving_left = True
+                    Variables.moving_left_pl1 = True
                     if not sound_playing and not Player1.in_air:
                         Variables.channel_walk.play(Variables.walking_sfx, loops=-1)
                         sound_playing = True
                 if event.key == pygame.K_d:
-                    Variables.moving_right = True
+                    Variables.moving_right_pl1 = True
                     if not sound_playing and not Player1.in_air:
                         Variables.channel_walk.play(Variables.walking_sfx, loops=-1)
                         sound_playing = True
@@ -233,13 +229,13 @@ while Variables.RUNNING:
             #KEY_UP
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_a:
-                    Variables.moving_left = False
-                    if not Variables.moving_right and not Player1.in_air:
+                    Variables.moving_left_pl1 = False
+                    if not Variables.moving_right_pl1 and not Player1.in_air:
                         Variables.channel_walk.stop()
                         sound_playing = False
                 if event.key == pygame.K_d:
-                    Variables.moving_right = False
-                    if not Variables.moving_left and not Player1.in_air:
+                    Variables.moving_right_pl1 = False
+                    if not Variables.moving_left_pl1 and not Player1.in_air:
                         Variables.channel_walk.stop()
                         sound_playing = False
 

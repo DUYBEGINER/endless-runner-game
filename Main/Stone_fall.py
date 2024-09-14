@@ -12,26 +12,41 @@ MAX_HIGH = 4  # Định nghĩa độ cao cột đá có thể có
 stones = Group()
 # Define Class Stone_fall
 class Stone(Sprite):
-    def __init__(self, scale, stone_type):
+    def __init__(self, scale, stone_type, mode):
         Sprite.__init__(self)
         self.type = stone_type
+        self.mode = mode
         # Load image stone
         img_stone_fall = pygame.image.load(os.path.join(Variables.current_dir, f'Asset/Map/{stone_type}.png'))
         # Create Rect of stone_fall
         self.scale = scale
         self.image = pygame.transform.scale(img_stone_fall,(img_stone_fall.get_width() * scale, img_stone_fall.get_height() * scale))
         self.rect = self.image.get_rect()
-        tmp = random.randint(1, 8)  # Lấy một số ngẫu nhiên từ 1 đến 8 để làm giá trị x ban đầu cho stone
-        # Kiểm tra để lấy vị trí spawn để không gây trường hợp xấu
-        while (not self.check_high(tmp)):
-            tmp = self.check_min_high()
-        self.rect.center = (tmp * self.image.get_width() + self.image.get_width() / 2, -10)
+        if self.mode == 'mode1':
+            tmp = random.randint(1, 8)  # Lấy một số ngẫu nhiên từ 1 đến 8 để làm giá trị x ban đầu cho stone
+            # Kiểm tra để lấy vị trí spawn để không gây trường hợp xấu
+            while (not self.check_high(tmp)):
+                tmp = self.check_min_high()
+            self.rect.center = (tmp * self.image.get_width() + self.image.get_width() / 2, -10)
+        elif self.mode == 'mode2':
+            tmp = random.randint(1, 6)  # Lấy một số ngẫu nhiên từ 1 đến 8 để làm giá trị x ban đầu cho stone
+            # Kiểm tra để lấy vị trí spawn để không gây trường hợp xấu
+            while (not self.check_high(tmp)):
+                tmp = self.check_min_high()
+            self.rect.center = (tmp * self.image.get_width() + self.image.get_width() / 2, -10)
+        else:
+            tmp = random.randint(9, 14)  # Lấy một số ngẫu nhiên từ 1 đến 8 để làm giá trị x ban đầu cho stone
+            # Kiểm tra để lấy vị trí spawn để không gây trường hợp xấu
+            while (not self.check_high(tmp)):
+                tmp = self.check_min_high()
+            self.rect.center = (tmp * self.image.get_width() + self.image.get_width() / 2, -10)
         # Định nghĩa các biến liên quan đến rơi
         self.in_air = True
         self.vel_y = 0
         self.MAX_VEL = 4
         # Định nghĩa các biến liên quan đến xóa các đối tượng
-        self.list_to_delete = []
+        self.list_to_delete1 = []
+        self.list_to_delete2 = []
         self.list_to_check_high = []
 
     # Định nghĩa các phương thức của class
@@ -73,13 +88,30 @@ class Stone(Sprite):
 
     def check_to_delete(self):
         # reset list_to_delete
-        self.list_to_delete = []
-        for i in stones:
-            if (i.rect.bottom >= Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT - 2):
-                self.list_to_delete.append(i)
-        if len(self.list_to_delete) == 8:
-            for i in self.list_to_delete:
-                i.kill()
+        self.list_to_delete1 = []
+        self.list_to_delete2 = []
+        if self.mode == 'mode1':
+            for i in stones:
+                if (i.rect.bottom >= Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT - 2):
+                    self.list_to_delete1.append(i)
+            if len(self.list_to_delete1) == 8:
+                for i in self.list_to_delete1:
+                    i.kill()
+        elif self.mode == 'mode2':
+            for i in stones:
+                if (i.rect.bottom >= Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT - 2):
+                    if (i.rect.centerx > 0 and i.rect.centerx < 240):
+                        self.list_to_delete1.append(i)
+                    else:
+                        self.list_to_delete2.append(i)
+            if len(self.list_to_delete1) == 6:
+                for i in self.list_to_delete1:
+                    i.kill()
+            if len(self.list_to_delete2) == 6:
+                for i in self.list_to_delete2:
+                    i.kill()
+
+
 
 
     def check_to_delete_fall2(self):
@@ -110,19 +142,54 @@ class Stone(Sprite):
         tmp_min = float('inf')  # Sử dụng giá trị vô cực để bắt đầu tìm số lượng đá ít nhất
         # reset list_to_check_high
         self.list_to_check_high = []
-        # Kiểm tra từng cột từ 1 đến 8
-        for col in range(1, 9):
-            pos_x = col * self.rect.width + self.rect.width / 2
-            self.list_to_check_high = []
+        # if self.mode == 'mode1':
+        #     x = int(8)
+        # else:
+        #     x = int(6)
 
-            # Kiểm tra từng viên đá trong danh sách `stones`
-            for stone in stones:
-                # Kiểm tra xem viên đá có nằm trong cột hiện tại không
-                if abs(stone.rect.centerx - pos_x) < self.rect.width:
-                    self.list_to_check_high.append(stone)
+        if self.mode == 'mode1':
+            for col in range(1, 9):
+                pos_x = col * self.rect.width + self.rect.width / 2
+                self.list_to_check_high = []
 
-            # Cập nhật cột có số lượng đá ít nhất
-            if len(self.list_to_check_high) < tmp_min:
-                tmp_min = len(self.list_to_check_high)
-                min_col = col
+                # Kiểm tra từng viên đá trong danh sách `stones`
+                for stone in stones:
+                    # Kiểm tra xem viên đá có nằm trong cột hiện tại không
+                    if abs(stone.rect.centerx - pos_x) < self.rect.width:
+                        self.list_to_check_high.append(stone)
+
+                # Cập nhật cột có số lượng đá ít nhất
+                if len(self.list_to_check_high) < tmp_min:
+                    tmp_min = len(self.list_to_check_high)
+                    min_col = col
+        elif self.mode == 'mode2':
+            for col in range(1, 7):
+                pos_x = col * self.rect.width + self.rect.width / 2
+                self.list_to_check_high = []
+
+                # Kiểm tra từng viên đá trong danh sách `stones`
+                for stone in stones:
+                    # Kiểm tra xem viên đá có nằm trong cột hiện tại không
+                    if abs(stone.rect.centerx - pos_x) < self.rect.width:
+                        self.list_to_check_high.append(stone)
+
+                # Cập nhật cột có số lượng đá ít nhất
+                if len(self.list_to_check_high) < tmp_min:
+                    tmp_min = len(self.list_to_check_high)
+                    min_col = col
+        else:
+            for col in range(9, 15):
+                pos_x = col * self.rect.width + self.rect.width / 2
+                self.list_to_check_high = []
+
+                # Kiểm tra từng viên đá trong danh sách `stones`
+                for stone in stones:
+                    # Kiểm tra xem viên đá có nằm trong cột hiện tại không
+                    if abs(stone.rect.centerx - pos_x) < self.rect.width:
+                        self.list_to_check_high.append(stone)
+
+                # Cập nhật cột có số lượng đá ít nhất
+                if len(self.list_to_check_high) < tmp_min:
+                    tmp_min = len(self.list_to_check_high)
+                    min_col = col
         return min_col

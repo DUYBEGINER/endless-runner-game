@@ -90,9 +90,12 @@ def draw_item_title(font,text_col,x,y):
     SUB_AREA.blit(img, (x, y))
 
 #Các biến hành động nhân vật
-moving_left = False
-moving_right = False
-moving_jump = False
+moving_left_pl1 = False
+moving_right_pl1 = False
+moving_jump_pl1 = False
+moving_left_pl2 = False
+moving_right_pl2 = False
+moving_jump_pl2 = False
 quantity_shield = 0
 
 
@@ -142,3 +145,21 @@ global volume, difficulty, skin
 volume = 50
 difficulty = 'Easy'
 skin = 'WHITE'
+
+
+# Các biến của mode 2 player
+WINDOW_WIDTH_MODE2 = 512
+WINDOW_HEIGHT_MODE2 = 500
+SCREEN_MODE2 = pygame.display.set_mode((WINDOW_WIDTH_MODE2 + 200, WINDOW_HEIGHT_MODE2))
+
+WALL_RECT1_MODE2 = WALL_IMG1.get_rect()
+WALL_RECT2_MODE2 = WALL_IMG2.get_rect()
+WALL_RECT3_MODE2 = WALL_IMG1.get_rect()
+WALL_RECT4_MODE2 = WALL_IMG2.get_rect()
+
+WALL_RECT1_MODE2.topleft = (0, 0)
+WALL_RECT2_MODE2.topleft = (224, 0)
+WALL_RECT3_MODE2.topleft = (256, 0)
+WALL_RECT4_MODE2.topleft = (480, 0)
+
+

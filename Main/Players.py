@@ -10,7 +10,7 @@ Stone_broken = Group()
 Boom_broken = Group()
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, x, y, scale, speed):
+    def __init__(self, x, y, scale, speed, mode):
         super().__init__()
         # Biến
         self.Animation_list = []
@@ -20,8 +20,12 @@ class Player(pygame.sprite.Sprite):
         self.in_air = True
         self.vel_y = 0  # Vận tốc
         self.alive = True
-
+        self.mode = mode
         self.update_time = pygame.time.get_ticks()
+        # Là người chơi 1 hay người chơi 2
+        if x == 150:
+            self.pl = 'player1'
+        else: self.pl = 'player2'
         # Load all animation
         Animation_type = ['Idle', 'Run', 'Jump2']
         for animation in Animation_type:
@@ -95,13 +99,30 @@ class Player(pygame.sprite.Sprite):
         """
         Kiểm tra va chạm với các đối tượng tường, đá
         """
-        on_ground = False        # Kiem tra va cham tuong
-        if Variables.WALL_RECT1.colliderect(self.rect.left + dx, self.rect.top, self.rect.width, self.rect.height):
-            self.rect.left = Variables.WALL_RECT1.right
-            dx = 0
-        if Variables.WALL_RECT2.colliderect(self.rect.left + dx, self.rect.top, self.rect.width, self.rect.height):
-            self.rect.right = Variables.WALL_RECT2.left
-            dx = 0
+        # Kiem tra va cham tuong
+        # Mode 1 player
+        if self.mode == 'mode1':
+            if Variables.WALL_RECT1.colliderect(self.rect.left + dx, self.rect.top, self.rect.width, self.rect.height):
+                self.rect.left = Variables.WALL_RECT1.right
+                dx = 0
+            if Variables.WALL_RECT2.colliderect(self.rect.left + dx, self.rect.top, self.rect.width, self.rect.height):
+                self.rect.right = Variables.WALL_RECT2.left
+                dx = 0
+        else: # Mode 2 player
+            if self.pl == 'player1':
+                if Variables.WALL_RECT1_MODE2.colliderect(self.rect.left + dx, self.rect.top, self.rect.width, self.rect.height):
+                    self.rect.left = Variables.WALL_RECT1_MODE2.right
+                    dx = 0
+                if Variables.WALL_RECT2_MODE2.colliderect(self.rect.left + dx, self.rect.top, self.rect.width, self.rect.height):
+                    self.rect.right = Variables.WALL_RECT2_MODE2.left
+                    dx = 0
+            if self.pl == 'player2':
+                if Variables.WALL_RECT3_MODE2.colliderect(self.rect.left + dx, self.rect.top, self.rect.width, self.rect.height):
+                    self.rect.left = Variables.WALL_RECT3_MODE2.right
+                    dx = 0
+                if Variables.WALL_RECT4_MODE2.colliderect(self.rect.left + dx, self.rect.top, self.rect.width, self.rect.height):
+                    self.rect.right = Variables.WALL_RECT4_MODE2.left
+                    dx = 0 
 
         # Kiểm tra va chạm với stone
         for tile in stones:

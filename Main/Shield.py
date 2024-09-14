@@ -10,12 +10,13 @@ Shield_Group = Group()
 GRAVITY_SHIELD = 0.025
 
 class shield(pygame.sprite.Sprite):
-    def __init__(self, scale):
+    def __init__(self, scale, mode):
         Sprite.__init__(self)
         self.animation_list = []
         self.index = 0
         self.in_air =  True
         self.vel_y = 0
+        self.mode = mode
 
         self.TIME_EXIST = 5000
         self.update_time = pygame.time.get_ticks()
@@ -28,7 +29,12 @@ class shield(pygame.sprite.Sprite):
 
         self.image = self.animation_list[self.index]
         self.rect = self.image.get_rect()
-        tmp = random.randint(1, 8)
+        if self.mode == 'mode1':
+            tmp = random.randint(1, 8)
+        elif self.mode == 'mode2':
+            tmp = random.randint(1,6)
+        else:
+            tmp = random.randint(9,14)
         self.rect.center = (tmp * self.image.get_width() + self.image.get_width() / 2, -20)
 
     def update(self):
