@@ -55,7 +55,7 @@ just_jump = False
 sound_playing = False
 update_time_broken = pygame.time.get_ticks()
 # Biến trạng thái để theo dõi ảnh menu
-show_small_image = False
+menu_image = False
 
 ########## VÒNG LẶP GAME ### #######
 pygame.init()
@@ -72,29 +72,25 @@ while True:
             if menu.start_button_rect.collidepoint(mouse_x, mouse_y):
                 print("Start Game clicked!")
                 Variables.mode_1player = True
+                if Variables.mode_1player:
+                    Variables.SCREEN.blit(menu_image, menu_image_rect.topleft)
+                if menu_image_rect.collidepoint(mouse_x, mouse_y):
+                    print("Settings button clicked!")
+                    Setting.settings_menu(Variables.SCREEN, menu.font)
                 # Kiểm tra nút cài đặt
                 if menu_image_rect.collidepoint(mouse_x, mouse_y):
                     print("Settings button clicked!")
-                    show_small_image = True
-                    result = Setting.settings_menu(Variables.SCREEN, Variables.font)
-                    show_small_image = False
-                    if result == "resume":
-                        Variables.mode_1player = True
-                    elif result == "restart":
-                        Variables.score = 0
-                        Variables.mode_1player = True
-                    elif result == "menu":
-                        Variables.mode_1player = False
+                    Setting.settings_menu()
             elif menu.settings_button_rect.collidepoint(mouse_x, mouse_y):
                 print("Settings clicked!")
                 menu.settings_menu()
             elif menu.exit_button_rect.collidepoint(mouse_x, mouse_y):
                 pygame.quit()
                 sys.exit()  # Thoát game nếu click chuột vào nút Exit
-    # Vẽ nút cài đặt
-    Variables.SCREEN.blit(menu_image, menu_image_rect.topleft)
+    
     # Vẽ nền
     menu.screen.blit(menu.bg, (0, 0))
+    
     # Vẽ các button
     menu.draw_button("Start Game", menu.start_button_x, menu.start_button_y, menu.BUTTON_WIDTH, menu.BUTTON_HEIGHT)
     menu.draw_button("Settings", menu.settings_button_x, menu.settings_button_y, menu.BUTTON_WIDTH, menu.BUTTON_HEIGHT)
@@ -114,9 +110,7 @@ while True:
         Variables.SCREEN.blit(GROUND_IMG, (0, Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT))
         Variables.SCREEN.blit(Variables.WALL_IMG1, (0, 0))
         Variables.SCREEN.blit(Variables.WALL_IMG2, (288, 0))
-        # Vẽ nút cài đặt
-        Variables.SCREEN.blit(menu_image, menu_image_rect.topleft)
-
+        
         
         # print(Variables.tmp_high_score)
 
