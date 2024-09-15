@@ -95,8 +95,10 @@ def draw_item_title(font,text_col,x,y):
 moving_left = False
 moving_right = False
 moving_jump = False
-quantity_shield = 0
 
+#Số lượng vật phẩm
+quantity_shield = 0
+quantity_STI = 0
 
 #Biến chạy hiệu ứng animation jump
 effect_list = []

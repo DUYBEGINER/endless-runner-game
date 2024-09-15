@@ -1,6 +1,7 @@
 import pygame, os, random, sys
 from pygame import *
 import Variables
+import Stop_time_item
 from Variables import effect_list
 import Shield
 from Players import Player
@@ -58,7 +59,7 @@ update_time_score = pygame.time.get_ticks()
 # Tư động sinh các đối tượng đád
 def re_spawn_stone():
     if not pause:
-        tmp = random.randint(1, 100)  # Chọn một số ngẫu nhiên từ 1 đến 10
+        tmp = random.randint(1, 100)  # Chọn một số ngẫu nhiên từ 1 đến 100
         if tmp <= 50:
             stone = Stone_fall.Stone(2, 'stone_fall1')
             Stone_fall.stones.add(stone)
@@ -72,6 +73,9 @@ def re_spawn_stone():
         if tmp > 50:
             shield = Shield.shield(1)
             Shield.Shield_Group.add(shield)
+        if tmp > 75:
+            STI = Stop_time_item.stop_time_item(1)
+            Stop_time_item.Stop_time_item_group.add(STI)
 
 def draw_background():
     Variables.SCREEN.blit(BACKGROUND_IMG2, (0, 0))
@@ -271,6 +275,9 @@ while Variables.RUNNING:
         Shield.Shield_Group.update()
         Shield.Shield_Group.draw(Variables.SCREEN)
 
+        Stop_time_item.Stop_time_item_group.update()
+        Stop_time_item.Stop_time_item_group.draw(Variables.SCREEN)
+
         #Chạy animation Broken đối với stone hoặc boom tương ứng
         if Variables.check_collision_boom:
             Players.Boom_broken.update()
@@ -282,8 +289,16 @@ while Variables.RUNNING:
         # Nhặt shield
         for shield in Shield.Shield_Group:
             shield.check_collision_player(Player1)
+
+        for STI in Stop_time_item.Stop_time_item_group:
+            STI.check_collision_player(Player1)
+
+
+        #Hiệu ứng shake khi boom nổ
         if Variables.is_exploi:
             Variables.Screen_shake_exploision(Variables.SCREEN, Variables.SCREEN_SHAKE)
+
+
         #CHECK GAME OVER
         if not Player1.alive:
             Variables.mode_1player = False
