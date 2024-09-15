@@ -135,3 +135,9 @@ for i in range(7):
     img = pygame.image.load(os.path.join(current_dir, f'Asset/character/distribute/{i}.png'))
     # img = pygame.transform.scale(img, (int((img.get_width() * scale)), (img.get_height() * scale)))
     effect_list.append(img)
+
+#### Load ảnh ####
+menu_image = pygame.image.load(os.path.join(current_dir,'Asset/Setting/openmenu.png'))
+menu_image = pygame.transform.scale(menu_image, (50, 50))
+# Vị trí của ảnh menu
+menu_image_rect = menu_image.get_rect(topleft=(10, 10))

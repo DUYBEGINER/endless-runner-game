@@ -6,7 +6,7 @@ import Shield
 from Players import Player
 import Stone_fall, Boom
 import Players
-import menu
+import menu, Setting
 # Thiết lập màn hình game
 # Thiết lập bề mặt màn hình chính
 pygame.display.set_caption('Name_of_game')  # Thiết lập tên cửa sổ game
@@ -20,7 +20,10 @@ FPS = 120
 FPS_Clock = pygame.time.Clock()
 
 #### Load ảnh ####
-
+menu_image = pygame.image.load(os.path.join(Variables.current_dir,'Asset/Setting/openmenu.png'))
+menu_image = pygame.transform.scale(menu_image, (50, 50))
+# Vị trí của ảnh menu
+menu_image_rect = menu_image.get_rect(topleft=(10, 10))
 # Background
 BACKGROUND_IMG1 = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Map/background3.png'))
 BACKGROUND_IMG1 = pygame.transform.scale(BACKGROUND_IMG1,(Variables.WINDOW_WIDTH * 1.25, Variables.WINDOW_HEIGHT * 1.25))
@@ -47,13 +50,13 @@ def re_spawn_stone():
         shield = Shield.shield(1)
         Shield.Shield_Group.add(shield)
 
-
-
-
 # Kiểm tra player có vừa mới nhảy không, nếu có thì thêm hiệu ứng
 just_jump = False
 sound_playing = False
 update_time_broken = pygame.time.get_ticks()
+# Biến trạng thái để theo dõi ảnh menu
+show_small_image = False
+
 ########## VÒNG LẶP GAME ### #######
 pygame.init()
 
@@ -69,12 +72,27 @@ while True:
             if menu.start_button_rect.collidepoint(mouse_x, mouse_y):
                 print("Start Game clicked!")
                 Variables.mode_1player = True
+                # Kiểm tra nút cài đặt
+                if menu_image_rect.collidepoint(mouse_x, mouse_y):
+                    print("Settings button clicked!")
+                    show_small_image = True
+                    result = Setting.settings_menu(Variables.SCREEN, Variables.font)
+                    show_small_image = False
+                    if result == "resume":
+                        Variables.mode_1player = True
+                    elif result == "restart":
+                        Variables.score = 0
+                        Variables.mode_1player = True
+                    elif result == "menu":
+                        Variables.mode_1player = False
             elif menu.settings_button_rect.collidepoint(mouse_x, mouse_y):
                 print("Settings clicked!")
                 menu.settings_menu()
             elif menu.exit_button_rect.collidepoint(mouse_x, mouse_y):
                 pygame.quit()
                 sys.exit()  # Thoát game nếu click chuột vào nút Exit
+    # Vẽ nút cài đặt
+    Variables.SCREEN.blit(menu_image, menu_image_rect.topleft)
     # Vẽ nền
     menu.screen.blit(menu.bg, (0, 0))
     # Vẽ các button
@@ -87,15 +105,19 @@ while True:
         # Create Player
         Player1 = Player(150, 150, 1, 2)
 
+    
     while Variables.mode_1player:
-        # Menu.draw_button()
-        # Menu.settings_menu(Variables.SCREEN,Variables.score_title_font, 0,0,Variables.WINDOW)
+        
         Variables.SCREEN.fill(Variables.BLACK)
         Variables.SCREEN.blit(BACKGROUND_IMG2, (0, 0))
         Variables.SCREEN.blit(BACKGROUND_IMG1, (0, 0))
         Variables.SCREEN.blit(GROUND_IMG, (0, Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT))
         Variables.SCREEN.blit(Variables.WALL_IMG1, (0, 0))
         Variables.SCREEN.blit(Variables.WALL_IMG2, (288, 0))
+        # Vẽ nút cài đặt
+        Variables.SCREEN.blit(menu_image, menu_image_rect.topleft)
+
+        
         # print(Variables.tmp_high_score)
 
         ##########################################--KHU VỰC PHỤ--#################################################
@@ -183,6 +205,10 @@ while True:
             if Variables.effect_jump_index >= len(Variables.effect_list):
                 Variables.effect_jump_index = 0
                 just_jump = False
+        ## đang sửa
+        # Hiển thị ảnh menu nếu trạng thái `show_small_image` là True
+        if show_small_image:
+            Variables.SCREEN.blit(menu_image, menu_image_rect)
 
 
         # Update class Stone

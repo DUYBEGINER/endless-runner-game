@@ -140,11 +140,13 @@ def settings_menu():
                 elif 50 <= mouse_x <= 270 and 150 <= mouse_y <= 200:
                     if difficulty == 'Easy':
                         difficulty = 'Normal'
+                        Variables.difficult = 1.25
                     elif difficulty == 'Normal':
+                        Variables.difficult = 1.5
                         difficulty = 'Hard'
-                    else:
+                    elif difficulty == 'Hard':
+                        Variables.difficult = 1
                         difficulty = 'Easy'
-                    print(f"Difficulty set to {difficulty}")
                 # Kiểm tra nút skin
                 elif 50 <= mouse_x <= 270 and 220 <= mouse_y <= 270:
                     current_skin_index = skins.index(skin)

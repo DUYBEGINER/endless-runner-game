@@ -2,7 +2,7 @@
 # settings.py
 import pygame
 import sys, os
-import Variables 
+import Variables , menu
 
 # Constants
 WHITE = (255, 255, 255)
@@ -20,7 +20,6 @@ def draw_button(screen, font, text, x, y, width, height):
     screen.blit(text_surface, text_rect)
 
 def settings_menu(screen, font):
-    volume = 50
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -28,11 +27,8 @@ def settings_menu(screen, font):
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
-                
-                if 60 <= mouse_x <= 260 and 80 <= mouse_y <= 130:  # Volume button
-                    volume = (volume + 10) % 110
-                    print(f"Volume adjusted to {volume}")
-                elif 60 <= mouse_x <= 260 and 150 <= mouse_y <= 200:  # Resume button
+
+                if 60 <= mouse_x <= 260 and 150 <= mouse_y <= 200:  # Resume button
                     return "resume"
                 elif 60 <= mouse_x <= 260 and 220 <= mouse_y <= 270:  # Restart button
                     return "restart"
@@ -40,8 +36,7 @@ def settings_menu(screen, font):
                     return "menu"
 
         screen.blit(pygame.image.load(os.path.join(Variables.current_dir, 'GAME_PROJECT/Asset/Setting/bg.jpg')), (0, 0))
-        draw_button(screen, font, f"Volume: {volume}", 60, 80, BUTTON_WIDTH, BUTTON_HEIGHT)
-        draw_button(screen, font, "Resume", 60, 150, BUTTON_WIDTH, BUTTON_HEIGHT)
-        draw_button(screen, font, "Restart", 60, 220, BUTTON_WIDTH, BUTTON_HEIGHT)
-        draw_button(screen, font, "Back to Menu", 60, 290, BUTTON_WIDTH, BUTTON_HEIGHT)
+        draw_button(menu.screen, menu.font, "Resume", 60, 150, BUTTON_WIDTH, BUTTON_HEIGHT)
+        draw_button(menu.screen, menu.font, "Restart", 60, 220, BUTTON_WIDTH, BUTTON_HEIGHT)
+        draw_button(menu.screen, menu.font, "Back to Menu", 60, 290, BUTTON_WIDTH, BUTTON_HEIGHT)
         pygame.display.flip()
