@@ -69,19 +69,21 @@ high_score = int(fi.read())
 #FONT TEXT
 pygame.font.init()
 text_font = pygame.font.Font(None, 30)
-score_font = pygame.font.Font(None, 30)
+score_font = pygame.font.Font(None, 40)
+high_score_font = pygame.font.Font(None, 60)
 score_x = 95
 score_up = 10
 
-def draw_high_score(ext,font,text_col,x,y):
+def draw_high_score(surf,font,text_col,x,y):
     recor = font.render(f'{high_score}', True, text_col)
-    SUB_AREA.blit(recor, (x, y))
+    surf.blit(recor, (x, y))
 
-def draw_score(text,font,text_col,x,y):
+def draw_score(surf,font,text_col,x,y):
     score_game = font.render(f'{score}', True, text_col)
-    SUB_AREA.blit(score_game, (x, y ))
+    surf.blit(score_game, (x, y ))
 
-def draw_num_shield(text,font,text_col,x,y):
+
+def draw_num_shield(text, font,text_col,x,y):
     img = font.render(f'x {quantity_shield}', True, text_col)
     SUB_AREA.blit(img, (x, y))
 
@@ -113,8 +115,10 @@ walking_sfx = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/walking.m
 sound_background = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/sound_game.mp3'))
 collect_shield_sfx = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/collect_shield.mp3'))
 click_button_sfx = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/click_button.mp3'))
+click_button_sfx2 = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/click_button2.mp3'))
+click_button_sfx3 = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/click_button3.mp3'))
 hover_button_sfx = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/hover_button.mp3'))
-background_music = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/sound_game.mp3'))
+background_music = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/sound_game2.mp3'))
 # countdown_boom.set_volume(0.3)
 jump_sfx.set_volume(0.3)
 walking_sfx.set_volume(1)

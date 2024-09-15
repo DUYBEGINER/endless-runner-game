@@ -25,6 +25,7 @@ FPS = 120
 FPS_Clock = pygame.time.Clock()
 
 #### Load ảnh ####
+
 # Background
 BACKGROUND_IMG1 = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Map/background3.png'))
 BACKGROUND_IMG1 = pygame.transform.scale(BACKGROUND_IMG1,(Variables.WINDOW_WIDTH * 1.25, Variables.WINDOW_HEIGHT * 1.25))
@@ -32,6 +33,10 @@ BACKGROUND_IMG2 = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/M
 BACKGROUND_IMG2 = pygame.transform.scale(BACKGROUND_IMG2,(Variables.WINDOW_WIDTH * 1.25, Variables.WINDOW_HEIGHT * 1.25))
 
 GAMEOVER_IMG = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/gameover.png'))
+
+
+
+
 
 
 ####Load các ảnh và khởi tại button
@@ -78,8 +83,8 @@ def draw_background():
 def draw_sub_area():
     Variables.SCREEN.blit(Variables.SUB_AREA, (320, 0))
     Variables.SUB_AREA.blit(Variables.SUB_AREA_IMG, (0, 0))
-    Variables.draw_high_score(Variables.high_score, Variables.score_font, (186, 145, 88), 90, 215)
-    Variables.draw_score(Variables.score, Variables.score_font, (186, 145, 88), Variables.score_x, 145)
+    Variables.draw_high_score(Variables.SUB_AREA, Variables.score_font, (186, 145, 88), 90, 215)
+    Variables.draw_score(Variables.SUB_AREA, Variables.score_font, (186, 145, 88), Variables.score_x, 145)
     Variables.draw_item_title(Variables.text_font, (121, 144, 78), 63, 350)
     Variables.SUB_AREA_IMG.blit(Variables.SHIELD_IMG, (20, 370))
     Variables.draw_num_shield(Variables.quantity_shield, Variables.text_font, (197, 188, 157), 60, 380)
@@ -95,9 +100,12 @@ def handle_menu_events():
             # Kiểm tra xem chuột có click vào button nào không và thực hiện hành động tương ứng
             if menu.start_button_rect.collidepoint(mouse_x, mouse_y):
                 Variables.mode_1player = True
+                Variables.click_button_sfx.play()
             elif menu.settings_button_rect.collidepoint(mouse_x, mouse_y):
+                Variables.click_button_sfx.play()
                 menu.settings_menu()
             elif menu.exit_button_rect.collidepoint(mouse_x, mouse_y):
+                Variables.click_button_sfx.play()
                 Variables.RUNNING = False
     # Vẽ nền
     menu.screen.blit(menu.bg, (0, 0))
@@ -107,29 +115,6 @@ def handle_menu_events():
     menu.draw_button("Exit", menu.exit_button_x, menu.exit_button_y, menu.BUTTON_WIDTH, menu.BUTTON_HEIGHT)
     # Cập nhật màn hình
     pygame.display.flip()
-
-
-def handle_gameover_events():
-    # for event in pygame.event.get():
-    #     if event.type == pygame.KEYDOWN:
-    #         if event.key == pygame.K_ESCAPE:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            Variables.RUNNING = False
-            pause = False
-        elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            mouse_x, mouse_y = pygame.mouse.get_pos()  # Nhận vị trí chuột khi click
-            # Kiểm tra xem chuột có click vào button nào không và thực hiện hành động tương ứng
-            if menu.home_button_rect.collidepoint(mouse_x, mouse_y):
-                pause = False
-                stop_game()
-            # elif menu.settings_button_rect.collidepoint(mouse_x, mouse_y):
-            #     menu.settings_menu()
-            # elif menu.exit_button_rect.collidepoint(mouse_x, mouse_y):
-            #     Variables.RUNNING = False
-
-
-
 
 
 def stop_game():
@@ -179,13 +164,14 @@ while Variables.RUNNING:
     if not restart:
     ############################### MÀN HÌNH MENU #####################################
         handle_menu_events()
-        Variables.channel_music.play(Variables.background_music, loops=-1)
+
     ####################################################################################
 
     one_flip = True     #biến để cập nhật màn hình over_game đúng 1 lần
     if Variables.mode_1player:
         # Create Player
         Player1 = Player(150, 150, 1, 2)
+        Variables.channel_music.play(Variables.background_music, loops=-1)
 
 
     #################################### MÀN HÌNH CHÍNH CỦA GAME ####################################
@@ -309,17 +295,17 @@ while Variables.RUNNING:
 
     ################################## Màn hình GAME OVER #############################################
     while pause:
+        Variables.channel_music.stop()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 Variables.RUNNING = False
                 pause = False
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-
                 mouse_x, mouse_y = pygame.mouse.get_pos()  # Nhận vị trí chuột khi click
                 # Kiểm tra xem chuột có click vào button nào không và thực hiện hành động tương ứng
                 if home_button.rect.collidepoint(mouse_x, mouse_y):
                     # Variables.hover_button_sfx.play()
-                    Variables.click_button_sfx.play()
+                    Variables.click_button_sfx3.play()
                     pause = False
                     restart = False
                     stop_game()
@@ -327,15 +313,22 @@ while Variables.RUNNING:
                     Variables.mode_1player = True
                     pause = False
                     restart = True
-                    Variables.click_button_sfx.play()
+                    Variables.click_button_sfx3.play()
                     stop_game()
 
-        Variables.SCREEN.blit(GAMEOVER_IMG, (100,100))
+        Variables.SCREEN.blit(GAMEOVER_IMG, (100,100))  #Hiển thị bảng game_over
         home_button.draw()
         restart_button.draw()
+
+        Variables.draw_score(Variables.SCREEN, Variables.score_font, (99, 102, 50), 240, 323)
+        Variables.draw_high_score(Variables.SCREEN, Variables.high_score_font, (235, 128, 7), 210, 240)
         list_display_update = [GAMEOVER_IMG.get_rect(topleft=(100,100)), home_button.rect, restart_button.rect]
         pygame.display.update(list_display_update)
 
+        # Variables.SCREEN.blit(Score,())
+
+        # Variables.draw_high_score(Variables.high_score, Variables.score_font, (186, 145, 88), 100, 215)
+        # Variables.draw_score(Variables.score, Variables.score_font, (186, 145, 88), Variables.score_x, 145)
         draw_background()
         draw_sub_area()
         Variables.SCREEN.blit(Player1.image, (Player1.rect.x, Player1.rect.y))
