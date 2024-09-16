@@ -223,11 +223,13 @@ while Variables.RUNNING:
                     Player1.jump = True
                     Variables.channel_jump.play(Variables.jump_sfx)
                     just_jump = True
+                # Ấn phím J để sử dụng vật phẩm
                 if event.key == pygame.K_j and Variables.quantity_STI != 0 and not Variables.cooldown_use:
                     Variables.stop_time_activate = True
                     Variables.quantity_STI -= 1
                     Variables.cooldown_use = True  #Ngăn không cho người chơi trong lúc ngưng thời gian lại dùng thêm item
                     Variables.is_exploi = False
+                    Variables.Stop_time_channel.play(Variables.stop_time_sfx)
 
             #KEY_UP
             if event.type == pygame.KEYUP:
@@ -263,12 +265,8 @@ while Variables.RUNNING:
             if Variables.effect_jump_index >= len(Variables.effect_list):
                 Variables.effect_jump_index = 0
                 just_jump = False
-        ## đang sửa
-        # Hiển thị ảnh menu nếu trạng thái `show_small_image` là True
-        # if show_small_image:
-        #     Variables.SCREEN.blit(menu_image, menu_image_rect)
 
-        # Update class Stone
+        # Kiểm tra xem người chơi có đang dùng vật phẩm ngưng thời gian không
         if not Variables.stop_time_activate:
             if pygame.time.get_ticks() - Variables.update_time > Variables.COOLDOWN_SPAWN:
                 Variables.update_time = pygame.time.get_ticks()
@@ -291,24 +289,27 @@ while Variables.RUNNING:
                 Players.Stone_broken.update()
                 Players.Stone_broken.draw(Variables.SCREEN)
         else:
-            if pygame.time.get_ticks() - update_time_stop > 500 and Variables.effect_stop_time_index < len(
-                    Variables.effect_stop_time_list):
-                Variables.SCREEN.blit(Variables.effect_stop_time_list[Variables.effect_stop_time_index], (30, 50))
+
+            #Chạy animation đồng hồ quay
+            if pygame.time.get_ticks() - update_time_stop > 800 and Variables.effect_stop_time_index < len(Variables.effect_stop_time_list):
+                Variables.SCREEN.blit(Variables.effect_stop_time_list[Variables.effect_stop_time_index], (20, 30))
                 Variables.effect_stop_time_index += 1
                 update_time_stop_time = pygame.time.get_ticks()
+
             if pygame.time.get_ticks() - Variables.update_time < 3000:
                 # Variables.update_time = pygame.time.get_ticks()
                 # Variables.SCREEN.blit(Player1.image, (Player1.rect.x, Player1.rect.y))
                 Boom.booms_effect.draw(Variables.SCREEN)
                 Stone_fall.stones.draw(Variables.SCREEN)
                 Item.Item_Group.draw(Variables.SCREEN)
-
-
             else:
+                Variables.Stop_time_channel.stop()
                 Variables.stop_time_activate = False
                 Variables.cooldown_use = False
                 Variables.effect_stop_time_index = 0
                 Variables.update_time = pygame.time.get_ticks()
+                for item in Item.Item_Group:
+                    item.update_time_exist += 3000
 
         # Nhặt item
         for item in Item.Item_Group:
@@ -317,7 +318,6 @@ while Variables.RUNNING:
         #Hiệu ứng shake khi boom nổ
         if Variables.is_exploi:
             Variables.Screen_shake_exploision(Variables.SCREEN, Variables.SCREEN_SHAKE)
-
 
         #CHECK GAME OVER
         if not Player1.alive:

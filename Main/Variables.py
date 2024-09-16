@@ -18,10 +18,10 @@ BLOCK_SIZE = 32         # Kích thước khối block
 # Trọng lực
 GRAVITY = 0.3
 #Wall
-WALL_IMG1 = pygame.image.load(os.path.join(current_dir, 'Asset/Map/wall.png'))
+WALL_IMG1 = pygame.image.load(os.path.join(current_dir, 'Asset/Map/wall3.png'))
 WALL_IMG1 = pygame.transform.scale(WALL_IMG1, (32, WINDOW_HEIGHT-GROUND_HEIGHT))
 WALL_RECT1 = WALL_IMG1.get_rect()
-WALL_IMG2 = pygame.image.load(os.path.join(current_dir, 'Asset/Map/wall.png'))
+WALL_IMG2 = pygame.image.load(os.path.join(current_dir, 'Asset/Map/wall3.png'))
 WALL_IMG2 = pygame.transform.scale(WALL_IMG2, (32, WINDOW_HEIGHT-GROUND_HEIGHT))
 WALL_RECT2 = WALL_IMG2.get_rect()
 
@@ -136,16 +136,20 @@ click_button_sfx2 = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/cli
 click_button_sfx3 = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/click_button3.mp3'))
 hover_button_sfx = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/hover_button.mp3'))
 background_music = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/sound_game2.mp3'))
+stop_time_sfx = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/Stop_time.mp3'))
+
 # countdown_boom.set_volume(0.3)
 jump_sfx.set_volume(0.3)
 walking_sfx.set_volume(1)
+stop_time_sfx.set_volume(1)
+
 #SFX Chanel
 pygame.mixer.init()
 channel_collect = pygame.mixer.Channel(0)  # Chọn kênh 0
 channel_jump = pygame.mixer.Channel(1)
 channel_walk = pygame.mixer.Channel(2)
 channel_music = pygame.mixer.Channel(3)
-
+Stop_time_channel = pygame.mixer.Channel(4)
 # play_channel_collect = channel_collect.play(collect_shield_sfx)
 # play_channel_boom = channel_countdown_boom.play(countdown_boom)
 #
@@ -168,13 +172,6 @@ for i in range(41):
     img = pygame.image.load(os.path.join(current_dir, f'Asset/Item/Stop_time_effect/{i}.png'))
     img = pygame.transform.scale(img, (int((img.get_width() * 3)), (img.get_height() * 3)))
     effect_stop_time_list.append(img)
-
-def animation_stop_time():
-    global effect_stop_time_index
-    if pygame.time.get_ticks() - update_time < 20:
-        SCREEN.blit(effect_stop_time_list[effect_stop_time_index], (200, 200))
-    if effect_stop_time_index >= len(effect_stop_time_list):
-        effect_stop_time_index = 0
 
 difficult = 1
 global volume, difficulty, skin

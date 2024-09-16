@@ -28,8 +28,6 @@ class item(pygame.sprite.Sprite):
             img = pygame.image.load(os.path.join(Variables.current_dir, f'Asset/Item/{self.type}/{i}.png'))
             img = pygame.transform.scale(img, (int((img.get_width() * scale)), (img.get_height() * scale)))
             self.animation_list.append(img)
-
-
         self.image = self.animation_list[self.index]
         self.rect = self.image.get_rect()
         tmp = random.randint(1, 8)
@@ -37,25 +35,22 @@ class item(pygame.sprite.Sprite):
 
     def update(self):
         dy = 0
-
         if self.rect.bottom + dy > Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT:
             self.in_air = False
             self.vel_y = 0
             self.rect.bottom = Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT + 1
         else:
             self.in_air = True
-
         if self.in_air:
             self.vel_y += GRAVITY_SHIELD
             dy += self.vel_y
         if pygame.time.get_ticks() - self.update_time_exist> self.TIME_EXIST:
             self.kill()
             self.update_time_exist = pygame.time.get_ticks()
+
         dy = self.check_collision_stone(dy)
         self.update_animation()
-
         self.rect.y += dy
-
 
 
     def check_collision_stone(self,dy):
@@ -64,18 +59,18 @@ class item(pygame.sprite.Sprite):
                 self.in_air = False
                 self.vel_y = 0
                 dy = stone.rect.top - self.rect.bottom
-
         for bom in booms_effect:
             if self.rect.colliderect(bom.rect.left, bom.rect.top, bom.rect.width, bom.rect.height):
                 self.kill()
-
         return dy
+
 
     def check_collision_boom_effect(self):
         for tile in booms_effect:
             if self.rect.colliderect(tile.rect.left, tile.rect.top, tile.rect.width, tile.rect.height):
                 self.kill()
                 break
+
 
     def update_animation(self):
         # Tốc độ nhanh chậm của animation
