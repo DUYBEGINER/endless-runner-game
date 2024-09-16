@@ -144,14 +144,17 @@ class Boom_effect(pygame.sprite.Sprite):
         self.rect = self.animation_list[self.index].get_rect()
         self.rect.center = (self.x, self.y)
 
-    def update(self):
-        ANIMATION_COOLDOWN_effect = 10
-        # Cập nhật frame ảnh hiện tại
-        self.image = self.animation_list[self.index]
+    def update(self,player_alive):
+        if player_alive:
+            ANIMATION_COOLDOWN_effect = 10
+            # Cập nhật frame ảnh hiện tại
+            self.image = self.animation_list[self.index]
 
-        if pygame.time.get_ticks() - self.update_time > ANIMATION_COOLDOWN_effect:
-            self.update_time = pygame.time.get_ticks()
-            self.index += 1
-        if self.index >= len(self.animation_list):
-            Variables.is_exploi = False
-            self.kill()
+            if pygame.time.get_ticks() - self.update_time > ANIMATION_COOLDOWN_effect:
+                self.update_time = pygame.time.get_ticks()
+                self.index += 1
+            if self.index >= len(self.animation_list):
+                Variables.is_exploi = False
+                self.kill()
+        else:
+            self.image = self.animation_list[7]

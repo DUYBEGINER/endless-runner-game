@@ -42,11 +42,11 @@ def Screen_shake_exploision(SCREEN, SCREEN_SHAKE):
 # Sub area
 SUB_AREA = pygame.surface.Surface((200,500))
 SUB_AREA_IMG = pygame.image.load(os.path.join(current_dir, 'Asset/Map/sub_area_main.png'))
-
-
-# Ảnh shield
 SHIELD_IMG = pygame.image.load(os.path.join(current_dir, 'Asset/Item/Shield/0.png'))
 SHIELD_IMG = pygame.transform.scale(SHIELD_IMG, (SHIELD_IMG.get_width()*1.25, SHIELD_IMG.get_height()*1.25))
+STOPGAME_IMG = pygame.image.load(os.path.join(current_dir, 'Asset/Item/Stop_time/3.png'))
+STOPGAME_IMG = pygame.transform.scale(STOPGAME_IMG, (STOPGAME_IMG.get_width()*1, STOPGAME_IMG.get_height()*1))
+
 # Update the wall rect positions
 WALL_RECT1.topleft = (0, 0)
 WALL_RECT2.topleft = (288, 0)
@@ -83,9 +83,14 @@ def draw_score(surf,font,text_col,x,y):
     surf.blit(score_game, (x, y ))
 
 
-def draw_num_shield(text, font,text_col,x,y):
+def draw_num_shield(font,text_col,x,y):
     img = font.render(f'x {quantity_shield}', True, text_col)
     SUB_AREA.blit(img, (x, y))
+
+def draw_num_stopGameItem(font,text_col,x,y):
+    img = font.render(f'x {quantity_STI}', True, text_col)
+    SUB_AREA.blit(img, (x, y))
+
 
 def draw_item_title(font,text_col,x,y):
     img = font.render(f'Item List', True, text_col)
@@ -106,6 +111,7 @@ quantity_STI = 0
 stop_time_activate = False
 COOLDOWN_STOP = 3000
 cooldown_use = False
+
 #Biến chạy hiệu ứng animation jump
 effect_list = []
 effect_jump_index = 0

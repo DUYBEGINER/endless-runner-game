@@ -18,8 +18,9 @@ class Player(pygame.sprite.Sprite):
         self.index = 0
         self.jump = False
         self.in_air = True
-        self.vel_y = 0  # Vận tốc
         self.alive = True
+        self.vel_y = 0  # Vận tốc
+
 
         self.update_time = pygame.time.get_ticks()
         # Load all animation
@@ -148,12 +149,12 @@ class Player(pygame.sprite.Sprite):
         # Bị boom nổ
         for tile in booms_effect:
             if self.rect.colliderect(tile.rect.left, tile.rect.top, tile.rect.width, tile.rect.height):
-                if Variables.quantity_shield < 0:
+                if Variables.quantity_shield < 0 and not Variables.stop_time_activate:
                     self.alive = False
                     print("over!")
-                elif tile.boom_broken_shield != 0: #Khi nào số khiên cần phải mất khi boom nổ chưa đủ thì trừ dần về 0
-                    Variables.quantity_shield -= 1
-                    tile.boom_broken_shield -= 1
+                elif tile.boom_broken_shield != 0 and not Variables.stop_time_activate: #Khi nào số khiên cần phải mất khi boom nổ chưa đủ thì trừ dần về 0
+                    Variables.quantity_shield -= tile.boom_broken_shield
+                    tile.boom_broken_shield  = 0
 
 
         #Kiểm tra player có đứng trên mặt đất không

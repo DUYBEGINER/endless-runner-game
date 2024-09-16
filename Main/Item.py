@@ -21,16 +21,14 @@ class item(pygame.sprite.Sprite):
         self.update_time = pygame.time.get_ticks()
         self.update_time_exist = pygame.time.get_ticks()
 
-        for animation in item_type:
-            # Reset list temp
-            Temp_list = []
-            # Đếm xem có bao nhiêu file ảnh trong folder dùng làm animation
-            num_of_frames = len(os.listdir(os.path.join(Variables.current_dir, f'Asset/Item/{animation}')))
-            for i in range(num_of_frames):
-                img = pygame.image.load(os.path.join(Variables.current_dir, f'Asset/Item/{animation}/{i}.png'))
-                img = pygame.transform.scale(img, (int((img.get_width() * scale)), (img.get_height() * scale)))
-                Temp_list.append(img)
-            self.animation_list.append(Temp_list)
+
+         # Đếm xem có bao nhiêu file ảnh trong folder dùng làm animation
+        num_of_frames = len(os.listdir(os.path.join(Variables.current_dir, f'Asset/Item/{self.type}')))
+        for i in range(num_of_frames):
+            img = pygame.image.load(os.path.join(Variables.current_dir, f'Asset/Item/{self.type}/{i}.png'))
+            img = pygame.transform.scale(img, (int((img.get_width() * scale)), (img.get_height() * scale)))
+            self.animation_list.append(img)
+
 
         self.image = self.animation_list[self.index]
         self.rect = self.image.get_rect()
