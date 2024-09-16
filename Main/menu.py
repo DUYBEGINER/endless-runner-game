@@ -150,7 +150,7 @@ def settings_menu():
                         difficulty = 'Normal'
                         Variables.difficult = 1.25
                     elif difficulty == 'Normal':
-                        Variables.difficult = 100
+                        Variables.difficult = 1.5
                         difficulty = 'Hard'
                     elif difficulty == 'Hard':
                         Variables.difficult = 1

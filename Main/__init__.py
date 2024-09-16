@@ -10,8 +10,7 @@ import Players
 import menu
 import Button
 import update_high_score
-
-
+import Setting
 
 # Thiết lập màn hình game
 # Thiết lập bề mặt màn hình chính
@@ -26,7 +25,11 @@ FPS = 120
 FPS_Clock = pygame.time.Clock()
 
 #### Load ảnh ####
-
+menu_image = pygame.image.load(os.path.join(Variables.current_dir,'Asset/Setting/openmenu.png'))
+menu_image = pygame.transform.scale(menu_image, (50, 50))
+# Vị trí của ảnh menu
+menu_image_rect = menu_image.get_rect()
+menu_image_rect.topleft = (10,10)
 # Background
 BACKGROUND_IMG1 = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Map/background3.png'))
 BACKGROUND_IMG1 = pygame.transform.scale(BACKGROUND_IMG1,(Variables.WINDOW_WIDTH * 1.25, Variables.WINDOW_HEIGHT * 1.25))
@@ -34,8 +37,6 @@ BACKGROUND_IMG2 = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/M
 BACKGROUND_IMG2 = pygame.transform.scale(BACKGROUND_IMG2,(Variables.WINDOW_WIDTH * 1.25, Variables.WINDOW_HEIGHT * 1.25))
 
 GAMEOVER_IMG = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/gameover.png'))
-
-
 
 
 
@@ -97,8 +98,6 @@ def handle_menu_events():
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             Variables.RUNNING = False
-            # pygame.quit()
-            # sys.exit()  # Thoát game nếu đóng cửa sổ
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             mouse_x, mouse_y = pygame.mouse.get_pos()  # Nhận vị trí chuột khi click
             # Kiểm tra xem chuột có click vào button nào không và thực hiện hành động tương ứng
@@ -113,6 +112,7 @@ def handle_menu_events():
                 Variables.RUNNING = False
     # Vẽ nền
     menu.screen.blit(menu.bg, (0, 0))
+
     # Vẽ các button
     menu.draw_button("Start Game", menu.start_button_x, menu.start_button_y, menu.BUTTON_WIDTH, menu.BUTTON_HEIGHT)
     menu.draw_button("Settings", menu.settings_button_x, menu.settings_button_y, menu.BUTTON_WIDTH, menu.BUTTON_HEIGHT)
@@ -128,6 +128,7 @@ def stop_game():
     Boom.booms_effect.empty()
     Players.Stone_broken.empty()
     Players.Boom_broken.empty()
+    Stop_time_item.Stop_time_item_group.empty()
     Variables.is_exploi = False
     Variables.score = 0
 
@@ -159,16 +160,15 @@ gameover_font = pygame.font.SysFont('Arial', 50)
 just_jump = False
 sound_playing = False
 update_time_broken = pygame.time.get_ticks()
-
+# Biến trạng thái để theo dõi ảnh menu
+menu_image_check = False
 
 ########## VÒNG LẶP GAME ### #######
 pygame.init()
 while Variables.RUNNING:
-
     if not restart:
     ############################### MÀN HÌNH MENU #####################################
         handle_menu_events()
-
     ####################################################################################
 
     one_flip = True     #biến để cập nhật màn hình over_game đúng 1 lần
@@ -180,9 +180,11 @@ while Variables.RUNNING:
 
     #################################### MÀN HÌNH CHÍNH CỦA GAME ####################################
     while Variables.mode_1player:
-
+        print(Variables.quantity_STI)
         draw_background()
         draw_sub_area()
+        # Variables.SCREEN.blit(menu_image,menu_image_rect )
+
         #count score
         if pygame.time.get_ticks() - update_time_score > 100:
             Variables.score += 1
@@ -208,9 +210,6 @@ while Variables.RUNNING:
             #KEY_DOWN
             if event.type == pygame.QUIT:
                 Variables.RUNNING = False
-            if event == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    Variables.mode_1player = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_a:
                     Variables.moving_left = True
@@ -226,8 +225,15 @@ while Variables.RUNNING:
                     Player1.jump = True
                     Variables.channel_jump.play(Variables.jump_sfx)
                     just_jump = True
+                if event.key == pygame.K_j and Variables.quantity_STI != 0 and not Variables.cooldown_use:
+                    Variables.stop_time_activate = True
+
             #KEY_UP
             if event.type == pygame.KEYUP:
+                if event.key == pygame.K_j and Variables.quantity_STI != 0 and not Variables.cooldown_use:
+                    Variables.quantity_STI -= 1
+                    Variables.cooldown_use = True
+                    Variables.is_exploi = False
                 if event.key == pygame.K_a:
                     Variables.moving_left = False
                     if not Variables.moving_right and not Player1.in_air:
@@ -260,31 +266,49 @@ while Variables.RUNNING:
             if Variables.effect_jump_index >= len(Variables.effect_list):
                 Variables.effect_jump_index = 0
                 just_jump = False
+        ## đang sửa
+        # Hiển thị ảnh menu nếu trạng thái `show_small_image` là True
+        # if show_small_image:
+        #     Variables.SCREEN.blit(menu_image, menu_image_rect)
 
         # Update class Stone
-        if pygame.time.get_ticks() - Variables.update_time > Variables.COOLDOWN_SPAWN:
-            Variables.update_time = pygame.time.get_ticks()
-            re_spawn_stone()
+        if not Variables.stop_time_activate:
+            if pygame.time.get_ticks() - Variables.update_time > Variables.COOLDOWN_SPAWN:
+                Variables.update_time = pygame.time.get_ticks()
+                re_spawn_stone()
 
-        Stone_fall.stones.update()
-        Stone_fall.stones.draw(Variables.SCREEN)
+            Stone_fall.stones.update()
+            Stone_fall.stones.draw(Variables.SCREEN)
 
-        Boom.booms_effect.update()
-        Boom.booms_effect.draw(Variables.SCREEN)
+            Boom.booms_effect.update()
+            Boom.booms_effect.draw(Variables.SCREEN)
 
-        Shield.Shield_Group.update()
-        Shield.Shield_Group.draw(Variables.SCREEN)
+            Shield.Shield_Group.update()
+            Shield.Shield_Group.draw(Variables.SCREEN)
 
-        Stop_time_item.Stop_time_item_group.update()
-        Stop_time_item.Stop_time_item_group.draw(Variables.SCREEN)
+            Stop_time_item.Stop_time_item_group.update()
+            Stop_time_item.Stop_time_item_group.draw(Variables.SCREEN)
 
-        #Chạy animation Broken đối với stone hoặc boom tương ứng
-        if Variables.check_collision_boom:
-            Players.Boom_broken.update()
-            Players.Boom_broken.draw(Variables.SCREEN)
+
+            #Chạy animation Broken đối với stone hoặc boom tương ứng
+            if Variables.check_collision_boom:
+                Players.Boom_broken.update()
+                Players.Boom_broken.draw(Variables.SCREEN)
+            else:
+                Players.Stone_broken.update()
+                Players.Stone_broken.draw(Variables.SCREEN)
         else:
-            Players.Stone_broken.update()
-            Players.Stone_broken.draw(Variables.SCREEN)
+            if pygame.time.get_ticks() - Variables.update_time < 2000:
+                # Variables.update_time = pygame.time.get_ticks()
+                # Variables.SCREEN.blit(Player1.image, (Player1.rect.x, Player1.rect.y))
+                Boom.booms_effect.draw(Variables.SCREEN)
+                Shield.Shield_Group.draw(Variables.SCREEN)
+                Stone_fall.stones.draw(Variables.SCREEN)
+                Stop_time_item.Stop_time_item_group.draw(Variables.SCREEN)
+            else:
+                Variables.stop_time_activate = False
+                Variables.cooldown_use = False
+                Variables.update_time = pygame.time.get_ticks()
 
         # Nhặt shield
         for shield in Shield.Shield_Group:
@@ -340,15 +364,14 @@ while Variables.RUNNING:
         list_display_update = [GAMEOVER_IMG.get_rect(topleft=(100,100)), home_button.rect, restart_button.rect]
         pygame.display.update(list_display_update)
 
-        # Variables.SCREEN.blit(Score,())
 
-        # Variables.draw_high_score(Variables.high_score, Variables.score_font, (186, 145, 88), 100, 215)
-        # Variables.draw_score(Variables.score, Variables.score_font, (186, 145, 88), Variables.score_x, 145)
+        #####$ Dừng màn hình game $#####
         draw_background()
         draw_sub_area()
         Variables.SCREEN.blit(Player1.image, (Player1.rect.x, Player1.rect.y))
         Boom.booms_effect.draw(Variables.SCREEN)
         Shield.Shield_Group.draw(Variables.SCREEN)
         Stone_fall.stones.draw(Variables.SCREEN)
+        Stop_time_item.Stop_time_item_group.draw(Variables.SCREEN)
 
 pygame.quit()

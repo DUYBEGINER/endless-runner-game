@@ -5,25 +5,32 @@ from Boom import booms_effect
 from Stone_fall import stones
 import Variables
 
-Stop_time_item_group = Group()
-GRAVITY_STI = 0.025
 
-class stop_time_item(pygame.sprite.Sprite):
-    def __init__(self, scale):
+Item_Group = Group()
+GRAVITY_SHIELD = 0.025
+
+class item(pygame.sprite.Sprite):
+    def __init__(self, scale,item_type):
         Sprite.__init__(self)
         self.animation_list = []
         self.index = 0
         self.in_air =  True
         self.vel_y = 0
-
+        self.type = item_type
         self.TIME_EXIST = 5000
         self.update_time = pygame.time.get_ticks()
         self.update_time_exist = pygame.time.get_ticks()
 
-        for i in range(10):
-            img = pygame.image.load(os.path.join(Variables.current_dir, f'Asset/Item/Stop_time/{i}.png'))
-            img = pygame.transform.scale(img, (int((img.get_width() * scale)), (img.get_height() * scale)))
-            self.animation_list.append(img)
+        for animation in item_type:
+            # Reset list temp
+            Temp_list = []
+            # Đếm xem có bao nhiêu file ảnh trong folder dùng làm animation
+            num_of_frames = len(os.listdir(os.path.join(Variables.current_dir, f'Asset/Item/{animation}')))
+            for i in range(num_of_frames):
+                img = pygame.image.load(os.path.join(Variables.current_dir, f'Asset/Item/{animation}/{i}.png'))
+                img = pygame.transform.scale(img, (int((img.get_width() * scale)), (img.get_height() * scale)))
+                Temp_list.append(img)
+            self.animation_list.append(Temp_list)
 
         self.image = self.animation_list[self.index]
         self.rect = self.image.get_rect()
@@ -41,13 +48,14 @@ class stop_time_item(pygame.sprite.Sprite):
             self.in_air = True
 
         if self.in_air:
-            self.vel_y += GRAVITY_STI
+            self.vel_y += GRAVITY_SHIELD
             dy += self.vel_y
         if pygame.time.get_ticks() - self.update_time_exist> self.TIME_EXIST:
             self.kill()
             self.update_time_exist = pygame.time.get_ticks()
         dy = self.check_collision_stone(dy)
         self.update_animation()
+
         self.rect.y += dy
 
 
@@ -62,6 +70,7 @@ class stop_time_item(pygame.sprite.Sprite):
         for bom in booms_effect:
             if self.rect.colliderect(bom.rect.left, bom.rect.top, bom.rect.width, bom.rect.height):
                 self.kill()
+
         return dy
 
     def check_collision_boom_effect(self):
@@ -84,8 +93,11 @@ class stop_time_item(pygame.sprite.Sprite):
             self.index = 0
 
     def check_collision_player(self, player):
-        if self.rect.colliderect(player):
+        if self.rect.colliderect(player) and self.type == 'Shield':
+            Variables.quantity_shield += 1
+            self.kill()
+            Variables.channel_collect.play(Variables.collect_shield_sfx)
+        elif self.rect.colliderect(player) and self.type == 'Stop_time':
             Variables.quantity_STI += 1
-            print(Variables.quantity_STI)
             self.kill()
             Variables.channel_collect.play(Variables.collect_shield_sfx)

@@ -96,10 +96,16 @@ moving_left = False
 moving_right = False
 moving_jump = False
 
+
+
 #Số lượng vật phẩm
 quantity_shield = 0
 quantity_STI = 0
 
+#Biến liên quan đến ngưng động màn hình
+stop_time_activate = False
+COOLDOWN_STOP = 3000
+cooldown_use = False
 #Biến chạy hiệu ứng animation jump
 effect_list = []
 effect_jump_index = 0
@@ -111,7 +117,7 @@ RUNNING = True
 pygame.init()
 
 
-#SFX
+###### SFX ######
 jump_sfx = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/jump.mp3'))
 walking_sfx = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/walking.mp3'))
 sound_background = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/sound_game.mp3'))
@@ -141,6 +147,8 @@ channel_music = pygame.mixer.Channel(3)
 # Các biến liên quan đến thời gian spawn các chướng ngại vật đá
 update_time = pygame.time.get_ticks()
 COOLDOWN_SPAWN = 500
+
+
 for i in range(7):
     img = pygame.image.load(os.path.join(current_dir, f'Asset/character/distribute/{i}.png'))
     # img = pygame.transform.scale(img, (int((img.get_width() * scale)), (img.get_height() * scale)))
@@ -150,3 +158,9 @@ global volume, difficulty, skin
 volume = 50
 difficulty = 'Easy'
 skin = 'WHITE'
+
+#### Load ảnh ####
+menu_image = pygame.image.load(os.path.join(current_dir,'Asset/Setting/openmenu.png'))
+menu_image = pygame.transform.scale(menu_image, (50, 50))
+# Vị trí của ảnh menu
+menu_image_rect = menu_image.get_rect(topleft=(10, 10))
