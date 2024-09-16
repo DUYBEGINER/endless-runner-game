@@ -114,8 +114,11 @@ cooldown_use = False
 
 #Biến chạy hiệu ứng animation jump
 effect_list = []
+effect_stop_time_list = []
 effect_jump_index = 0
+effect_stop_time_index = 0
 check_collision_boom = False
+
 
 # Biến thực hiện các màn hình
 mode_1player = False
@@ -154,11 +157,25 @@ channel_music = pygame.mixer.Channel(3)
 update_time = pygame.time.get_ticks()
 COOLDOWN_SPAWN = 500
 
-
+#Load animation dưới chân khi nhảy
 for i in range(7):
     img = pygame.image.load(os.path.join(current_dir, f'Asset/character/distribute/{i}.png'))
     # img = pygame.transform.scale(img, (int((img.get_width() * scale)), (img.get_height() * scale)))
     effect_list.append(img)
+
+#Load hiệu ứng sử dụng item stop_time
+for i in range(41):
+    img = pygame.image.load(os.path.join(current_dir, f'Asset/Item/Stop_time_effect/{i}.png'))
+    img = pygame.transform.scale(img, (int((img.get_width() * 3)), (img.get_height() * 3)))
+    effect_stop_time_list.append(img)
+
+def animation_stop_time():
+    global effect_stop_time_index
+    if pygame.time.get_ticks() - update_time < 20:
+        SCREEN.blit(effect_stop_time_list[effect_stop_time_index], (200, 200))
+    if effect_stop_time_index >= len(effect_stop_time_list):
+        effect_stop_time_index = 0
+
 difficult = 1
 global volume, difficulty, skin
 volume = 50

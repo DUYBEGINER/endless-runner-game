@@ -55,7 +55,7 @@ GROUND_IMG = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Map/gr
 pause = False
 
 update_time_score = pygame.time.get_ticks()
-
+update_time_stop = pygame.time.get_ticks()
 # Tư động sinh các đối tượng đád
 def re_spawn_stone():
     if not pause:
@@ -291,16 +291,23 @@ while Variables.RUNNING:
                 Players.Stone_broken.update()
                 Players.Stone_broken.draw(Variables.SCREEN)
         else:
-            if pygame.time.get_ticks() - Variables.update_time < 5000:
+            if pygame.time.get_ticks() - update_time_stop > 500 and Variables.effect_stop_time_index < len(
+                    Variables.effect_stop_time_list):
+                Variables.SCREEN.blit(Variables.effect_stop_time_list[Variables.effect_stop_time_index], (30, 50))
+                Variables.effect_stop_time_index += 1
+                update_time_stop_time = pygame.time.get_ticks()
+            if pygame.time.get_ticks() - Variables.update_time < 3000:
                 # Variables.update_time = pygame.time.get_ticks()
                 # Variables.SCREEN.blit(Player1.image, (Player1.rect.x, Player1.rect.y))
                 Boom.booms_effect.draw(Variables.SCREEN)
                 Stone_fall.stones.draw(Variables.SCREEN)
                 Item.Item_Group.draw(Variables.SCREEN)
 
+
             else:
                 Variables.stop_time_activate = False
                 Variables.cooldown_use = False
+                Variables.effect_stop_time_index = 0
                 Variables.update_time = pygame.time.get_ticks()
 
         # Nhặt item
