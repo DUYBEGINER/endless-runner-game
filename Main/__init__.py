@@ -62,7 +62,7 @@ def button_action():
     print("Nút Menu đã được nhấn!")
 ########## VÒNG LẶP GAME ### #######
 pygame.init()
-#123
+
 # Variables.sound_background.play(loops=-1)
 while True:
     for event in pygame.event.get():
