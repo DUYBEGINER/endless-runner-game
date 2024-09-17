@@ -1,25 +1,29 @@
-#setting trong khi chơi game
-# settings.py
 import pygame
 import sys, os
-import Variables , menu
+import Variables, menu
 
 # Constants
 WHITE = (255, 255, 255)
-BUTTON_WIDTH, BUTTON_HEIGHT = 200, 50
 
-def draw_button(screen, font, text, x, y, width, height):
-    BUTTON_COLOR = (0, 128, 255)
-    BUTTON_HOVER_COLOR = (0, 100, 200)
-    mouse_pos = pygame.mouse.get_pos()
-    is_hovered = pygame.Rect(x, y, width, height).collidepoint(mouse_pos)
-    button_color = BUTTON_HOVER_COLOR if is_hovered else BUTTON_COLOR
-    pygame.draw.rect(screen, button_color, (x, y, width, height))
-    text_surface = font.render(text, True, WHITE)
-    text_rect = text_surface.get_rect(center=(x + width // 2, y + height // 2))
-    screen.blit(text_surface, text_rect)
+# Load button images
+def load_button_images():
+    resume_img = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Setting/start.png'))
+    restart_img = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Setting/restart.png'))
+    back_img = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Setting/back.png'))
+    return resume_img, restart_img, back_img
+
+def draw_button_image(screen, img, x, y):
+    screen.blit(img, (x, y))
 
 def settings_menu(screen, font):
+    # Load button images
+    resume_img, restart_img, back_to_menu_img = load_button_images()
+    
+    # Button positions
+    start_rect = pygame.Rect(60, 150, resume_img.get_width(), resume_img.get_height())
+    restart_rect = pygame.Rect(60, 220, restart_img.get_width(), restart_img.get_height())
+    back_to_menu_rect = pygame.Rect(60, 290, back_to_menu_img.get_width(), back_to_menu_img.get_height())
+    
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -28,15 +32,19 @@ def settings_menu(screen, font):
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
 
-                if 60 <= mouse_x <= 260 and 150 <= mouse_y <= 200:  # Resume button
+                if start_rect.collidepoint(mouse_x, mouse_y):
                     return "resume"
-                elif 60 <= mouse_x <= 260 and 220 <= mouse_y <= 270:  # Restart button
+                elif restart_rect.collidepoint(mouse_x, mouse_y):
                     return "restart"
-                elif 60 <= mouse_x <= 260 and 290 <= mouse_y <= 340:  # Exit button
+                elif back_to_menu_rect.collidepoint(mouse_x, mouse_y):
                     return "menu"
 
-        screen.blit(pygame.image.load(os.path.join(Variables.current_dir, 'GAME_PROJECT/Asset/Setting/bg.jpg')), (0, 0))
-        draw_button(menu.screen, menu.font, "Resume", 60, 150, BUTTON_WIDTH, BUTTON_HEIGHT)
-        draw_button(menu.screen, menu.font, "Restart", 60, 220, BUTTON_WIDTH, BUTTON_HEIGHT)
-        draw_button(menu.screen, menu.font, "Back to Menu", 60, 290, BUTTON_WIDTH, BUTTON_HEIGHT)
+        # Draw the background
+        screen.blit(pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Setting/bg.jpg')), (0, 0))
+        
+        # Draw buttons
+        draw_button_image(screen, resume_img, 60, 150)
+        draw_button_image(screen, restart_img, 60, 220)
+        draw_button_image(screen, back_to_menu_img, 60, 290)
+        
         pygame.display.flip()
