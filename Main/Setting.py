@@ -15,7 +15,7 @@ def load_button_images():
 def draw_button_image(screen, img, x, y):
     screen.blit(img, (x, y))
 
-def settings_menu(screen, font):
+def settings_menu1(screen, font):
     # Load button images
     resume_img, restart_img, back_to_menu_img = load_button_images()
     
@@ -46,5 +46,5 @@ def settings_menu(screen, font):
         draw_button_image(screen, resume_img, 60, 150)
         draw_button_image(screen, restart_img, 60, 220)
         draw_button_image(screen, back_to_menu_img, 60, 290)
-        
+    
         pygame.display.flip()

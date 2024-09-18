@@ -22,8 +22,7 @@ FPS_Clock = pygame.time.Clock()
 #### Load ảnh ####
 menu_image = pygame.image.load(os.path.join(Variables.current_dir,'Asset/Setting/openmenu.png'))
 menu_image = pygame.transform.scale(menu_image, (35, 35))
-# Vị trí của ảnh menu
-menu_image_rect = menu_image.get_rect(topleft=(10, 10))
+
 # Background
 BACKGROUND_IMG1 = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Map/background3.png'))
 BACKGROUND_IMG1 = pygame.transform.scale(BACKGROUND_IMG1,(Variables.WINDOW_WIDTH * 1.25, Variables.WINDOW_HEIGHT * 1.25))
@@ -57,9 +56,11 @@ update_time_broken = pygame.time.get_ticks()
 # Biến trạng thái để theo dõi ảnh menu
 show_menu = True
 show_settings = False  
-###############################################test
-def button_action():
-    print("Nút Menu đã được nhấn!")
+
+def draw_button_image(screen, img, x, y):
+    screen.blit(img, (x, y))
+
+
 ########## VÒNG LẶP GAME ### #######
 pygame.init()
 
@@ -77,20 +78,10 @@ while True:
                 print("Start Game clicked!")
                 show_menu = False
                 Variables.mode_1player = True
+
                 if menu_image_rect.collidepoint(mouse_x, mouse_y):
-                    button_action()  
-                if show_settings:
-                    result = Setting.settings_menu(Variables.SCREEN, Variables.FONT)
-                    if result == "resume":
-                        show_settings = False
-                        Variables.mode_1player = True
-                    elif result == "restart":
-                        show_settings = False
-                        Variables.score = 0
-                        Variables.mode_1player = True
-                    elif result == "menu":
-                        show_settings = False
-                        show_menu = True
+                    Setting.settings_menu1() 
+                
             elif menu.settings_button_rect.collidepoint(mouse_x, mouse_y):
                 print("Settings clicked!")
                 menu.settings_menu()
@@ -100,7 +91,7 @@ while True:
     
     if show_settings:
         Variables.SCREEN.fill((0, 0, 0))  # Xóa màn hình trước khi hiển thị cửa sổ settings
-
+        draw_button_image(menu_image, menu_image_rect.x, menu_image_rect.y)
         continue
 
     if show_menu:
@@ -119,11 +110,14 @@ while True:
     menu.draw_button("Start Game", menu.start_button_x, menu.start_button_y, menu.BUTTON_WIDTH, menu.BUTTON_HEIGHT)
     menu.draw_button("Settings", menu.settings_button_x, menu.settings_button_y, menu.BUTTON_WIDTH, menu.BUTTON_HEIGHT)
     menu.draw_button("Exit", menu.exit_button_x, menu.exit_button_y, menu.BUTTON_WIDTH, menu.BUTTON_HEIGHT)
+    # Vị trí của ảnh menu
+    menu_image_rect = menu_image.get_rect(topleft=(10, 10))
     # Cập nhật màn hình
     pygame.display.flip()
     if Variables.mode_1player:
         # Create Player
         Player1 = Player(150, 150, 1, 2)
+
 
     
     while Variables.mode_1player:
@@ -135,10 +129,9 @@ while True:
         Variables.SCREEN.blit(Variables.WALL_IMG1, (0, 0))
         Variables.SCREEN.blit(Variables.WALL_IMG2, (288, 0))
         Variables.SCREEN.blit(menu_image, menu_image_rect)
+        
 
-        
-        
-        
+
         # print(Variables.tmp_high_score)
 
         ##########################################--KHU VỰC PHỤ--#################################################
