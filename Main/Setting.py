@@ -7,15 +7,18 @@ WHITE = (255, 255, 255)
 
 # Load button images
 def load_button_images():
-    resume_img = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Setting/start.png'))
+    resume_img = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Setting/resume.png'))
+    resume_img = pygame.transform.scale(resume_img, (int(resume_img.get_width()*0.2), int(resume_img.get_height()*0.2)))
     restart_img = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Setting/restart.png'))
+    restart_img = pygame.transform.scale(restart_img, (int(restart_img.get_width()*0.2), int(restart_img.get_height()*0.2)))
     back_img = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Setting/back.png'))
+    back_img = pygame.transform.scale(back_img, (int(back_img.get_width()*0.2), int(back_img.get_height()*0.2)))
     return resume_img, restart_img, back_img
 
 def draw_button_image(screen, img, x, y):
     screen.blit(img, (x, y))
 
-def settings_menu1(screen, font):
+def settings_menu1(screen):
     # Load button images
     resume_img, restart_img, back_to_menu_img = load_button_images()
     

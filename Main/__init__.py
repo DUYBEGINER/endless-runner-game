@@ -22,13 +22,13 @@ FPS_Clock = pygame.time.Clock()
 #### Load ảnh ####
 menu_image = pygame.image.load(os.path.join(Variables.current_dir,'Asset/Setting/openmenu.png'))
 menu_image = pygame.transform.scale(menu_image, (35, 35))
-
+menu_image_rect = menu_image.get_rect(topleft=(10, 10))
 # Background
 BACKGROUND_IMG1 = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Map/background3.png'))
 BACKGROUND_IMG1 = pygame.transform.scale(BACKGROUND_IMG1,(Variables.WINDOW_WIDTH * 1.25, Variables.WINDOW_HEIGHT * 1.25))
 BACKGROUND_IMG2 = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Map/background1.png'))
 BACKGROUND_IMG2 = pygame.transform.scale(BACKGROUND_IMG2,(Variables.WINDOW_WIDTH * 1.25, Variables.WINDOW_HEIGHT * 1.25))
-# Groundư
+# Ground
 GROUND_IMG = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Map/ground_new.png'))
 
 update_time_score = pygame.time.get_ticks()
@@ -87,8 +87,8 @@ while True:
                 menu.settings_menu()
             elif menu.exit_button_rect.collidepoint(mouse_x, mouse_y):
                 pygame.quit()
-                sys.exit()  # Thoát game nếu click chuột vào nút Exit
-    
+                sys.exit()  # Thoát game nếu click chuột vào nútxit
+
     if show_settings:
         Variables.SCREEN.fill((0, 0, 0))  # Xóa màn hình trước khi hiển thị cửa sổ settings
         draw_button_image(menu_image, menu_image_rect.x, menu_image_rect.y)
@@ -111,7 +111,7 @@ while True:
     menu.draw_button("Settings", menu.settings_button_x, menu.settings_button_y, menu.BUTTON_WIDTH, menu.BUTTON_HEIGHT)
     menu.draw_button("Exit", menu.exit_button_x, menu.exit_button_y, menu.BUTTON_WIDTH, menu.BUTTON_HEIGHT)
     # Vị trí của ảnh menu
-    menu_image_rect = menu_image.get_rect(topleft=(10, 10))
+
     # Cập nhật màn hình
     pygame.display.flip()
     if Variables.mode_1player:
@@ -129,7 +129,8 @@ while True:
         Variables.SCREEN.blit(Variables.WALL_IMG1, (0, 0))
         Variables.SCREEN.blit(Variables.WALL_IMG2, (288, 0))
         Variables.SCREEN.blit(menu_image, menu_image_rect)
-        
+
+
 
 
         # print(Variables.tmp_high_score)
@@ -167,6 +168,11 @@ while True:
             Player1.update_action(0)  # Idlea
 
         for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                mouse_x, mouse_y = pygame.mouse.get_pos()  # Nhận vị trí chuột khi click
+                # Kiểm tra xem chuột có click vào button nào không và thực hiện hành động tương ứng
+                if menu_image_rect.collidepoint(mouse_x, mouse_y):
+                    show_menu = True
             if event == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     Variables.mode_1player = False
@@ -240,7 +246,11 @@ while True:
         ## đang sửa
         # Hiển thị ảnh menu nếu trạng thái show_menu là True
         if show_menu:
-            Variables.SCREEN.blit(menu_image, menu_image_rect)
+            Variables.SCREEN.fill((0, 0, 0))  # Xóa màn hình trước khi hiển thị cửa sổ settings
+            draw_button_image(Variables.SCREEN,menu_image, menu_image_rect.x, menu_image_rect.y)
+            if menu_image_rect.collidepoint(mouse_x, mouse_y):
+                Setting.settings_menu1(Variables.SCREEN)
+            continue
 
         #Chạy animation stone broken
         if Variables.check_collision_boom:
