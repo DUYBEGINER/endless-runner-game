@@ -109,7 +109,7 @@ quantity_STI = 0
 
 #Biến liên quan đến ngưng động màn hình
 stop_time_activate = False
-COOLDOWN_STOP = 3000
+COOLDOWN_STOP = 120*3
 cooldown_use = False #Ngăn không cho người dùng spam vật phẩn ngưng đọng thời gian
 
 #Biến chạy hiệu ứng animation jump
