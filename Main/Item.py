@@ -17,7 +17,7 @@ class item(pygame.sprite.Sprite):
         self.in_air =  True
         self.vel_y = 0
         self.type = item_type
-        self.TIME_EXIST = 5000
+        self.TIME_EXIST = 600  # tồn taị bao nhiêu giây thì lấy FPS x số giây muốn tồn tại
         self.update_time = pygame.time.get_ticks()
         self.update_time_exist = pygame.time.get_ticks()
 
@@ -34,6 +34,7 @@ class item(pygame.sprite.Sprite):
         self.rect.center = (tmp * self.image.get_width() + self.image.get_width() / 2, -20)
 
     def update(self):
+
         dy = 0
         if self.rect.bottom + dy > Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT:
             self.in_air = False
@@ -44,9 +45,13 @@ class item(pygame.sprite.Sprite):
         if self.in_air:
             self.vel_y += GRAVITY_SHIELD
             dy += self.vel_y
-        if pygame.time.get_ticks() - self.update_time_exist> self.TIME_EXIST:
+        print(self.TIME_EXIST)
+        self.TIME_EXIST -= 1
+        if self.TIME_EXIST<=0:
             self.kill()
-            self.update_time_exist = pygame.time.get_ticks()
+        # if pygame.time.get_ticks() - self.update_time_exist> self.TIME_EXIST:
+        #     self.kill()
+        #     self.update_time_exist = pygame.time.get_ticks()
 
         dy = self.check_collision_stone(dy)
         self.update_animation()

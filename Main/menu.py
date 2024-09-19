@@ -24,7 +24,7 @@ bg = pygame.transform.scale(bg, (SCREEN_WIDTH_MENU, SCREEN_HEIGHT_MENU))
 
 # Tạo font chữ
 font = pygame.font.Font(None, FONT_SIZE)
-
+was_hover = False
 # Hàm vẽ nút
 def draw_button(text, x, y, width, height):
     mouse_pos = pygame.mouse.get_pos()  # Lấy vị trí chuột
@@ -134,10 +134,12 @@ def settings_menu():
                 mouse_x, mouse_y = pygame.mouse.get_pos()  # Nhận vị trí chuột khi click
                 # Kiểm tra nút âm lượng
                 if 50 <= mouse_x <= 270 and 80 <= mouse_y <= 130:
+                    Variables.click_button_sfx3.play()
                     volume = (volume + 10) % 110  # Tăng âm lượng và quay lại 0 nếu vượt quá 100
                     print(f"Volume adjusted to {volume}")
                 # Kiểm tra nút độ khó
                 elif 50 <= mouse_x <= 270 and 150 <= mouse_y <= 200:
+                    Variables.click_button_sfx2.play()
                     if difficulty == 'Easy':
                         difficulty = 'Normal'
                         Variables.difficult = 1.25
@@ -149,11 +151,13 @@ def settings_menu():
                         difficulty = 'Easy'
                 # Kiểm tra nút skin
                 elif 50 <= mouse_x <= 270 and 220 <= mouse_y <= 270:
+                    Variables.click_button_sfx.play()
                     current_skin_index = skins.index(skin)
                     skin = skins[(current_skin_index + 1) % len(skins)]
                     print(f"Skin changed to {skin}")
                 # Kiểm tra nút quay lại
                 elif 50 <= mouse_x <= 270 and 290 <= mouse_y <= 340:
+                    Variables.click_button_sfx.play()
                     write_settings()
                     return  # Quay lại menu chính
 
