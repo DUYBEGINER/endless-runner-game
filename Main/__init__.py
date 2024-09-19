@@ -25,7 +25,7 @@ FPS_Clock = pygame.time.Clock()
 
 #### Load ảnh ####
 menu_image = pygame.image.load(os.path.join(Variables.current_dir,'Asset/Setting/openmenu.png'))
-menu_image = pygame.transform.scale(menu_image, (50, 50))
+menu_image = pygame.transform.scale(menu_image, (35, 35))
 # Vị trí của ảnh menu
 menu_image_rect = menu_image.get_rect()
 menu_image_rect.topleft = (10,10)
@@ -76,12 +76,16 @@ def re_spawn_stone():
             STI = Item.item(1,'Stop_time')
             Item.Item_Group.add(STI)
 
+def draw_button_image(screen, img, x, y):
+    screen.blit(img, (x, y))
+
 def draw_background():
     Variables.SCREEN.blit(BACKGROUND_IMG2, (0, 0))
     Variables.SCREEN.blit(BACKGROUND_IMG1, (0, 0))
     Variables.SCREEN.blit(GROUND_IMG, (0, Variables.WINDOW_HEIGHT - Variables.GROUND_HEIGHT))
     Variables.SCREEN.blit(Variables.WALL_IMG1, (0, 0))
     Variables.SCREEN.blit(Variables.WALL_IMG2, (288, 0))
+    Variables.SCREEN.blit(menu_image, menu_image_rect)
 
 def draw_sub_area():
     Variables.SCREEN.blit(Variables.SUB_AREA, (320, 0))
@@ -93,6 +97,7 @@ def draw_sub_area():
     Variables.SUB_AREA_IMG.blit(Variables.STOPGAME_IMG, (20, 410))
     Variables.draw_num_shield(Variables.text_font, (197, 188, 157), 60, 380)
     Variables.draw_num_stopGameItem(Variables.text_font, (197, 188, 157), 60, 420)
+
 def handle_menu_events():
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -102,13 +107,21 @@ def handle_menu_events():
             # Kiểm tra xem chuột có click vào button nào không và thực hiện hành động tương ứng
             if menu.start_button_rect.collidepoint(mouse_x, mouse_y):
                 Variables.mode_1player = True
+                show_menu= False
                 Variables.click_button_sfx.play()
+                if menu_image_rect.collidepoint(mouse_x, mouse_y):
+                    Setting.settings_menu1() 
             elif menu.settings_button_rect.collidepoint(mouse_x, mouse_y):
                 Variables.click_button_sfx.play()
                 menu.settings_menu()
             elif menu.exit_button_rect.collidepoint(mouse_x, mouse_y):
                 Variables.click_button_sfx.play()
                 Variables.RUNNING = False
+    if show_settings:
+        Variables.SCREEN.fill((0, 0, 0))  # Xóa màn hình trước khi hiển thị cửa sổ settings
+        draw_button_image(menu_image, menu_image_rect.x, menu_image_rect.y)
+        pass
+
     # Vẽ nền
     menu.screen.blit(menu.bg, (0, 0))
 
@@ -162,6 +175,13 @@ sound_playing = False      #Kiểm tra âm thanh có đang chạy không
 update_time_broken = pygame.time.get_ticks()    #Biến đặt thời gian cho hiệu ứng broken
 # Biến trạng thái để theo dõi ảnh menu
 menu_image_check = False
+# Biến trạng thái để theo dõi ảnh menu
+show_menu = True
+show_settings = False  
+
+def draw_button_image(screen, img, x, y):
+    screen.blit(img, (x, y))
+
 
 ########## VÒNG LẶP GAME ### #######
 pygame.init()
@@ -181,7 +201,7 @@ while Variables.RUNNING:
         print(Variables.quantity_STI)
         draw_background()
         draw_sub_area()
-        # Variables.SCREEN.blit(menu_image,menu_image_rect )
+        Variables.SCREEN.blit(menu_image,menu_image_rect )
 
         #count score
         if pygame.time.get_ticks() - update_time_score > 100:
@@ -230,7 +250,7 @@ while Variables.RUNNING:
                     Variables.cooldown_use = True  #Ngăn không cho người chơi trong lúc ngưng thời gian lại dùng thêm item
                     Variables.is_exploi = False
                     Variables.Stop_time_channel.play(Variables.stop_time_sfx)
-
+            
             #KEY_UP
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_a:
@@ -243,7 +263,18 @@ while Variables.RUNNING:
                     if not Variables.moving_left and not Player1.in_air:
                         Variables.channel_walk.stop()
                         sound_playing = False
-
+            # Xu ly nhan tin hieu chuot
+            if event.type == pygame.QUIT:
+                Variables.RUNNING = False
+                Variables.mode_1player = False
+                pause = False
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                mouse_x, mouse_y = pygame.mouse.get_pos()  # Nhận vị trí chuột khi click
+                # Kiểm tra xem chuột có click vào button nào không và thực hiện hành động tương ứng
+                if menu_image_rect.collidepoint(mouse_x, mouse_y):
+                    pause_in_game = True
+            
+        
         # Cập nhật trạng thái âm thanh dựa trên các phím đang được nhấn và trạng thái bay
         keys = pygame.key.get_pressed()
         if (keys[pygame.K_a] or keys[pygame.K_d]) and not Player1.in_air:
@@ -280,6 +311,9 @@ while Variables.RUNNING:
 
             Item.Item_Group.update()
             Item.Item_Group.draw(Variables.SCREEN)
+
+        
+
 
             #Chạy animation Broken đối với stone hoặc boom tương ứng
             if Variables.check_collision_boom:
@@ -327,7 +361,9 @@ while Variables.RUNNING:
             pause = True
         pygame.display.update()
         FPS_Clock.tick(FPS)
-
+    while pause_in_game:
+        # Draw the background
+        Setting.screen.blit(pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Setting/bg.jpg')), (0, 0))
     ################################## Màn hình GAME OVER #############################################
     while pause:
         Variables.channel_music.stop()
@@ -350,6 +386,8 @@ while Variables.RUNNING:
                     restart = True
                     Variables.click_button_sfx3.play()
                     stop_game()
+        
+
 
         Variables.SCREEN.blit(GAMEOVER_IMG, (100,100))  #Hiển thị bảng game_over
         home_button.draw()
