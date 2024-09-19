@@ -361,9 +361,7 @@ while Variables.RUNNING:
             pause = True
         pygame.display.update()
         FPS_Clock.tick(FPS)
-    while pause_in_game:
-        # Draw the background
-        Setting.screen.blit(pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Setting/bg.jpg')), (0, 0))
+ 
     ################################## Màn hình GAME OVER #############################################
     while pause:
         Variables.channel_music.stop()
