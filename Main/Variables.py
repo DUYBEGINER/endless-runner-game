@@ -109,7 +109,7 @@ quantity_STI = 0
 
 #Biến liên quan đến ngưng động màn hình
 stop_time_activate = False
-COOLDOWN_STOP = 3000
+COOLDOWN_STOP = 120*3
 cooldown_use = False #Ngăn không cho người dùng spam vật phẩn ngưng đọng thời gian
 
 #Biến chạy hiệu ứng animation jump
@@ -175,9 +175,6 @@ for i in range(41):
 
 difficult = 1
 global volume, difficulty, skin
-volume = 50
-difficulty = 'Easy'
-skin = 'WHITE'
 
 #### Load ảnh ####
 menu_image = pygame.image.load(os.path.join(current_dir,'Asset/Setting/openmenu.png'))

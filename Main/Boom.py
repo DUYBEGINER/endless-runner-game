@@ -1,10 +1,14 @@
-import pygame, os, random
+import pygame, os, random, json
 
 from pygame.sprite import Group
 from Stone_fall import stones
 
 import Variables
-
+SETTINGS_FILE = 'settings.json'  # Tên tệp lưu trữ cài đặt
+global difficulty
+with open(SETTINGS_FILE, 'r') as f:
+            settings = json.load(f)
+            difficulty = settings.get('difficulty', 'Easy')
 
 GRAVITY_BOOM = 0.025
 
@@ -21,20 +25,23 @@ exploision_sfx.set_volume(0.5)
 
 
 class boom(pygame.sprite.Sprite):
-    def __init__(self, scale):
+    def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.scale = scale
         self.animation_list = []
         self.type = 'boom'
         self.index = 0
         self.update_time = pygame.time.get_ticks()
         self.active = False
+        if difficulty == "Hardest":
+            self.scale = 5
+        else:
+            self.scale = 2
         # self.countdown_sound = countdown_boom
         # self.exploision_sound = exploision_sfx
         # Load image
         for i in range(1, 9):
             img = pygame.image.load(os.path.join(Variables.current_dir, f'Asset/Boom/{i}.png'))
-            img = pygame.transform.scale(img, (img.get_width() * self.scale, img.get_height() * self.scale))
+            img = pygame.transform.scale(img, (img.get_width() * 2, img.get_height() * 2))
             self.animation_list.append(img)
         self.image = self.animation_list[self.index]
         self.rect = self.image.get_rect()
@@ -104,7 +111,7 @@ class boom(pygame.sprite.Sprite):
         for stone in stones:
             if self != stone:
                 if stone.rect.colliderect(self.rect.left - self.rect.width / 2, self.rect.top - self.rect.height / 2,
-                                          self.rect.width * 2, self.rect.height * 2):
+                                          self.rect.width * self.scale, self.rect.height * self.scale):
                     list_tmp.append(stone)
         for i in list_tmp:
             i.kill()
@@ -137,9 +144,14 @@ class Boom_effect(pygame.sprite.Sprite):
         self.y = y
         self.boom_broken_shield = 5
         self.update_time = pygame.time.get_ticks()
+        if difficulty == "Hardest":
+            self.scale = 1.5
+        else:
+            self.scale = 1
         # Load animation
         for i in range(1, 14):
             tmp_img = pygame.image.load(os.path.join(Variables.current_dir, f'Asset/Boom/Boom_effect2/{i}.png'))
+            tmp_img = pygame.transform.scale(tmp_img, (tmp_img.get_width() * self.scale, tmp_img.get_height() * self.scale))
             self.animation_list.append(tmp_img)
         self.rect = self.animation_list[self.index].get_rect()
         self.rect.center = (self.x, self.y)

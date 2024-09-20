@@ -68,7 +68,7 @@ def re_spawn_stone():
             stone = Stone_fall.Stone(2, 'stone_fall2')
             Stone_fall.stones.add(stone)
         elif tmp <=80:
-            stone = Boom.boom(2)
+            stone = Boom.boom()
             Stone_fall.stones.add(stone)
         elif tmp <= 90:
             shield = Item.item(1,'Shield')
@@ -135,7 +135,7 @@ def handle_menu_events():
 
 
 def reset_game():
-    Player1.kill()
+    # Player1.kill()
     Stone_fall.stones.empty()
     Item.Item_Group.empty()
     Boom.booms_effect.empty()
@@ -322,7 +322,7 @@ while Variables.RUNNING:
 
 
         #Xử lí khi nhân vật sử dụng vật phẩm ngưng thời gian
-        if Variables.stop_time_activate:
+        if Variables.stop_time_activate and not pause_in_game:
             #Đây là khi nhân vật dùng ngưng đọng thời gian, bỏ qua phần update các vật thể trong game
             #Chạy animation đồng hồ quay
             if pygame.time.get_ticks() - update_time_stop > 800 and Variables.effect_stop_time_index < len(Variables.effect_stop_time_list):
@@ -331,15 +331,15 @@ while Variables.RUNNING:
                 update_time_stop_time = pygame.time.get_ticks()
 
             #Nếu ngừng thời gian chưa đủ 3s thì tiếp tục không cập nhật các đối tượng trong game trừ nhân vật
-            if pygame.time.get_ticks() - Variables.update_time < 3000:
-                pass
-            else:
+            Variables.COOLDOWN_STOP -= 1
+
+            if Variables.COOLDOWN_STOP <= 0:
                 #Nếu đã đủ 3 giây thì cho game tiếp tục chạy, tiếp tục cập nhật các đối tượng game phía trên
                 Variables.Stop_time_channel.stop()     #Dừng âm thanh ngưng đọng thời gian
                 Variables.stop_time_activate = False       #Đặt lại biến kiểm tra ngưng đọng trở lại False để tiếp tục cập nhật các đối tượng game
-                Variables.cooldown_use = False
+                Variables.cooldown_use = False              #Ngăn không cho spam phím J
                 Variables.effect_stop_time_index = 0        # đặt lại index của frame chạy animation stop_time về 0
-                Variables.update_time = pygame.time.get_ticks()
+                Variables.COOLDOWN_STOP = 120*3   # số giây  = FPS * số giây muốn chạy
 
         #Vẽ các đối tượng game (mặc định luôn luôn vẽ)
         Player1.draw(Variables.SCREEN)
@@ -366,6 +366,8 @@ while Variables.RUNNING:
             elif check == "restart":
                 Variables.channel_music.play(Variables.background_music, loops=-1)
                 reset_game()
+                Player1.kill()
+                Player1 = Player(150, 150, 1, 2)
                 pause_in_game = False
             elif check == "menu":
                 reset_game()
@@ -374,12 +376,17 @@ while Variables.RUNNING:
                 Variables.mode_1player = False
                 Variables.channel_music.stop()
 
+
         #CHECK GAME OVER
         if not Player1.alive:
-            Variables.mode_1player = False
-            update_high_score.update_score()
-            pause_game()
             game_over = True
+            Variables.mode_1player = False
+            pause_game()
+            update_high_score.update_score()
+            #chạy cập nhật boom để hiện lúc boom nổ to nhất, nhìn nó thật hơn
+            for i in Boom.booms_effect:
+                pygame.display.update(i.rect)
+            break
 
         pygame.display.update()
         FPS_Clock.tick(FPS)
@@ -422,7 +429,7 @@ while Variables.RUNNING:
         #####$ Dừng màn hình game $#####
         draw_background()
         draw_sub_area()
-        # Variables.SCREEN.blit(Player1.image, (Player1.rect.x, Player1.rect.y))
+
         Boom.booms_effect.draw(Variables.SCREEN)
         Stone_fall.stones.draw(Variables.SCREEN)
         Item.Item_Group.draw(Variables.SCREEN)
