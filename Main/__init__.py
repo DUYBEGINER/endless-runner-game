@@ -37,28 +37,29 @@ BACKGROUND_IMG2 = pygame.transform.scale(BACKGROUND_IMG2,(Variables.WINDOW_WIDTH
 
 GAMEOVER_IMG = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/gameover.png'))
 
+# Ground
+GROUND_IMG = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Map/ground_new.png'))
 
 
-
-####Load các ảnh và khởi tạo button
+####Load các ảnh và khởi tạo button gameover
 home_button_default_img = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Button/home/Default.png'))
 home_button_hover_img = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Button/home/Hover.png'))
 restart_button_default_img = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Button/Restart/Default.png'))
 restart_button_hover_img = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Button/Restart/Hover.png'))
-restart = False
+
 
 #Khởi tạo button
 home_button = Button.button(home_button_default_img,home_button_hover_img,150,400,0.8)
 restart_button = Button.button(restart_button_default_img,restart_button_hover_img, 250,400,0.8)
-# Ground
-GROUND_IMG = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Map/ground_new.png'))
-pause = False
+
+
+
 
 update_time_score = pygame.time.get_ticks()
 update_time_stop = pygame.time.get_ticks()
 # Tư động sinh các đối tượng đád
 def re_spawn_stone():
-    if not pause:
+    if not game_over:
         tmp = random.randint(1, 100)  # Chọn một số ngẫu nhiên từ 1 đến 100
         if tmp <= 50:
             stone = Stone_fall.Stone(2, 'stone_fall1')
@@ -133,7 +134,7 @@ def handle_menu_events():
     pygame.display.flip()
 
 
-def stop_game():
+def reset_game():
     Player1.kill()
     Stone_fall.stones.empty()
     Item.Item_Group.empty()
@@ -169,6 +170,10 @@ def pause_game():
 pygame.font.init()
 gameover_font = pygame.font.SysFont('Arial', 50)
 
+#Các biến kiểm tra các sự kiện trong game
+game_over = False
+pause_in_game = False
+restart = False
 
 just_jump = False   # Kiểm tra player có vừa mới nhảy không, nếu có thì thêm hiệu ứng
 sound_playing = False      #Kiểm tra âm thanh có đang chạy không
@@ -198,36 +203,16 @@ while Variables.RUNNING:
 
     #################################### MÀN HÌNH CHÍNH CỦA GAME ####################################
     while Variables.mode_1player:
-        print(Variables.quantity_STI)
         draw_background()
         draw_sub_area()
-        Variables.SCREEN.blit(menu_image,menu_image_rect )
-
-        #count score
-        if pygame.time.get_ticks() - update_time_score > 100:
-            Variables.score += 1
-            update_time_score = pygame.time.get_ticks()
-            if Variables.score % Variables.score_up == 0:
-                Variables.score_up *= 10
-                Variables.score_x -=5
-        #Cập nhật player
-        Player1.update_animation()
-        Player1.draw(Variables.SCREEN)
-        Player1.move_and_jump(Variables.moving_left, Variables.moving_right)
-
-        # Update player action
-        if Player1.in_air:
-            Player1.update_action(2)
-        elif Variables.moving_left or Variables.moving_right:
-            Player1.update_action(1)  # Run
-        else:
-            Player1.update_action(0)  # Idlea
-
-        #Xử lí đầu vào từ bàn phím
+        Variables.SCREEN.blit(menu_image, menu_image_rect)
+        # Xử lí đầu vào từ bàn phím
         for event in pygame.event.get():
-            #KEY_DOWN
+            # KEY_DOWN
             if event.type == pygame.QUIT:
                 Variables.RUNNING = False
+                Variables.mode_1player = False
+                game_over = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_a:
                     Variables.moving_left = True
@@ -244,14 +229,15 @@ while Variables.RUNNING:
                     Variables.channel_jump.play(Variables.jump_sfx)
                     just_jump = True
                 # Ấn phím J để sử dụng vật phẩm
+                if event.key == pygame.K_ESCAPE:
+                    pause_in_game = False
                 if event.key == pygame.K_j and Variables.quantity_STI != 0 and not Variables.cooldown_use:
                     Variables.stop_time_activate = True
                     Variables.quantity_STI -= 1
-                    Variables.cooldown_use = True  #Ngăn không cho người chơi trong lúc ngưng thời gian lại dùng thêm item
+                    Variables.cooldown_use = True  # Ngăn không cho người chơi trong lúc ngưng thời gian lại dùng thêm item
                     Variables.is_exploi = False
                     Variables.Stop_time_channel.play(Variables.stop_time_sfx)
-            
-            #KEY_UP
+            # KEY_UP
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_a:
                     Variables.moving_left = False
@@ -264,17 +250,12 @@ while Variables.RUNNING:
                         Variables.channel_walk.stop()
                         sound_playing = False
             # Xu ly nhan tin hieu chuot
-            if event.type == pygame.QUIT:
-                Variables.RUNNING = False
-                Variables.mode_1player = False
-                pause = False
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 mouse_x, mouse_y = pygame.mouse.get_pos()  # Nhận vị trí chuột khi click
                 # Kiểm tra xem chuột có click vào button nào không và thực hiện hành động tương ứng
                 if menu_image_rect.collidepoint(mouse_x, mouse_y):
                     pause_in_game = True
-            
-        
+
         # Cập nhật trạng thái âm thanh dựa trên các phím đang được nhấn và trạng thái bay
         keys = pygame.key.get_pressed()
         if (keys[pygame.K_a] or keys[pygame.K_d]) and not Player1.in_air:
@@ -286,64 +267,85 @@ while Variables.RUNNING:
                 Variables.channel_walk.stop()
                 sound_playing = False
 
-        # Thêm hiệu ứng nhảy
-        if just_jump == False:
-            temp_posx = Player1.rect.x
-            temp_posy = Player1.rect.y
-        if just_jump == True:
-            Variables.SCREEN.blit(effect_list[Variables.effect_jump_index], (temp_posx - 6, temp_posy + 10))
-            Variables.effect_jump_index += 1
-            if Variables.effect_jump_index >= len(Variables.effect_list):
-                Variables.effect_jump_index = 0
-                just_jump = False
+        ########### Nếu không pause game thì chạy như bình thường ############
+        if not pause_in_game:
+            #count score
+            if pygame.time.get_ticks() - update_time_score > 100:
+                Variables.score += 1
+                update_time_score = pygame.time.get_ticks()
+                if Variables.score % Variables.score_up == 0:
+                    Variables.score_up *= 10
+                    Variables.score_x -=5
+            #Cập nhật player
+            Player1.update_animation()
+            Player1.move_and_jump(Variables.moving_left, Variables.moving_right)
 
-        # Kiểm tra xem người chơi có đang dùng vật phẩm ngưng thời gian không
-        if not Variables.stop_time_activate:
-            if pygame.time.get_ticks() - Variables.update_time > Variables.COOLDOWN_SPAWN:
-                Variables.update_time = pygame.time.get_ticks()
-                re_spawn_stone()
-
-            Stone_fall.stones.update()
-            Stone_fall.stones.draw(Variables.SCREEN)
-
-            Boom.booms_effect.update(Player1.alive)
-            Boom.booms_effect.draw(Variables.SCREEN)
-
-            Item.Item_Group.update()
-            Item.Item_Group.draw(Variables.SCREEN)
-
-        
-
-
-            #Chạy animation Broken đối với stone hoặc boom tương ứng
-            if Variables.check_collision_boom:
-                Players.Boom_broken.update()
-                Players.Boom_broken.draw(Variables.SCREEN)
+            # Update player action
+            if Player1.in_air:
+                Player1.update_action(2)
+            elif Variables.moving_left or Variables.moving_right:
+                Player1.update_action(1)  # Run
             else:
-                Players.Stone_broken.update()
-                Players.Stone_broken.draw(Variables.SCREEN)
-        else:
+                Player1.update_action(0)  # Idlea
 
+            # Thêm hiệu ứng nhảy
+            if just_jump == False:
+                temp_posx = Player1.rect.x
+                temp_posy = Player1.rect.y
+            if just_jump == True:
+                Variables.SCREEN.blit(effect_list[Variables.effect_jump_index], (temp_posx - 6, temp_posy + 10))
+                Variables.effect_jump_index += 1
+                if Variables.effect_jump_index >= len(Variables.effect_list):
+                    Variables.effect_jump_index = 0
+                    just_jump = False
+
+            # Kiểm tra xem người chơi có đang dùng vật phẩm ngưng thời gian không
+            if not Variables.stop_time_activate:
+                #Sản sinh các vật thể trong game
+                if pygame.time.get_ticks() - Variables.update_time > Variables.COOLDOWN_SPAWN:
+                    Variables.update_time = pygame.time.get_ticks()
+                    re_spawn_stone()
+
+                #update hình ảnh các đối tượng game
+                Stone_fall.stones.update()
+                Boom.booms_effect.update(Player1.alive)
+                Item.Item_Group.update()
+
+                #Chạy animation Broken đối với stone hoặc boom tương ứng khi nhân vât chạm vào nhưng có khiên
+                if Variables.check_collision_boom:
+                    Players.Boom_broken.update()
+                    Players.Boom_broken.draw(Variables.SCREEN)
+                else:
+                    Players.Stone_broken.update()
+                    Players.Stone_broken.draw(Variables.SCREEN)
+        ############ Nếu pause game thì sẽ không chạy khối code trên #######################
+
+
+        #Xử lí khi nhân vật sử dụng vật phẩm ngưng thời gian
+        if Variables.stop_time_activate:
+            #Đây là khi nhân vật dùng ngưng đọng thời gian, bỏ qua phần update các vật thể trong game
             #Chạy animation đồng hồ quay
             if pygame.time.get_ticks() - update_time_stop > 800 and Variables.effect_stop_time_index < len(Variables.effect_stop_time_list):
                 Variables.SCREEN.blit(Variables.effect_stop_time_list[Variables.effect_stop_time_index], (20, 30))
                 Variables.effect_stop_time_index += 1
                 update_time_stop_time = pygame.time.get_ticks()
 
+            #Nếu ngừng thời gian chưa đủ 3s thì tiếp tục không cập nhật các đối tượng trong game trừ nhân vật
             if pygame.time.get_ticks() - Variables.update_time < 3000:
-                # Variables.update_time = pygame.time.get_ticks()
-                # Variables.SCREEN.blit(Player1.image, (Player1.rect.x, Player1.rect.y))
-                Boom.booms_effect.draw(Variables.SCREEN)
-                Stone_fall.stones.draw(Variables.SCREEN)
-                Item.Item_Group.draw(Variables.SCREEN)
+                pass
             else:
-                Variables.Stop_time_channel.stop()
-                Variables.stop_time_activate = False
+                #Nếu đã đủ 3 giây thì cho game tiếp tục chạy, tiếp tục cập nhật các đối tượng game phía trên
+                Variables.Stop_time_channel.stop()     #Dừng âm thanh ngưng đọng thời gian
+                Variables.stop_time_activate = False       #Đặt lại biến kiểm tra ngưng đọng trở lại False để tiếp tục cập nhật các đối tượng game
                 Variables.cooldown_use = False
-                Variables.effect_stop_time_index = 0
+                Variables.effect_stop_time_index = 0        # đặt lại index của frame chạy animation stop_time về 0
                 Variables.update_time = pygame.time.get_ticks()
-                for item in Item.Item_Group:
-                    item.update_time_exist += 3000
+
+        #Vẽ các đối tượng game (mặc định luôn luôn vẽ)
+        Player1.draw(Variables.SCREEN)
+        Boom.booms_effect.draw(Variables.SCREEN)
+        Stone_fall.stones.draw(Variables.SCREEN)
+        Item.Item_Group.draw(Variables.SCREEN)
 
         # Nhặt item
         for item in Item.Item_Group:
@@ -353,61 +355,76 @@ while Variables.RUNNING:
         if Variables.is_exploi:
             Variables.Screen_shake_exploision(Variables.SCREEN, Variables.SCREEN_SHAKE)
 
+
+        ##################  HIỂN THỊ VÀ XỬ LÍ MENU PAUSE  ####################
+        if pause_in_game:
+            # Variables.channel_music.stop()
+            check = Setting.settings_menu1(Variables.SCREEN)
+            print(check)
+            if check == "resume":
+                pause_in_game = False
+            elif check == "restart":
+                Variables.channel_music.play(Variables.background_music, loops=-1)
+                reset_game()
+                pause_in_game = False
+            elif check == "menu":
+                reset_game()
+                restart = False   #Để hiển thị menu ngoài
+                pause_in_game = False
+                Variables.mode_1player = False
+                Variables.channel_music.stop()
+
         #CHECK GAME OVER
         if not Player1.alive:
             Variables.mode_1player = False
             update_high_score.update_score()
             pause_game()
-            pause = True
+            game_over = True
+
         pygame.display.update()
         FPS_Clock.tick(FPS)
  
+
+
     ################################## Màn hình GAME OVER #############################################
-    while pause:
-        Variables.channel_music.stop()
+    while game_over:
+        Variables.channel_music.stop()  #Dừng nhạc
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 Variables.RUNNING = False
-                pause = False
+                game_over = False
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 mouse_x, mouse_y = pygame.mouse.get_pos()  # Nhận vị trí chuột khi click
                 # Kiểm tra xem chuột có click vào button nào không và thực hiện hành động tương ứng
                 if home_button.rect.collidepoint(mouse_x, mouse_y):
                     # Variables.hover_button_sfx.play()
                     Variables.click_button_sfx3.play()
-                    pause = False
+                    game_over = False
                     restart = False
-                    stop_game()
+                    reset_game()
                 elif restart_button.rect.collidepoint(mouse_x, mouse_y):
                     Variables.mode_1player = True
-                    pause = False
+                    game_over = False
                     restart = True
                     Variables.click_button_sfx3.play()
-                    stop_game()
-        
-
+                    reset_game()
 
         Variables.SCREEN.blit(GAMEOVER_IMG, (100,100))  #Hiển thị bảng game_over
         home_button.draw()
         restart_button.draw()
-
         Variables.draw_score(Variables.SCREEN, Variables.score_font, (99, 102, 50), 240, 323)
         Variables.draw_high_score(Variables.SCREEN, Variables.high_score_font, (235, 128, 7), 210, 240)
 
-
         #Cập nhật bảng game over và các nút liên quan
-
         list_display_update = [GAMEOVER_IMG.get_rect(topleft=(100,100)), home_button.rect, restart_button.rect]
         pygame.display.update(list_display_update)
-
 
         #####$ Dừng màn hình game $#####
         draw_background()
         draw_sub_area()
-        Variables.SCREEN.blit(Player1.image, (Player1.rect.x, Player1.rect.y))
+        # Variables.SCREEN.blit(Player1.image, (Player1.rect.x, Player1.rect.y))
         Boom.booms_effect.draw(Variables.SCREEN)
         Stone_fall.stones.draw(Variables.SCREEN)
         Item.Item_Group.draw(Variables.SCREEN)
-
 
 pygame.quit()

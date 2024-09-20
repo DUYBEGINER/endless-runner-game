@@ -32,14 +32,17 @@ def settings_menu1(screen):
                 mouse_x, mouse_y = pygame.mouse.get_pos()
                 if resume_rect.collidepoint(mouse_x, mouse_y):
                     return "resume"
+                    break
                 elif restart_rect.collidepoint(mouse_x, mouse_y):
                     return "restart"
+                    break
                 elif back_to_menu_rect.collidepoint(mouse_x, mouse_y):
                     return "menu"
+                    break
                 
 
         # Draw the background
-        screen.blit(pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Setting/bg.jpg')), (0, 0))
+        screen.blit(pygame.image.load(os.path.join(Variables.current_dir, 'Asset/gameover.png')), (0, 0))
         
         # Draw buttons
         draw_button_image(screen, resume_img, 60, 150)
@@ -48,13 +51,13 @@ def settings_menu1(screen):
     
         pygame.display.flip()
 
-def handle_settings_action(action):
-    if action == "resume":
-        print("Game Resumed")  # Thực hiện hành động khôi phục trò chơi
-        return False  # Quay lại trò chơi
-    elif action == "restart":
-        print("Game Restarted")  # Thực hiện hành động khởi động lại trò chơi
-        return True  # Quay lại trò chơi và khởi động lại
-    elif action == "menu":
-        print("Returning to Main Menu")  # Quay lại menu chính
-        return "menu"  # Quay lại menu chính
+# def handle_settings_action(action):
+#     if action == "resume":
+#         print("Game Resumed")  # Thực hiện hành động khôi phục trò chơi
+#         return False  # Quay lại trò chơi
+#     elif action == "restart":
+#         print("Game Restarted")  # Thực hiện hành động khởi động lại trò chơi
+#         return True  # Quay lại trò chơi và khởi động lại
+#     elif action == "menu":
+#         print("Returning to Main Menu")  # Quay lại menu chính
+#         return "menu"  # Quay lại menu chính
