@@ -68,7 +68,7 @@ def re_spawn_stone():
             stone = Stone_fall.Stone(2, 'stone_fall2')
             Stone_fall.stones.add(stone)
         elif tmp <=80:
-            stone = Boom.boom(2)
+            stone = Boom.boom()
             Stone_fall.stones.add(stone)
         elif tmp <= 90:
             shield = Item.item(1,'Shield')
