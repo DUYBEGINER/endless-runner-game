@@ -358,7 +358,7 @@ while Variables.RUNNING:
 
         ##################  HIỂN THỊ VÀ XỬ LÍ MENU PAUSE  ####################
         if pause_in_game:
-            # Variables.channel_music.stop()
+            Variables.channel_music.stop()
             check = Setting.settings_menu1(Variables.SCREEN)
             print(check)
             if check == "resume":

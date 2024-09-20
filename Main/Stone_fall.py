@@ -1,4 +1,4 @@
-import pygame, random, os
+import pygame, random, os, json
 from pygame.sprite import Sprite
 from pygame.sprite import Group
 import Variables
@@ -7,7 +7,11 @@ import Variables
 # Định nghĩa một số biêns liên quan
 GRAVITY_STONE = 0.025
 MAX_HIGH = 4  # Định nghĩa độ cao cột đá có thể có
-
+SETTINGS_FILE = 'settings.json'  # Tên tệp lưu trữ cài đặt
+global difficulty
+with open(SETTINGS_FILE, 'r') as f:
+            settings = json.load(f)
+            difficulty = settings.get('difficulty', 'Easy')
 # Định nghĩa nhóm các viên đá
 stones = Group()
 # Define Class Stone_fall
@@ -21,6 +25,15 @@ class Stone(Sprite):
         self.scale = scale
         self.image = pygame.transform.scale(img_stone_fall,(img_stone_fall.get_width() * scale, img_stone_fall.get_height() * scale))
         self.rect = self.image.get_rect()
+        if difficulty == 'Easy':
+            self.dfc = 1.0
+        elif difficulty == 'Normal':
+            self.dfc = 1.25
+        elif difficulty == 'Hard':
+            self.dfc = 1.5
+        elif difficulty == 'Hardest':
+            self.dfc = 2
+        
         tmp = random.randint(1, 8)  # Lấy một số ngẫu nhiên từ 1 đến 8 để làm giá trị x ban đầu cho stone
         # Kiểm tra để lấy vị trí spawn để không gây trường hợp xấu
         while (not self.check_high(tmp)):
@@ -48,9 +61,9 @@ class Stone(Sprite):
         self.check_collision_otherStone()
         # Áp dụng 
         if (self.in_air):
-            self.vel_y += GRAVITY_STONE * Variables.difficult
-            if self.vel_y > self.MAX_VEL * Variables.difficult:
-                self.vel_y = self.MAX_VEL * Variables.difficult
+            self.vel_y += GRAVITY_STONE * self.dfc
+            if self.vel_y > self.MAX_VEL * self.dfc:
+                self.vel_y = self.MAX_VEL * self.dfc
         dy = self.vel_y
         self.rect.centery += dy
         # Kiểm tra và xóa các đối tượng chạm mặt đâts nếu đủ điều kiện

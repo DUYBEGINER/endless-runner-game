@@ -138,16 +138,13 @@ def settings_menu():
                     volume = (volume + 10) % 110  # Tăng âm lượng và quay lại 0 nếu vượt quá 100
                     print(f"Volume adjusted to {volume}")
                 # Kiểm tra nút độ khó
-                elif 50 <= mouse_x <= 270 and 150 <= mouse_y <= 200:
+                elif 50 <= mouse_x <= 270 and 150 <= mouse_y <= 200 and skin != 'BLACK':
                     Variables.click_button_sfx2.play()
                     if difficulty == 'Easy':
                         difficulty = 'Normal'
-                        Variables.difficult = 1.25
                     elif difficulty == 'Normal':
-                        Variables.difficult = 1.5
                         difficulty = 'Hard'
                     elif difficulty == 'Hard':
-                        Variables.difficult = 1
                         difficulty = 'Easy'
                 # Kiểm tra nút skin
                 elif 50 <= mouse_x <= 270 and 220 <= mouse_y <= 270:
@@ -155,6 +152,10 @@ def settings_menu():
                     current_skin_index = skins.index(skin)
                     skin = skins[(current_skin_index + 1) % len(skins)]
                     print(f"Skin changed to {skin}")
+                    if skin == 'BLACK':
+                        difficulty = 'Hardest'
+                    else:
+                        difficulty = 'Easy'
                 # Kiểm tra nút quay lại
                 elif 50 <= mouse_x <= 270 and 290 <= mouse_y <= 340:
                     Variables.click_button_sfx.play()

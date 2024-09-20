@@ -175,9 +175,6 @@ for i in range(41):
 
 difficult = 1
 global volume, difficulty, skin
-volume = 50
-difficulty = 'Easy'
-skin = 'WHITE'
 
 #### Load ảnh ####
 menu_image = pygame.image.load(os.path.join(current_dir,'Asset/Setting/openmenu.png'))
