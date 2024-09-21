@@ -137,6 +137,7 @@ def settings_menu():
                     Variables.click_button_sfx3.play()
                     if volume == 'Yes':
                         volume = 'No'
+                        
                     else:
                         volume = 'Yes'
                 # Kiểm tra nút độ khó

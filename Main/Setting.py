@@ -7,11 +7,11 @@ WHITE = (255, 255, 255)
 
 # Load button images
 resume_img = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Setting/resume.png'))
-resume_img = pygame.transform.scale(resume_img, (int(resume_img.get_width() * 0.2), int(resume_img.get_height() * 0.2)))
+resume_img = pygame.transform.scale(resume_img, (int(resume_img.get_width() * 0.75), int(resume_img.get_height() * 0.75)))
 restart_img = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Setting/restart.png'))
-restart_img = pygame.transform.scale(restart_img, (int(restart_img.get_width() * 0.2), int(restart_img.get_height() * 0.2)))
+restart_img = pygame.transform.scale(restart_img, (int(restart_img.get_width() * 0.75), int(restart_img.get_height() * 0.75)))
 back_img = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Setting/back_menu.png'))
-back_img = pygame.transform.scale(back_img, (int(back_img.get_width() * 0.2), int(back_img.get_height() * 0.2)))
+back_img = pygame.transform.scale(back_img, (int(back_img.get_width() * 0.75), int(back_img.get_height() * 0.75)))
 bg1_img = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Setting/bg1.png'))
 bg1_img = pygame.transform.scale(bg1_img, (int(bg1_img.get_width() * 2.5), int(bg1_img.get_height() * 2.5)))
 
@@ -48,9 +48,9 @@ def settings_menu1(screen):
         Variables.SCREEN.blit(bg1_img, (0, 0))
 
         # Draw buttons
-        draw_button_image(screen, resume_img, 60, 150)
-        draw_button_image(screen, restart_img, 60, 220)
-        draw_button_image(screen, back_img, 60, 290)
+        draw_button_image(screen, resume_img, 125, 60)
+        draw_button_image(screen, restart_img, 125, 130)
+        draw_button_image(screen, back_img, 125, 200)
     
         pygame.display.flip()
 
