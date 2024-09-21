@@ -50,9 +50,7 @@ restart_button_hover_img = pygame.image.load(os.path.join(Variables.current_dir,
 
 #Khởi tạo button
 home_button = Button.button(home_button_default_img,home_button_hover_img,150,400,0.8)
-restart_button = Button.button(restart_button_default_img,restart_button_hover_img, 250,400,0.8)
-
-
+restart_button = Button.button(restart_button_default_img,restart_button_hover_img, 290,400,0.8)
 
 
 update_time_score = pygame.time.get_ticks()
@@ -61,16 +59,16 @@ update_time_stop = pygame.time.get_ticks()
 def re_spawn_stone():
     if not game_over:
         tmp = random.randint(1, 100)  # Chọn một số ngẫu nhiên từ 1 đến 100
-        if tmp <= 50:
+        if tmp <= 60:
             stone = Stone_fall.Stone(2, 'stone_fall1')
             Stone_fall.stones.add(stone)
-        elif tmp <= 60:
+        elif tmp <= 70:
             stone = Stone_fall.Stone(2, 'stone_fall2')
             Stone_fall.stones.add(stone)
-        elif tmp <=80:
+        elif tmp <=95:
             stone = Boom.boom(2)
             Stone_fall.stones.add(stone)
-        elif tmp <= 90:
+        elif tmp <= 98:
             shield = Item.item(1,'Shield')
             Item.Item_Group.add(shield)
         else:
