@@ -47,7 +47,7 @@ def read_settings():
             settings = json.load(f)
             difficulty = settings.get('difficulty', 'Easy')
             skin = settings.get('skin', 'WHITE')
-            volume = settings.get('volume', 50)
+            volume = settings.get('volume', 'Yes')
     else:
         set_default_settings()
 
@@ -55,7 +55,7 @@ def set_default_settings():
     global volume, difficulty, skin
     difficulty = 'Easy'
     skin = 'WHITE'
-    volume = 50
+    volume = 'Yes'
 
 # Hàm ghi cài đặt vào tệp JSON
 def write_settings():
@@ -135,8 +135,10 @@ def settings_menu():
                 # Kiểm tra nút âm lượng
                 if 50 <= mouse_x <= 270 and 80 <= mouse_y <= 130:
                     Variables.click_button_sfx3.play()
-                    volume = (volume + 10) % 110  # Tăng âm lượng và quay lại 0 nếu vượt quá 100
-                    print(f"Volume adjusted to {volume}")
+                    if volume == 'Yes':
+                        volume = 'No'
+                    else:
+                        volume = 'Yes'
                 # Kiểm tra nút độ khó
                 elif 50 <= mouse_x <= 270 and 150 <= mouse_y <= 200 and skin != 'BLACK':
                     Variables.click_button_sfx2.play()

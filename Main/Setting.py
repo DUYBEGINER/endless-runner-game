@@ -12,6 +12,8 @@ restart_img = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Setti
 restart_img = pygame.transform.scale(restart_img, (int(restart_img.get_width() * 0.2), int(restart_img.get_height() * 0.2)))
 back_img = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Setting/back_menu.png'))
 back_img = pygame.transform.scale(back_img, (int(back_img.get_width() * 0.2), int(back_img.get_height() * 0.2)))
+bg1_img = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Setting/bg1.png'))
+bg1_img = pygame.transform.scale(bg1_img, (int(bg1_img.get_width() * 2.5), int(bg1_img.get_height() * 2.5)))
 
 resume_rect = pygame.Rect(60, 150, resume_img.get_width(), resume_img.get_height())
 restart_rect = pygame.Rect(60, 220, restart_img.get_width(), restart_img.get_height())
@@ -42,8 +44,9 @@ def settings_menu1(screen):
                 
 
         # Draw the background
-        screen.blit(pygame.image.load(os.path.join(Variables.current_dir, 'Asset/gameover.png')), (0, 0))
-        
+        #screen.blit(pygame.image.load(os.path.join(Variables.current_dir, 'Asset/gameover.png')), (0, 0))
+        Variables.SCREEN.blit(bg1_img, (0, 0))
+
         # Draw buttons
         draw_button_image(screen, resume_img, 60, 150)
         draw_button_image(screen, restart_img, 60, 220)
