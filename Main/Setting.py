@@ -15,9 +15,9 @@ back_img = pygame.transform.scale(back_img, (int(back_img.get_width() * 0.75), i
 bg1_img = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Setting/bg1.png'))
 bg1_img = pygame.transform.scale(bg1_img, (int(bg1_img.get_width() * 2.5), int(bg1_img.get_height() * 2.5)))
 
-resume_rect = pygame.Rect(60, 150, resume_img.get_width(), resume_img.get_height())
-restart_rect = pygame.Rect(60, 220, restart_img.get_width(), restart_img.get_height())
-back_to_menu_rect = pygame.Rect(60, 290, back_img.get_width(), back_img.get_height())
+resume_rect = pygame.Rect(125, 60, resume_img.get_width(), resume_img.get_height())
+restart_rect = pygame.Rect(125, 130, restart_img.get_width(), restart_img.get_height())
+back_to_menu_rect = pygame.Rect(125, 200, back_img.get_width(), back_img.get_height())
 
 def draw_button_image(screen, img, x, y):
     screen.blit(img, (x, y))

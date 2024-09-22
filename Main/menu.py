@@ -138,6 +138,7 @@ def settings_menu():
                     if volume == 'Yes':
                         volume = 'No'
                         
+                        
                     else:
                         volume = 'Yes'
                 # Kiểm tra nút độ khó
