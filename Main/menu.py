@@ -48,10 +48,7 @@ def read_settings():
             difficulty = settings.get('difficulty', 'Easy')
             skin = settings.get('skin', 'WHITE')
             volume = settings.get('volume', 'Yes')
-            if volume == 'Yes':
-                pygame.mixer.music.set_volume(1)  # Set volume to max
-            else:
-                pygame.mixer.music.set_volume(0)  # Mute
+           
     else:
         set_default_settings()
 
