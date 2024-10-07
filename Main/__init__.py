@@ -115,8 +115,7 @@ def handle_menu_events():
             elif menu.settings_button_rect.collidepoint(mouse_x, mouse_y):
                 Variables.click_button_sfx.play()
                 menu.settings_menu()
-                # if menu.volume == 'No':
-                    # pygame.mixer.stop()
+        
             elif menu.exit_button_rect.collidepoint(mouse_x, mouse_y):
                 Variables.click_button_sfx.play()
                 Variables.RUNNING = False

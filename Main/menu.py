@@ -48,6 +48,10 @@ def read_settings():
             difficulty = settings.get('difficulty', 'Easy')
             skin = settings.get('skin', 'WHITE')
             volume = settings.get('volume', 'Yes')
+            if volume == 'Yes':
+                pygame.mixer.music.set_volume(1)  # Set volume to max
+            else:
+                pygame.mixer.music.set_volume(0)  # Mute
     else:
         set_default_settings()
 
@@ -112,6 +116,14 @@ exit_button_rect = pygame.Rect(exit_button_x, exit_button_y, BUTTON_WIDTH, BUTTO
 #     # Cập nhật màn hình
 #     pygame.display.flip()
 
+def mute_all_sounds():
+    pygame.mixer.stop()  # Dừng tất cả âm thanh hiện tại
+    pygame.mixer.music.stop()  # Dừng nhạc nền
+    pygame.mixer.set_num_channels(0)  # Tắt tất cả các kênh âm thanh
+def unmute_all_sounds():
+    pygame.mixer.set_num_channels(8)  # Mở lại một số kênh âm thanh
+    pygame.mixer.music.set_volume(1)  # Đặt âm lượng tối đa
+
 # Hàm hiển thị menu cài đặt
 def settings_menu():
     global volume, difficulty, skin
@@ -137,10 +149,11 @@ def settings_menu():
                     Variables.click_button_sfx3.play()
                     if volume == 'Yes':
                         volume = 'No'
-                        
-                        
+                        mute_all_sounds()
                     else:
                         volume = 'Yes'
+                        unmute_all_sounds()  # Mở lại âm thanh
+
                 # Kiểm tra nút độ khó
                 elif 50 <= mouse_x <= 270 and 150 <= mouse_y <= 200 and skin != 'BLACK':
                     Variables.click_button_sfx2.play()
