@@ -62,11 +62,11 @@ def re_spawn_stone():
         if tmp <= 60:
             stone = Stone_fall.Stone(2, 'stone_fall1')
             Stone_fall.stones.add(stone)
-        elif tmp <= 70:
+        elif tmp <= 60:
             stone = Stone_fall.Stone(2, 'stone_fall2')
             Stone_fall.stones.add(stone)
-        elif tmp <=95:
-            stone = Boom.boom(2)
+        elif tmp <=80:
+            stone = Boom.boom()
             Stone_fall.stones.add(stone)
         elif tmp <= 98:
             shield = Item.item(1,'Shield')
@@ -108,8 +108,6 @@ def handle_menu_events():
                 Variables.mode_1player = True
                 show_menu= False
                 Variables.click_button_sfx.play()
-                if menu_image_rect.collidepoint(mouse_x, mouse_y):
-                    Setting.settings_menu1() 
             elif menu.settings_button_rect.collidepoint(mouse_x, mouse_y):
                 Variables.click_button_sfx.play()
                 menu.settings_menu()
@@ -151,8 +149,7 @@ def reset_game():
     Variables.jump_sfx.stop()
     Variables.walking_sfx.stop()
     Variables .collect_shield_sfx.stop()
-    # Boom.exploision_sfx.stop()
-    Boom.countdown_boom.stop()
+    Variables.countdown_boom.stop()
 
 def pause_game():
     Variables.is_exploi = False
@@ -163,7 +160,8 @@ def pause_game():
     Variables.walking_sfx.stop()
     Variables.collect_shield_sfx.stop()
     # Boom.exploision_sfx.stop()
-    Boom.countdown_boom.stop()
+    Variables.countdown_boom.stop()
+
 
 pygame.font.init()
 gameover_font = pygame.font.SysFont('Arial', 50)
@@ -176,8 +174,10 @@ restart = False
 just_jump = False   # Kiểm tra player có vừa mới nhảy không, nếu có thì thêm hiệu ứng
 sound_playing = False      #Kiểm tra âm thanh có đang chạy không
 update_time_broken = pygame.time.get_ticks()    #Biến đặt thời gian cho hiệu ứng broken
-# Biến trạng thái để theo dõi ảnh menu
-menu_image_check = False
+
+
+
+
 # Biến trạng thái để theo dõi ảnh menu
 show_menu = True
 show_settings = False  
@@ -201,6 +201,7 @@ while Variables.RUNNING:
 
     #################################### MÀN HÌNH CHÍNH CỦA GAME ####################################
     while Variables.mode_1player:
+
         draw_background()
         draw_sub_area()
         Variables.SCREEN.blit(menu_image, menu_image_rect)
@@ -356,7 +357,7 @@ while Variables.RUNNING:
 
         ##################  HIỂN THỊ VÀ XỬ LÍ MENU PAUSE  ####################
         if pause_in_game:
-            # Variables.channel_music.stop()
+            Variables.channel_music.stop()
             check = Setting.settings_menu1(Variables.SCREEN)
             print(check)
             if check == "resume":
@@ -388,6 +389,7 @@ while Variables.RUNNING:
 
         pygame.display.update()
         FPS_Clock.tick(FPS)
+
 
 
     ################################## Màn hình GAME OVER #############################################

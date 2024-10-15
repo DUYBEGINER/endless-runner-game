@@ -1,4 +1,4 @@
-import pygame, sys, os
+import pygame, sys, os, json
 from pygame import *
 import Variables
 import Stone_fall
@@ -8,11 +8,12 @@ from pygame.sprite import Group
 import update_high_score
 Stone_broken = Group()
 Boom_broken = Group()
-
+SETTINGS_FILE = 'settings.json'  # Tên tệp lưu trữ cài đặt
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y, scale, speed):
         super().__init__()
         # Biến
+
         self.Animation_list = []
         self.action = 0
         self.index = 0
@@ -20,22 +21,36 @@ class Player(pygame.sprite.Sprite):
         self.in_air = True
         self.alive = True
         self.vel_y = 0  # Vận tốc
-
-
         self.update_time = pygame.time.get_ticks()
-        # Load all animation
-        Animation_type = ['Idle', 'Run', 'Jump2']
-        for animation in Animation_type:
-            # Reset list temp
-            Temp_list = []
-            # Đếm xem có bao nhiêu file ảnh trong folder dùng làm animation
-            num_of_frames = len(os.listdir(os.path.join(Variables.current_dir, f'Asset/character/{animation}')))
-            for i in range(num_of_frames):
-                img = pygame.image.load(os.path.join(Variables.current_dir, f'Asset/character/{animation}/{i}.png'))
-                img = pygame.transform.scale(img, (int((img.get_width() * scale)), (img.get_height() * scale)))
-                Temp_list.append(img)
-            self.Animation_list.append(Temp_list)
-
+        with open(SETTINGS_FILE, 'r') as f:
+            settings = json.load(f)
+            skin = settings.get('skin', 'WHITE')
+        if skin == 'BLACK':
+            # Load all animation
+            Animation_type = ['Idle', 'Run', 'Jump2']
+            for animation in Animation_type:
+                # Reset list temp
+                Temp_list = []
+                # Đếm xem có bao nhiêu file ảnh trong folder dùng làm animation
+                num_of_frames = len(os.listdir(os.path.join(Variables.current_dir, f'Asset/character/BLACK/{animation}')))
+                for i in range(num_of_frames):
+                    img = pygame.image.load(os.path.join(Variables.current_dir, f'Asset/character/BLACK/{animation}/{i}.png'))
+                    img = pygame.transform.scale(img, (int((img.get_width() * scale)), (img.get_height() * scale)))
+                    Temp_list.append(img)
+                self.Animation_list.append(Temp_list)
+        if skin == 'WHITE':
+            # Load all animation
+            Animation_type = ['Idle', 'Run', 'Jump2']
+            for animation in Animation_type:
+                # Reset list temp
+                Temp_list = []
+                # Đếm xem có bao nhiêu file ảnh trong folder dùng làm animation
+                num_of_frames = len(os.listdir(os.path.join(Variables.current_dir, f'Asset/character/WHITE/{animation}')))
+                for i in range(num_of_frames):
+                    img = pygame.image.load(os.path.join(Variables.current_dir, f'Asset/character/WHITE/{animation}/{i}.png'))
+                    img = pygame.transform.scale(img, (int((img.get_width() * scale)), (img.get_height() * scale)))
+                    Temp_list.append(img)
+                self.Animation_list.append(Temp_list)
         # Load ảnh frame hiện tại
         self.image = self.Animation_list[self.action][self.index]
         self.rect = self.image.get_rect()

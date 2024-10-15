@@ -45,7 +45,6 @@ class item(pygame.sprite.Sprite):
         if self.in_air:
             self.vel_y += GRAVITY_SHIELD
             dy += self.vel_y
-        print(self.TIME_EXIST)
         self.TIME_EXIST -= 1
         if self.TIME_EXIST<=0:
             self.kill()

@@ -137,15 +137,19 @@ click_button_sfx3 = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/cli
 hover_button_sfx = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/hover_button.mp3'))
 background_music = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/sound_game2.mp3'))
 stop_time_sfx = pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/Stop_time.mp3'))
+exploision_sfx =   pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/exploision.mp3'))
+countdown_boom =   pygame.mixer.Sound(os.path.join(current_dir, f'Asset/SFX/countdown_boom.mp3'))
 
 # countdown_boom.set_volume(0.3)
 jump_sfx.set_volume(0.3)
 walking_sfx.set_volume(1)
 stop_time_sfx.set_volume(1)
-
+countdown_boom.set_volume(0.1)
+exploision_sfx.set_volume(0.5)
+background_music.set_volume(0.5)
 #SFX Chanel
 pygame.mixer.init()
-channel_collect = pygame.mixer.Channel(0)  # Chọn kênh 0
+channel_collect = pygame.mixer.Channel(0)
 channel_jump = pygame.mixer.Channel(1)
 channel_walk = pygame.mixer.Channel(2)
 channel_music = pygame.mixer.Channel(3)
@@ -175,9 +179,6 @@ for i in range(41):
 
 difficult = 1
 global volume, difficulty, skin
-volume = 50
-difficulty = 'Easy'
-skin = 'WHITE'
 
 #### Load ảnh ####
 menu_image = pygame.image.load(os.path.join(current_dir,'Asset/Setting/openmenu.png'))
