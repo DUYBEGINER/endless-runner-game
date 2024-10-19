@@ -121,7 +121,7 @@ check_collision_boom = False
 
 
 # Biến thực hiện các màn hình
-mode_1player = False
+Playing = False
 RUNNING = True
 pygame.init()
 

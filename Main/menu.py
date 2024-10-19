@@ -19,7 +19,7 @@ screen = pygame.display.set_mode((SCREEN_WIDTH_MENU, SCREEN_HEIGHT_MENU))
 pygame.display.set_caption("Menu")
 
 # Tải ảnh nền và thay đổi kích thước cho phù hợp
-bg = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Setting/bg.jpg'))
+bg = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Setting/backgroundnew2.png'))
 bg = pygame.transform.scale(bg, (SCREEN_WIDTH_MENU, SCREEN_HEIGHT_MENU))
 
 # Tạo font chữ
@@ -31,9 +31,12 @@ def draw_button(text, x, y, width, height):
     is_hovered = pygame.Rect(x, y, width, height).collidepoint(mouse_pos)  # Kiểm tra xem chuột có đang hover vào button hay không
     
     # Chọn màu button dựa trên việc chuột có đang hover không
-    button_color = BUTTON_HOVER_COLOR if is_hovered else BUTTON_COLOR
-    pygame.draw.rect(screen, button_color, (x, y, width, height))
-    
+    rect_surface = pygame.Surface((width, height), pygame.SRCALPHA)
+    rect_surface.fill((0, 128, 255, 250)) if is_hovered else rect_surface.fill((0, 100, 200, 200))
+    # pygame.draw.rect(screen, button_color, (x, y, width, height))
+
+
+    Variables.SCREEN.blit(rect_surface, (x, y))
     # Vẽ văn bản trên button
     text_surface = font.render(text, True, WHITE)
     text_rect = text_surface.get_rect(center=(x + width // 2, y + height // 2))
@@ -48,6 +51,7 @@ def read_settings():
             difficulty = settings.get('difficulty', 'Easy')
             skin = settings.get('skin', 'WHITE')
             volume = settings.get('volume', 'Yes')
+           
     else:
         set_default_settings()
 
@@ -112,6 +116,14 @@ exit_button_rect = pygame.Rect(exit_button_x, exit_button_y, BUTTON_WIDTH, BUTTO
 #     # Cập nhật màn hình
 #     pygame.display.flip()
 
+def mute_all_sounds():
+    pygame.mixer.stop()  # Dừng tất cả âm thanh hiện tại
+    pygame.mixer.music.stop()  # Dừng nhạc nền
+    pygame.mixer.set_num_channels(0)  # Tắt tất cả các kênh âm thanh
+def unmute_all_sounds():
+    pygame.mixer.set_num_channels(8)  # Mở lại một số kênh âm thanh
+    pygame.mixer.music.set_volume(1)  # Đặt âm lượng tối đa
+
 # Hàm hiển thị menu cài đặt
 def settings_menu():
     global volume, difficulty, skin
@@ -122,7 +134,7 @@ def settings_menu():
     skins = ['WHITE', 'BLACK']
 
     # Tải ảnh nền và thay đổi kích thước cho phù hợp
-    bg = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Setting/bg.jpg'))
+    bg = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Setting/backgroundnew2.png'))
     bg = pygame.transform.scale(bg, (SCREEN_WIDTH_MENU, SCREEN_HEIGHT_MENU))
 
     while True:
@@ -137,9 +149,11 @@ def settings_menu():
                     Variables.click_button_sfx3.play()
                     if volume == 'Yes':
                         volume = 'No'
-                        
+                        mute_all_sounds()
                     else:
                         volume = 'Yes'
+                        unmute_all_sounds()  # Mở lại âm thanh
+
                 # Kiểm tra nút độ khó
                 elif 50 <= mouse_x <= 270 and 150 <= mouse_y <= 200 and skin != 'BLACK':
                     Variables.click_button_sfx2.play()

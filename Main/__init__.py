@@ -24,19 +24,20 @@ FPS = 120
 FPS_Clock = pygame.time.Clock()
 
 #### Load ảnh ####
-menu_image = pygame.image.load(os.path.join(Variables.current_dir,'Asset/Setting/openmenu.png'))
+###Ảnh menu setting###
+menu_image = pygame.image.load(os.path.join(Variables.current_dir,'Asset/Setting/openmenu2.png'))
 menu_image = pygame.transform.scale(menu_image, (35, 35))
 # Vị trí của ảnh menu
 menu_image_rect = menu_image.get_rect()
-menu_image_rect.topleft = (10,10)
+menu_image_rect.topleft = (25,10)
+
 # Background
 BACKGROUND_IMG1 = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Map/background3.png'))
 BACKGROUND_IMG1 = pygame.transform.scale(BACKGROUND_IMG1,(Variables.WINDOW_WIDTH * 1.25, Variables.WINDOW_HEIGHT * 1.25))
 BACKGROUND_IMG2 = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Map/background1.png'))
 BACKGROUND_IMG2 = pygame.transform.scale(BACKGROUND_IMG2,(Variables.WINDOW_WIDTH * 1.25, Variables.WINDOW_HEIGHT * 1.25))
-
+#Ảnh game over
 GAMEOVER_IMG = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/gameover.png'))
-
 # Ground
 GROUND_IMG = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Map/ground_new.png'))
 
@@ -55,7 +56,9 @@ restart_button = Button.button(restart_button_default_img,restart_button_hover_i
 
 update_time_score = pygame.time.get_ticks()
 update_time_stop = pygame.time.get_ticks()
-# Tư động sinh các đối tượng đád
+
+
+# Tư động sinh các đối tượng đá và vật phẩm
 def re_spawn_stone():
     if not game_over:
         tmp = random.randint(1, 100)  # Chọn một số ngẫu nhiên từ 1 đến 100
@@ -97,6 +100,7 @@ def draw_sub_area():
     Variables.draw_num_shield(Variables.text_font, (197, 188, 157), 60, 380)
     Variables.draw_num_stopGameItem(Variables.text_font, (197, 188, 157), 60, 420)
 
+#Xử lí xự kiện tương tác với menu
 def handle_menu_events():
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -105,12 +109,13 @@ def handle_menu_events():
             mouse_x, mouse_y = pygame.mouse.get_pos()  # Nhận vị trí chuột khi click
             # Kiểm tra xem chuột có click vào button nào không và thực hiện hành động tương ứng
             if menu.start_button_rect.collidepoint(mouse_x, mouse_y):
-                Variables.mode_1player = True
+                Variables.Playing = True
                 show_menu= False
                 Variables.click_button_sfx.play()
             elif menu.settings_button_rect.collidepoint(mouse_x, mouse_y):
                 Variables.click_button_sfx.play()
                 menu.settings_menu()
+        
             elif menu.exit_button_rect.collidepoint(mouse_x, mouse_y):
                 Variables.click_button_sfx.play()
                 Variables.RUNNING = False
@@ -131,16 +136,13 @@ def handle_menu_events():
 
 
 def reset_game():
-    # Player1.kill()
     Stone_fall.stones.empty()
     Item.Item_Group.empty()
     Boom.booms_effect.empty()
     Players.Stone_broken.empty()
     Players.Boom_broken.empty()
-
     Variables.is_exploi = False
     Variables.score = 0
-
     Variables.moving_left = False
     Variables.moving_right = False
     Variables.moving_jump = False
@@ -176,15 +178,9 @@ sound_playing = False      #Kiểm tra âm thanh có đang chạy không
 update_time_broken = pygame.time.get_ticks()    #Biến đặt thời gian cho hiệu ứng broken
 
 
-
-
 # Biến trạng thái để theo dõi ảnh menu
 show_menu = True
 show_settings = False  
-
-def draw_button_image(screen, img, x, y):
-    screen.blit(img, (x, y))
-
 
 ########## VÒNG LẶP GAME ### #######
 pygame.init()
@@ -194,14 +190,13 @@ while Variables.RUNNING:
         handle_menu_events()
     ####################################################################################
 
-    if Variables.mode_1player:
+    if Variables.Playing:
         # Create Player
         Player1 = Player(150, 150, 1, 2)
         Variables.channel_music.play(Variables.background_music, loops=-1)
 
     #################################### MÀN HÌNH CHÍNH CỦA GAME ####################################
-    while Variables.mode_1player:
-
+    while Variables.Playing:
         draw_background()
         draw_sub_area()
         Variables.SCREEN.blit(menu_image, menu_image_rect)
@@ -210,22 +205,22 @@ while Variables.RUNNING:
             # KEY_DOWN
             if event.type == pygame.QUIT:
                 Variables.RUNNING = False
-                Variables.mode_1player = False
+                Variables.Playing = False
                 game_over = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_a:
                     Variables.moving_left = True
                     if not sound_playing and not Player1.in_air:
-                        Variables.channel_walk.play(Variables.walking_sfx, loops=-1)
+                        Variables.channel_walk.play(Variables.walking_sfx, loops=-1) #Chạy âm thanh đi bộ
                         sound_playing = True
                 if event.key == pygame.K_d:
                     Variables.moving_right = True
                     if not sound_playing and not Player1.in_air:
-                        Variables.channel_walk.play(Variables.walking_sfx, loops=-1)
+                        Variables.channel_walk.play(Variables.walking_sfx, loops=-1) #Chạy âm thanh đi bộ
                         sound_playing = True
                 if event.key == pygame.K_SPACE and not Player1.in_air:
                     Player1.jump = True
-                    Variables.channel_jump.play(Variables.jump_sfx)
+                    Variables.channel_jump.play(Variables.jump_sfx) #Chạy âm thanh nhảy
                     just_jump = True
                 # Ấn phím J để sử dụng vật phẩm
                 if event.key == pygame.K_ESCAPE:
@@ -248,7 +243,7 @@ while Variables.RUNNING:
                     if not Variables.moving_left and not Player1.in_air:
                         Variables.channel_walk.stop()
                         sound_playing = False
-            # Xu ly nhan tin hieu chuot
+            # Xử lí nhận tín hiệu từ chuột có click vào setting không
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 mouse_x, mouse_y = pygame.mouse.get_pos()  # Nhận vị trí chuột khi click
                 # Kiểm tra xem chuột có click vào button nào không và thực hiện hành động tương ứng
@@ -268,25 +263,25 @@ while Variables.RUNNING:
 
         ########### Nếu không pause game thì chạy như bình thường ############
         if not pause_in_game:
-            #count score
+            #Đếm điểm số theo thời gian chạy
             if pygame.time.get_ticks() - update_time_score > 100:
                 Variables.score += 1
                 update_time_score = pygame.time.get_ticks()
                 if Variables.score % Variables.score_up == 0:
                     Variables.score_up *= 10
                     Variables.score_x -=5
-            #Cập nhật player
+
+            #Cập nhật Player
             Player1.update_animation()
             Player1.move_and_jump(Variables.moving_left, Variables.moving_right)
 
-            # Update player action
+            # Cập nhật hành động Player
             if Player1.in_air:
                 Player1.update_action(2)
             elif Variables.moving_left or Variables.moving_right:
                 Player1.update_action(1)  # Run
             else:
-                Player1.update_action(0)  # Idlea
-
+                Player1.update_action(0)  # Idle
             # Thêm hiệu ứng nhảy
             if just_jump == False:
                 temp_posx = Player1.rect.x
@@ -357,11 +352,14 @@ while Variables.RUNNING:
 
         ##################  HIỂN THỊ VÀ XỬ LÍ MENU PAUSE  ####################
         if pause_in_game:
-            Variables.channel_music.stop()
+            Variables.channel_music.pause()
+            pygame.mixer.pause()
             check = Setting.settings_menu1(Variables.SCREEN)
             print(check)
             if check == "resume":
                 pause_in_game = False
+                pygame.mixer.unpause()
+                Variables.channel_music.unpause()
             elif check == "restart":
                 Variables.channel_music.play(Variables.background_music, loops=-1)
                 reset_game()
@@ -372,21 +370,20 @@ while Variables.RUNNING:
                 reset_game()
                 restart = False   #Để hiển thị menu ngoài
                 pause_in_game = False
-                Variables.mode_1player = False
+                Variables.Playing = False
                 Variables.channel_music.stop()
 
 
         #CHECK GAME OVER
         if not Player1.alive:
             game_over = True
-            Variables.mode_1player = False
+            Variables.Playing = False  #Thoát khỏi vòng lặp Playing
             pause_game()
             update_high_score.update_score()
             #chạy cập nhật boom để hiện lúc boom nổ to nhất, nhìn nó thật hơn
             for i in Boom.booms_effect:
                 pygame.display.update(i.rect)
             break
-
         pygame.display.update()
         FPS_Clock.tick(FPS)
 
@@ -409,7 +406,7 @@ while Variables.RUNNING:
                     restart = False
                     reset_game()
                 elif restart_button.rect.collidepoint(mouse_x, mouse_y):
-                    Variables.mode_1player = True
+                    Variables.Playing = True
                     game_over = False
                     restart = True
                     Variables.click_button_sfx3.play()

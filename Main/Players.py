@@ -12,8 +12,6 @@ SETTINGS_FILE = 'settings.json'  # Tên tệp lưu trữ cài đặt
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y, scale, speed):
         super().__init__()
-        # Biến
-
         self.Animation_list = []
         self.action = 0
         self.index = 0
@@ -56,7 +54,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
 
-        # Giảm kích thước rect bao quang player để xử lí va chạm chính xác hơn
+        # Giảm kích thước rect bao quanh player để xử lí va chạm chính xác hơn
         self.rect.width = int(self.rect.width * 0.6)
         # thêm thuộc tính width và height để sử dụng kiểm tra va chạm
         self.width = self.rect.width
@@ -111,7 +109,7 @@ class Player(pygame.sprite.Sprite):
         """
         Kiểm tra va chạm với các đối tượng tường, đá
         """
-        on_ground = False        # Kiem tra va cham tuong
+        on_ground = False       #Kiểm tra có đang đứng dươi đất hoặc trên đá không
         if Variables.WALL_RECT1.colliderect(self.rect.left + dx, self.rect.top, self.rect.width, self.rect.height):
             self.rect.left = Variables.WALL_RECT1.right
             dx = 0
@@ -136,7 +134,7 @@ class Player(pygame.sprite.Sprite):
         for tile in stones:
             if tile.rect.colliderect(self.rect.left, self.rect.bottom, self.width, 1):
                 self.in_air = False
-                self.on_ground = True
+                self.on_ground = True #Nếu đứng trên đá thì xem như là đang đứng trên mặt đất
 
         #Tạo list đá đang rơi
         falling_stones = [stone for stone in stones if stone.rect.bottom > self.rect.top]
