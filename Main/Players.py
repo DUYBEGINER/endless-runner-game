@@ -5,7 +5,7 @@ import Stone_fall
 from Stone_fall import stones
 from Boom import booms_effect
 from pygame.sprite import Group
-import update_high_score
+import Update_High_Score
 Stone_broken = Group()
 Boom_broken = Group()
 SETTINGS_FILE = 'settings.json'  # Tên tệp lưu trữ cài đặt

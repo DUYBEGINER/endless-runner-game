@@ -7,12 +7,14 @@ from pygame.sprite import Group
 # Thiết lập đường dẫn
 current_dir_tmp = os.path.dirname(os.path.abspath(__file__)) #  Đường dẫn tới ../main
 current_dir = os.path.dirname(current_dir_tmp) # Đường dẫn tới ../Game_project
+RUNNING = True
 # Kích thước cửa sổ game
 WINDOW_WIDTH = 320
 WINDOW_HEIGHT = 500
-RUNNING = True
+#Thêm độ rộng 200 cho sub area
 SCREEN = pygame.display.set_mode((WINDOW_WIDTH + 200, WINDOW_HEIGHT))
-# Kích thước các đối tượng trong game
+
+# Kích thước các đối tượng trong màn hình chính
 GROUND_HEIGHT = 64      # Chiều dày mặt đất
 BLOCK_SIZE = 32         # Kích thước khối block
 # Trọng lực
@@ -24,7 +26,6 @@ WALL_RECT1 = WALL_IMG1.get_rect()
 WALL_IMG2 = pygame.image.load(os.path.join(current_dir, 'Asset/Map/wall3.png'))
 WALL_IMG2 = pygame.transform.scale(WALL_IMG2, (32, WINDOW_HEIGHT-GROUND_HEIGHT))
 WALL_RECT2 = WALL_IMG2.get_rect()
-
 
 #SHAKE EFFCT
 SCREEN_SHAKE = 30

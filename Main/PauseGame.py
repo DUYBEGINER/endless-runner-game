@@ -1,6 +1,7 @@
+from os import write
 import pygame
 import sys, os
-import Variables, menu
+import Variables, Menu
 tmp = ''
 # Constants
 WHITE = (255, 255, 255)
@@ -15,15 +16,19 @@ back_img = pygame.transform.scale(back_img, (int(back_img.get_width() * 0.75), i
 bg1_img = pygame.image.load(os.path.join(Variables.current_dir, 'Asset/Setting/bg1.png'))
 bg1_img = pygame.transform.scale(bg1_img, (int(bg1_img.get_width() * 2.5), int(bg1_img.get_height() * 2.5)))
 
-resume_rect = pygame.Rect(125, 60, resume_img.get_width(), resume_img.get_height())
-restart_rect = pygame.Rect(125, 130, restart_img.get_width(), restart_img.get_height())
-back_to_menu_rect = pygame.Rect(125, 200, back_img.get_width(), back_img.get_height())
+resume_rect = pygame.Rect(40, 200, resume_img.get_width(), resume_img.get_height())
+restart_rect = pygame.Rect(120, 200, restart_img.get_width(), restart_img.get_height())
+back_to_menu_rect = pygame.Rect(200, 200, back_img.get_width(), back_img.get_height())
+
+pygame.font.init()
+pause_game_text = pygame.font.Font(None, 50)
+
+
 
 def draw_button_image(screen, img, x, y):
     screen.blit(img, (x, y))
 
 def settings_menu1(screen):
-
     # Button positions
     while True:
         for event in pygame.event.get():
@@ -41,16 +46,15 @@ def settings_menu1(screen):
                 elif back_to_menu_rect.collidepoint(mouse_x, mouse_y):
                     return "menu"
                     break
-                
 
         # Draw the background
         #screen.blit(pygame.image.load(os.path.join(Variables.current_dir, 'Asset/gameover.png')), (0, 0))
-        Variables.SCREEN.blit(bg1_img, (0, 0))
-
+        screen.blit(bg1_img, (0, 0))
+        screen.blit(pause_game_text.render("PAUSE GAME",True,WHITE),(50,100))
         # Draw buttons
-        draw_button_image(screen, resume_img, 125, 60)
-        draw_button_image(screen, restart_img, 125, 130)
-        draw_button_image(screen, back_img, 125, 200)
+        draw_button_image(screen, resume_img, resume_rect.x, resume_rect.y)
+        draw_button_image(screen, restart_img, restart_rect.x, restart_rect.y)
+        draw_button_image(screen, back_img, back_to_menu_rect.x, back_to_menu_rect.y)
     
         pygame.display.flip()
 
