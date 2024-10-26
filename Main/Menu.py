@@ -159,10 +159,13 @@ def settings_menu():
                     Variables.click_button_sfx2.play()
                     if difficulty == 'Easy':
                         difficulty = 'Normal'
+                        Variables.list_rate = [60, 70, 95, 98]
                     elif difficulty == 'Normal':
                         difficulty = 'Hard'
+                        Variables.list_rate = [50, 60, 95, 98]
                     elif difficulty == 'Hard':
                         difficulty = 'Easy'
+                        Variables.list_rate = [60, 75, 90, 95]
                 # Kiểm tra nút skin
                 elif 50 <= mouse_x <= 270 and 220 <= mouse_y <= 270:
                     Variables.click_button_sfx.play()
@@ -171,8 +174,10 @@ def settings_menu():
                     print(f"Skin changed to {skin}")
                     if skin == 'BLACK':
                         difficulty = 'Hardest'
+                        Variables.list_rate = [40, 55, 97, 99]
                     else:
                         difficulty = 'Easy'
+                        Variables.list_rate = [60, 75, 90, 95]
                 # Kiểm tra nút quay lại
                 elif 50 <= mouse_x <= 270 and 290 <= mouse_y <= 340:
                     Variables.click_button_sfx.play()

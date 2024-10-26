@@ -1,4 +1,4 @@
-import os
+import os, json
 import pygame
 import random
 from pygame.sprite import Sprite
@@ -19,6 +19,20 @@ GROUND_HEIGHT = 64      # Chiều dày mặt đất
 BLOCK_SIZE = 32         # Kích thước khối block
 # Trọng lực
 GRAVITY = 0.3
+# độ khó
+with open('settings.json', 'r') as f:
+        settings = json.load(f)
+        difficulty = settings.get('difficulty')
+if difficulty == "Easy":
+    list_rate = [60, 75, 90, 95]
+elif difficulty == "Normal":
+    list_rate = [60, 70, 95, 98]
+elif difficulty == "Hard":
+    list_rate = [50, 60, 95, 98]
+elif difficulty == "Hardest":
+    list_rate = [40, 55, 97, 99]
+else: 
+    list_rate = [60, 75, 90, 95]
 #Wall
 WALL_IMG1 = pygame.image.load(os.path.join(current_dir, 'Asset/Map/wall3.png'))
 WALL_IMG1 = pygame.transform.scale(WALL_IMG1, (32, WINDOW_HEIGHT-GROUND_HEIGHT))
@@ -178,8 +192,6 @@ for i in range(41):
     img = pygame.transform.scale(img, (int((img.get_width() * 3)), (img.get_height() * 3)))
     effect_stop_time_list.append(img)
 
-difficult = 1
-global volume, difficulty, skin
 
 #### Load ảnh ####
 menu_image = pygame.image.load(os.path.join(current_dir,'Asset/Setting/openmenu.png'))

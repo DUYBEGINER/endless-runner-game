@@ -8,7 +8,7 @@ SETTINGS_FILE = 'settings.json'  # Tên tệp lưu trữ cài đặt
 global difficulty
 with open(SETTINGS_FILE, 'r') as f:
             settings = json.load(f)
-            difficulty = settings.get('difficulty', 'Easy')
+            difficulty = settings.get('difficulty')
 
 GRAVITY_BOOM = 0.025
 
@@ -30,8 +30,16 @@ class boom(pygame.sprite.Sprite):
         self.index = 0
         self.update_time = pygame.time.get_ticks()
         self.active = False
+        if difficulty == 'Easy':
+            self.dfc = 1.0
+        elif difficulty == 'Normal':
+            self.dfc = 1.25
+        elif difficulty == 'Hard':
+            self.dfc = 1.5
+        elif difficulty == 'Hardest':
+            self.dfc = 2
         if difficulty == "Hardest":
-            self.scale = 5
+            self.scale = 3
         else:
             self.scale = 2
         # self.countdown_sound = countdown_boom
@@ -66,9 +74,9 @@ class boom(pygame.sprite.Sprite):
         self.update_animation()
         # Áp dụng Gravity
         if self.in_air:
-            self.vel_y += GRAVITY_BOOM * Variables.difficult
-            if self.vel_y > self.MAX_VEL * Variables.difficult:
-                self.vel_y = self.MAX_VEL * Variables.difficult
+            self.vel_y += GRAVITY_BOOM * self.dfc
+            if self.vel_y > self.MAX_VEL * self.dfc:
+                self.vel_y = self.MAX_VEL * self.dfc
         dy = self.vel_y
         self.rect.centery += dy
         self.check_to_delete()
@@ -143,7 +151,7 @@ class Boom_effect(pygame.sprite.Sprite):
         self.boom_broken_shield = 5
         self.update_time = pygame.time.get_ticks()
         if difficulty == "Hardest":
-            self.scale = 2
+            self.scale = 1.25
         else:
             self.scale = 1
         # Load animation

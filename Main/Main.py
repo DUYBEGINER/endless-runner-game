@@ -1,4 +1,4 @@
-import pygame, os, random, sys
+import pygame, os, random, sys, json
 from pygame import *
 import Variables
 from Variables import effect_list
@@ -59,25 +59,25 @@ if __name__ == "__main__":
 
 
     # Tư động sinh các đối tượng đá và vật phẩm
-    def re_spawn_stone():
+    def re_spawn_stone(list_rate):
         if not game_over:
             tmp = random.randint(1, 100)  # Chọn một số ngẫu nhiên từ 1 đến 100
-            if tmp <= 60:
+            if tmp <= list_rate[0]:
                 stone = Stone_fall.Stone(2, 'stone_fall1')
                 Stone_fall.stones.add(stone)
-            elif tmp <= 70:
+            elif tmp <= list_rate[1]:
                 stone = Stone_fall.Stone(2, 'stone_fall2')
                 Stone_fall.stones.add(stone)
-            elif tmp <=80:
+            elif tmp <= list_rate[2]:
                 stone = Boom.boom()
                 Stone_fall.stones.add(stone)
-            elif tmp <= 98:
+            elif tmp <= list_rate[3]:
                 shield = Item.item(1,'Shield')
                 Item.Item_Group.add(shield)
             else:
                 STI = Item.item(1,'Stop_time')
                 Item.Item_Group.add(STI)
-
+        
     def draw_button_image(screen, img, x, y):
         screen.blit(img, (x, y))
 
@@ -296,7 +296,7 @@ if __name__ == "__main__":
                     #Sản sinh các vật thể trong game
                     if pygame.time.get_ticks() - Variables.update_time > Variables.COOLDOWN_SPAWN:
                         Variables.update_time = pygame.time.get_ticks()
-                        re_spawn_stone()
+                        re_spawn_stone(Variables.list_rate)
 
                     #update hình ảnh các đối tượng game
                     Stone_fall.stones.update()

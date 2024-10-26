@@ -12,7 +12,7 @@ global difficulty
 
 with open(SETTINGS_FILE, 'r') as f:
             settings = json.load(f)
-            difficulty = settings.get('difficulty', 'Easy')
+            difficulty = settings.get('difficulty')
 # Định nghĩa nhóm các viên đá
 stones = Group()
 # Define Class Stone_fall
@@ -94,7 +94,6 @@ class Stone(Sprite):
         if len(self.list_to_delete) == 8:
             for i in self.list_to_delete:
                 i.kill()
-
 
     def check_to_delete_fall2(self):
         # Kiểm tra đối tượng là đá rơi dạng 2 và in_air là False
