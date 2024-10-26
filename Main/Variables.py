@@ -24,15 +24,15 @@ with open('settings.json', 'r') as f:
         settings = json.load(f)
         difficulty = settings.get('difficulty')
 if difficulty == "Easy":
-    list_rate = [60, 75, 90, 95]
+    list_rate = [60, 75, 90, 95, 'Easy']
 elif difficulty == "Normal":
-    list_rate = [60, 70, 95, 98]
+    list_rate = [60, 70, 95, 98, 'Normal']
 elif difficulty == "Hard":
-    list_rate = [50, 60, 95, 98]
+    list_rate = [50, 60, 95, 98, 'Hard']
 elif difficulty == "Hardest":
-    list_rate = [40, 55, 97, 99]
+    list_rate = [40, 55, 97, 99, 'Hardest']
 else: 
-    list_rate = [60, 75, 90, 95]
+    list_rate = [60, 75, 90, 95, 'Easy']
 #Wall
 WALL_IMG1 = pygame.image.load(os.path.join(current_dir, 'Asset/Map/wall3.png'))
 WALL_IMG1 = pygame.transform.scale(WALL_IMG1, (32, WINDOW_HEIGHT-GROUND_HEIGHT))

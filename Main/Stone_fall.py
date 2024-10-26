@@ -8,16 +8,11 @@ import Variables
 GRAVITY_STONE = 0.025
 MAX_HIGH = 4  # Định nghĩa độ cao cột đá có thể có
 SETTINGS_FILE = 'settings.json'  # Tên tệp lưu trữ cài đặt
-global difficulty
-
-with open(SETTINGS_FILE, 'r') as f:
-            settings = json.load(f)
-            difficulty = settings.get('difficulty')
 # Định nghĩa nhóm các viên đá
 stones = Group()
 # Define Class Stone_fall
 class Stone(Sprite):
-    def __init__(self, scale, stone_type):
+    def __init__(self, scale, stone_type, difficulty):
         Sprite.__init__(self)
         self.type = stone_type
         # Load image stone
@@ -33,7 +28,7 @@ class Stone(Sprite):
         elif difficulty == 'Hard':
             self.dfc = 1.5
         elif difficulty == 'Hardest':
-            self.dfc = 2
+            self.dfc = 1.75
         
         tmp = random.randint(1, 8)  # Lấy một số ngẫu nhiên từ 1 đến 8 để làm giá trị x ban đầu cho stone
         # Kiểm tra để lấy vị trí spawn để không gây trường hợp xấu

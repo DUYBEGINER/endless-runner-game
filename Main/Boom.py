@@ -5,11 +5,6 @@ from Stone_fall import stones
 
 import Variables
 SETTINGS_FILE = 'settings.json'  # Tên tệp lưu trữ cài đặt
-global difficulty
-with open(SETTINGS_FILE, 'r') as f:
-            settings = json.load(f)
-            difficulty = settings.get('difficulty')
-
 GRAVITY_BOOM = 0.025
 
 booms_effect = Group()
@@ -23,7 +18,7 @@ pygame.mixer.init()
 
 
 class boom(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, difficulty):
         pygame.sprite.Sprite.__init__(self)
         self.animation_list = []
         self.type = 'boom'
@@ -37,7 +32,7 @@ class boom(pygame.sprite.Sprite):
         elif difficulty == 'Hard':
             self.dfc = 1.5
         elif difficulty == 'Hardest':
-            self.dfc = 2
+            self.dfc = 1.75
         if difficulty == "Hardest":
             self.scale = 3
         else:
@@ -122,7 +117,7 @@ class boom(pygame.sprite.Sprite):
         for i in list_tmp:
             i.kill()
         list_tmp = []
-        boom_effect = Boom_effect(self.rect.centerx, self.rect.centery)
+        boom_effect = Boom_effect(self.rect.centerx, self.rect.centery, Variables.list_rate[4])
         booms_effect.add(boom_effect)
         Variables.is_exploi = True
         self.kill()
@@ -142,7 +137,7 @@ class boom(pygame.sprite.Sprite):
 
 
 class Boom_effect(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self, x, y, difficulty):
         pygame.sprite.Sprite.__init__(self)
         self.animation_list = []
         self.index = 0

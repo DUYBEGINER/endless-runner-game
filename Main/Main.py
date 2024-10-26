@@ -63,13 +63,13 @@ if __name__ == "__main__":
         if not game_over:
             tmp = random.randint(1, 100)  # Chọn một số ngẫu nhiên từ 1 đến 100
             if tmp <= list_rate[0]:
-                stone = Stone_fall.Stone(2, 'stone_fall1')
+                stone = Stone_fall.Stone(2, 'stone_fall1', Variables.list_rate[4])
                 Stone_fall.stones.add(stone)
             elif tmp <= list_rate[1]:
-                stone = Stone_fall.Stone(2, 'stone_fall2')
+                stone = Stone_fall.Stone(2, 'stone_fall2', Variables.list_rate[4])
                 Stone_fall.stones.add(stone)
             elif tmp <= list_rate[2]:
-                stone = Boom.boom()
+                stone = Boom.boom(Variables.list_rate[4])
                 Stone_fall.stones.add(stone)
             elif tmp <= list_rate[3]:
                 shield = Item.item(1,'Shield')
